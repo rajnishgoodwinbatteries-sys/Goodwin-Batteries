@@ -14,6 +14,8 @@ export interface Product {
   is_published?: boolean;
   application: string[];
   image: string;
+  gallery?: string[];
+  videos?: string[];
   description: string;
   features: string[];
   terminalLayout: string;

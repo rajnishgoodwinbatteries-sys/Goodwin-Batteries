@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, ShieldCheck, Download, CheckCircle2, Wrench, FileText, Phone, Zap } from "lucide-react";
 import { getProductBySlug, getProducts, getCategories } from "@/lib/data";
+import ProductGallery from "@/components/ProductGallery";
 
 export async function generateStaticParams() {
   const products = await getProducts();
@@ -43,16 +44,7 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
             
             {/* Image Gallery */}
-            <div className="bg-surface rounded-2xl border border-border aspect-square flex items-center justify-center p-12 relative overflow-hidden sticky top-24">
-              <div className="absolute inset-0 bg-gradient-to-tr from-brand/5 to-transparent pointer-events-none" />
-              <div className="w-full h-full bg-white rounded-xl shadow-2xl flex items-center justify-center relative z-10 border border-gray-100 p-8">
-                 <img 
-                   src={product.image} 
-                   alt={product.name} 
-                   className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-500"
-                 />
-              </div>
-            </div>
+            <ProductGallery product={product} />
 
             {/* Product Info */}
             <div className="flex flex-col">
@@ -131,7 +123,7 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 border-b border-border">
                   <div className="p-4 sm:p-5 border-b sm:border-b-0 sm:border-r border-border bg-surface/30 font-bold text-xs uppercase tracking-wider text-muted-foreground flex items-center">Technology</div>
-                  <div className="p-4 sm:p-5 font-semibold text-foreground sm:col-span-2">Maintenance-Free Lead Acid</div>
+                  <div className="p-4 sm:p-5 font-semibold text-foreground sm:col-span-2">{product.technology || "Details coming soon"}</div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 border-b border-border">
                   <div className="p-4 sm:p-5 border-b sm:border-b-0 sm:border-r border-border bg-surface/30 font-bold text-xs uppercase tracking-wider text-muted-foreground flex items-center">Capacity (Ah)</div>

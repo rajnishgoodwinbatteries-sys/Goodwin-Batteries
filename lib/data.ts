@@ -44,6 +44,8 @@ export const getProducts = async (): Promise<Product[]> => {
       is_published: row.is_published,
       application: row.application || [],
       image: row.image,
+      gallery: row.gallery || [],
+      videos: row.videos || [],
       description: row.description,
       features: row.features || [],
       terminalLayout: row.terminalLayout,
