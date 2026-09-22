@@ -48,6 +48,7 @@ export const getProducts = async (): Promise<Product[]> => {
       videos: row.videos || [],
       description: row.description,
       features: row.features || [],
+      technology: row.technology,
       terminalLayout: row.terminalLayout,
       dimensions: row.dimensions,
       weight: row.weight,

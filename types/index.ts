@@ -18,6 +18,7 @@ export interface Product {
   videos?: string[];
   description: string;
   features: string[];
+  technology?: string;
   terminalLayout: string;
   dimensions: string;
   weight: string;
