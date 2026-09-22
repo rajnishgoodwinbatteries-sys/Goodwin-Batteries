@@ -183,7 +183,9 @@ export default function HomePageClient({ applications, products = [], settings }
               <div key={product.id} className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col group">
                 <div className="relative h-64 p-6 flex items-center justify-center bg-gray-50 border-b border-border overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-tr from-brand/5 to-transparent pointer-events-none" />
-                  <img src={product.image} alt={product.name} className="max-h-full max-w-full object-contain relative z-10 group-hover:scale-105 transition-transform duration-500" />
+                  <div className="w-full h-full relative z-10">
+                    <Image src={product.image} alt={product.name} fill className="object-contain group-hover:scale-105 transition-transform duration-500" />
+                  </div>
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <h4 className="font-heading font-bold text-2xl text-foreground mb-1">{product.name}</h4>

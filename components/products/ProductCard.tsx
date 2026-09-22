@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Product } from "@/types";
+import Image from "next/image";
 import { ArrowRight, MessageCircle, ShieldCheck } from "lucide-react";
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -19,10 +20,11 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Image Area */}
       <div className="relative h-48 bg-white p-4 flex items-center justify-center border-b border-border overflow-hidden">
         <div className="w-full h-full rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-500 relative">
-          <img 
+          <Image 
             src={product.image || "/assets/logo/Goodwin.png"} 
             alt={product.name} 
-            className="max-h-full max-w-full object-contain"
+            fill
+            className="object-contain"
           />
         </div>
       </div>

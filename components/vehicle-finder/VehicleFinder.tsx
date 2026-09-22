@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Battery, Car, Truck, Bike, Tractor, Search, Phone, Loader2, Info, ArrowLeft, RotateCcw, Download } from "lucide-react";
 import clsx from "clsx";
 import Link from "next/link";
+import Image from "next/image";
 import { useGlobalSettings } from "@/components/GlobalSettingsProvider";
 
 import vehicleFitments from "@/data/vehicleFitments.json";
@@ -457,7 +458,9 @@ export default function VehicleFinder() {
               
               <div className="w-48 h-48 bg-surface rounded-xl flex items-center justify-center shrink-0 border border-border p-4 relative z-10">
                 {recommendedProduct.image ? (
-                  <img src={recommendedProduct.image} alt={recommendedProduct.name} className="w-full h-full object-contain" />
+                  <div className="w-full h-full relative">
+                    <Image src={recommendedProduct.image} alt={recommendedProduct.name} fill className="object-contain" />
+                  </div>
                 ) : (
                   <Battery size={64} className="text-muted-foreground" />
                 )}
