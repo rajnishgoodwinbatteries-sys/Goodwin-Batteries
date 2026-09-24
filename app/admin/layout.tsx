@@ -19,8 +19,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       const { data: { session } } = await supabase.auth.getSession();
       if (!session && pathname !== "/admin/login") {
         router.push("/admin/login");
-      } else {
-        setAuthenticated(!!session);
+      } else if (session) {
+        setAuthenticated(true);
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .single();
+        if (profile) {
+          setUserRole(profile.role);
+        }
       }
       setLoading(false);
     };
