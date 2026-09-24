@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
-import { X, Save, Loader2 } from "lucide-react";
+import { X, Save, Loader2, RefreshCw } from "lucide-react";
+import { processClaimReplacement, createWarrantyClaim } from "@/app/actions/claim-actions";
 
 interface ClaimModalProps {
   isOpen: boolean;
@@ -20,7 +20,8 @@ export default function ClaimModal({ isOpen, onClose, claim, onSuccess }: ClaimM
     dealer_name: "",
     issue_description: "",
     status: "",
-    admin_notes: ""
+    admin_notes: "",
+    replacement_serial_number: ""
   });
 
   useEffect(() => {
@@ -33,7 +34,8 @@ export default function ClaimModal({ isOpen, onClose, claim, onSuccess }: ClaimM
         dealer_name: claim.dealer_name || "",
         issue_description: claim.issue_description || "",
         status: claim.status || "Pending Review",
-        admin_notes: claim.admin_notes || ""
+        admin_notes: claim.admin_notes || "",
+        replacement_serial_number: claim.replacement_serial_number || ""
       });
     }
     setError("");
@@ -47,21 +49,15 @@ export default function ClaimModal({ isOpen, onClose, claim, onSuccess }: ClaimM
     setError("");
 
     try {
-      const { error: updateError } = await supabase
-        .from("warranty_claims")
-        .update({
-          customer_name: formData.customer_name,
-          mobile: formData.mobile,
-          warranty_id: formData.warranty_id ? formData.warranty_id : null,
-          serial_number: formData.serial_number,
-          dealer_name: formData.dealer_name,
-          issue_description: formData.issue_description,
-          status: formData.status,
-          admin_notes: formData.admin_notes
-        })
-        .eq("id", claim.id);
-
-      if (updateError) throw updateError;
+      if (!claim.id) {
+        // Create new claim
+        const result = await createWarrantyClaim(formData);
+        if (result.error) throw new Error(result.error);
+      } else {
+        // Process/Update existing claim
+        const result = await processClaimReplacement(claim.id, formData);
+        if (result.error) throw new Error(result.error);
+      }
       
       onSuccess();
       onClose();
@@ -83,8 +79,8 @@ export default function ClaimModal({ isOpen, onClose, claim, onSuccess }: ClaimM
         </button>
 
         <div className="p-6 border-b border-border">
-          <h2 className="text-2xl font-bold text-foreground">Edit Warranty Claim</h2>
-          <p className="text-muted-foreground font-mono text-sm mt-1">{claim.id}</p>
+          <h2 className="text-2xl font-bold text-foreground">{claim.id ? "Edit Warranty Claim" : "Create Warranty Claim"}</h2>
+          {claim.id && <p className="text-muted-foreground font-mono text-sm mt-1">{claim.id}</p>}
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
@@ -128,6 +124,27 @@ export default function ClaimModal({ isOpen, onClose, claim, onSuccess }: ClaimM
               <label className="block text-sm font-bold text-muted-foreground mb-1">Admin Notes (Reason for Rejection, Internal Comments)</label>
               <textarea rows={3} value={formData.admin_notes} onChange={(e) => setFormData({...formData, admin_notes: e.target.value})} className="w-full bg-background border border-border rounded p-2 text-foreground" placeholder="These notes will be visible to the customer when checking status." />
             </div>
+
+            {formData.status === "Approved" && (
+              <div className="md:col-span-2 bg-brand/5 border border-brand/20 p-4 rounded-xl mt-2 animate-in fade-in duration-300">
+                <div className="flex items-center gap-2 text-brand font-bold mb-3">
+                  <RefreshCw size={18} />
+                  <h3>Replacement Processing</h3>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-muted-foreground mb-1">New Replacement Serial Number *</label>
+                  <input 
+                    type="text" 
+                    required 
+                    value={formData.replacement_serial_number} 
+                    onChange={(e) => setFormData({...formData, replacement_serial_number: e.target.value.toUpperCase()})} 
+                    className="w-full bg-background border border-border rounded p-2 text-foreground font-mono uppercase" 
+                    placeholder="Scan or enter the new battery serial"
+                  />
+                  <p className="text-xs text-muted-foreground mt-2">This will update the old battery to 'REPLACED', mark the new battery as 'SOLD', and update the warranty records permanently.</p>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="pt-6 border-t border-border flex justify-end gap-3">

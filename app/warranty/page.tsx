@@ -128,6 +128,15 @@ export default function PublicWarrantyPage() {
                       </div>
                     </div>
                   </div>
+                  
+                  <div className="mt-8 pt-6 border-t border-border flex justify-center">
+                    <a 
+                      href={`/warranty/certificate?serial=${result.battery.serial_number}`} 
+                      className="bg-brand/10 text-brand font-bold px-6 py-3 rounded-xl border border-brand/20 hover:bg-brand hover:text-white transition-all flex items-center gap-2"
+                    >
+                      View Digital Certificate
+                    </a>
+                  </div>
                 </div>
               </div>
             )}

@@ -76,6 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: "Dealers", href: "/admin/dealers", icon: <MapPin size={20} />, roles: ["super_admin", "admin"] },
     { label: "Enquiries", href: "/admin/enquiries", icon: <MessageSquare size={20} />, roles: ["super_admin", "admin"] },
     { label: "Warranties", href: "/admin/warranties", icon: <ShieldCheck size={20} />, roles: ["super_admin", "admin", "dealer"] },
+    { label: "Warranty Plans", href: "/admin/warranty-plans", icon: <Package size={20} />, roles: ["super_admin", "admin"] },
     { label: "Settings", href: "/admin/settings", icon: <Settings size={20} />, roles: ["super_admin", "admin"] },
   ].filter(item => item.roles.includes(userRole));
 
