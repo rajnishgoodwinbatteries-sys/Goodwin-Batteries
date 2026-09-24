@@ -79,13 +79,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const navItems = [
     { label: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} />, roles: ["super_admin", "admin", "dealer"] },
-    { label: "Products", href: "/admin/products", icon: <Package size={20} />, roles: ["super_admin", "admin"] },
-    { label: "Battery Finder", href: "/admin/battery-finder", icon: <Car size={20} />, roles: ["super_admin", "admin"] },
-    { label: "Dealers", href: "/admin/dealers", icon: <MapPin size={20} />, roles: ["super_admin", "admin"] },
-    { label: "Enquiries", href: "/admin/enquiries", icon: <MessageSquare size={20} />, roles: ["super_admin", "admin"] },
+    { label: "Products", href: "/admin/products", icon: <Package size={20} />, roles: ["super_admin", "admin", "dealer"] },
+    { label: "Battery Finder", href: "/admin/battery-finder", icon: <Car size={20} />, roles: ["super_admin", "admin", "dealer"] },
+    { label: "Dealers", href: "/admin/dealers", icon: <MapPin size={20} />, roles: ["super_admin", "admin", "dealer"] },
+    { label: "Enquiries", href: "/admin/enquiries", icon: <MessageSquare size={20} />, roles: ["super_admin", "admin", "dealer"] },
     { label: "Warranties", href: "/admin/warranties", icon: <ShieldCheck size={20} />, roles: ["super_admin", "admin", "dealer"] },
-    { label: "Warranty Plans", href: "/admin/warranty-plans", icon: <Package size={20} />, roles: ["super_admin", "admin"] },
-    { label: "Settings", href: "/admin/settings", icon: <Settings size={20} />, roles: ["super_admin", "admin"] },
+    { label: "Warranty Plans", href: "/admin/warranty-plans", icon: <Package size={20} />, roles: ["super_admin", "admin", "dealer"] },
+    { label: "Settings", href: "/admin/settings", icon: <Settings size={20} />, roles: ["super_admin", "admin", "dealer"] },
   ].filter(item => item.roles.includes(userRole));
 
   return (
