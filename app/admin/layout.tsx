@@ -12,6 +12,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string>("dealer");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -26,11 +27,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     checkAuth();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_OUT" && pathname !== "/admin/login") {
         router.push("/admin/login");
       } else if (session) {
         setAuthenticated(true);
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("role")
+          .eq("id", session.user.id)
+          .single();
+        if (profile) {
+          setUserRole(profile.role);
+        }
       }
     });
 
@@ -61,14 +70,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   const navItems = [
-    { label: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },
-    { label: "Products", href: "/admin/products", icon: <Package size={20} /> },
-    { label: "Battery Finder", href: "/admin/battery-finder", icon: <Car size={20} /> },
-    { label: "Dealers", href: "/admin/dealers", icon: <MapPin size={20} /> },
-    { label: "Enquiries", href: "/admin/enquiries", icon: <MessageSquare size={20} /> },
-    { label: "Warranties", href: "/admin/warranties", icon: <ShieldCheck size={20} /> },
-    { label: "Settings", href: "/admin/settings", icon: <Settings size={20} /> },
-  ];
+    { label: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} />, roles: ["super_admin", "admin", "dealer"] },
+    { label: "Products", href: "/admin/products", icon: <Package size={20} />, roles: ["super_admin", "admin"] },
+    { label: "Battery Finder", href: "/admin/battery-finder", icon: <Car size={20} />, roles: ["super_admin", "admin"] },
+    { label: "Dealers", href: "/admin/dealers", icon: <MapPin size={20} />, roles: ["super_admin", "admin"] },
+    { label: "Enquiries", href: "/admin/enquiries", icon: <MessageSquare size={20} />, roles: ["super_admin", "admin"] },
+    { label: "Warranties", href: "/admin/warranties", icon: <ShieldCheck size={20} />, roles: ["super_admin", "admin", "dealer"] },
+    { label: "Settings", href: "/admin/settings", icon: <Settings size={20} />, roles: ["super_admin", "admin"] },
+  ].filter(item => item.roles.includes(userRole));
 
   return (
     <div className="flex min-h-screen bg-background">

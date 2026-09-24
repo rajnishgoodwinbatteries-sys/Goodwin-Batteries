@@ -12,10 +12,18 @@ export default function AdminDashboard() {
     warranties: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState<string>("dealer");
 
   useEffect(() => {
     async function fetchStats() {
       try {
+        const { data: { session } } = await supabase.auth.getSession();
+        let currentRole = "dealer";
+        if (session) {
+          const { data: profile } = await supabase.from("user_profiles").select("role").eq("id", session.user.id).single();
+          if (profile) currentRole = profile.role;
+          setRole(currentRole);
+        }
         const [
           { count: productsCount },
           { count: dealersCount },
@@ -52,37 +60,42 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <StatCard 
-          title="Total Products" 
-          value={loading ? "-" : stats.products} 
-          icon={<Package size={24} />} 
-          trend="+2 this month"
-          color="bg-brand"
-        />
-        <StatCard 
-          title="Active Dealers" 
-          value={loading ? "-" : stats.dealers} 
-          icon={<MapPin size={24} />} 
-          trend="Stable"
-          color="bg-emerald-500"
-        />
-        <StatCard 
-          title="New Enquiries" 
-          value={loading ? "-" : stats.enquiries} 
-          icon={<MessageSquare size={24} />} 
-          trend="Needs Attention"
-          color="bg-amber-500"
-        />
+        {role !== "dealer" && (
+          <>
+            <StatCard 
+              title="Total Products" 
+              value={loading ? "-" : stats.products} 
+              icon={<Package size={24} />} 
+              trend="+2 this month"
+              color="bg-brand"
+            />
+            <StatCard 
+              title="Active Dealers" 
+              value={loading ? "-" : stats.dealers} 
+              icon={<MapPin size={24} />} 
+              trend="Stable"
+              color="bg-emerald-500"
+            />
+            <StatCard 
+              title="New Enquiries" 
+              value={loading ? "-" : stats.enquiries} 
+              icon={<MessageSquare size={24} />} 
+              trend="Needs Attention"
+              color="bg-amber-500"
+            />
+          </>
+        )}
         <StatCard 
           title="Warranty Reg." 
           value={loading ? "-" : stats.warranties} 
           icon={<ShieldCheck size={24} />} 
-          trend="+15 this week"
+          trend="Total Registered"
           color="bg-purple-500"
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {role !== "dealer" && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-surface border border-border rounded-xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-bold text-lg">Recent Enquiries</h3>
@@ -104,7 +117,8 @@ export default function AdminDashboard() {
             <p>Connect database to view live claims</p>
           </div>
         </div>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
