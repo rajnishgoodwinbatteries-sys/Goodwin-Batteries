@@ -30,6 +30,17 @@ export default function DealerLogin() {
         throw new Error("Invalid Email or Seller Code.");
       }
 
+      if (data.role === 'retailer' && data.parent_dealer_code) {
+        const { data: parentDealer } = await supabase
+          .from("dealers")
+          .select("name")
+          .eq("seller_code", data.parent_dealer_code)
+          .single();
+        if (parentDealer) {
+          data.parent_dealer_name = parentDealer.name;
+        }
+      }
+
       // Save to local storage for persistence
       localStorage.setItem("dealer_auth", JSON.stringify(data));
       router.push("/dealer");

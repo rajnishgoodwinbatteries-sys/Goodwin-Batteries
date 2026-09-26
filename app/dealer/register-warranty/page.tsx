@@ -109,10 +109,10 @@ export default function DealerWarrantyRegistrationPage() {
         warranty_expiry_date: expiryDate,
         invoice_number: formData.invoice_number,
         invoice_url: finalInvoiceUrl,
-        dealer_name: dealer.name,
-        retailer_name: formData.retailer_name || null,
-        retailer_location: formData.retailer_location || null,
-        seller_code: dealer.seller_code,
+        dealer_name: dealer.role === 'retailer' ? (dealer.parent_dealer_name || dealer.parent_dealer_code) : dealer.name,
+        retailer_name: dealer.role === 'retailer' ? dealer.name : formData.retailer_name || null,
+        retailer_location: dealer.role === 'retailer' ? dealer.region : formData.retailer_location || null,
+        seller_code: dealer.role === 'retailer' ? dealer.parent_dealer_code : dealer.seller_code,
         region: dealer.region,
         vehicle_reg_number: formData.vehicle_reg_number.toUpperCase(),
         vehicle_make_model: formData.vehicle_make_model,
@@ -315,7 +315,7 @@ export default function DealerWarrantyRegistrationPage() {
                     <input 
                       disabled
                       type="text" 
-                      value={dealer?.name || "Loading..."}
+                      value={dealer?.role === 'retailer' ? (dealer.parent_dealer_name || dealer.parent_dealer_code) : (dealer?.name || "Loading...")}
                       className="w-full bg-background border border-border rounded p-3 text-muted-foreground focus:outline-none focus:border-brand transition-colors cursor-not-allowed opacity-50 font-bold" 
                     />
                   </div>
@@ -323,9 +323,10 @@ export default function DealerWarrantyRegistrationPage() {
                     <label className="block text-sm font-semibold text-muted-foreground mb-2">Retailer Name (Optional)</label>
                     <input 
                       type="text" 
-                      value={formData.retailer_name}
+                      disabled={dealer?.role === 'retailer'}
+                      value={dealer?.role === 'retailer' ? dealer.name : formData.retailer_name}
                       onChange={(e) => setFormData({...formData, retailer_name: e.target.value})}
-                      className="w-full bg-background border border-border rounded p-3 text-foreground focus:outline-none focus:border-brand transition-colors" 
+                      className="w-full bg-background border border-border rounded p-3 text-foreground focus:outline-none focus:border-brand transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
                       placeholder="e.g. Battery Point" 
                     />
                   </div>
@@ -333,9 +334,10 @@ export default function DealerWarrantyRegistrationPage() {
                     <label className="block text-sm font-semibold text-muted-foreground mb-2">Retailer Location (Optional)</label>
                     <input 
                       type="text" 
-                      value={formData.retailer_location}
+                      disabled={dealer?.role === 'retailer'}
+                      value={dealer?.role === 'retailer' ? dealer.region : formData.retailer_location}
                       onChange={(e) => setFormData({...formData, retailer_location: e.target.value})}
-                      className="w-full bg-background border border-border rounded p-3 text-foreground focus:outline-none focus:border-brand transition-colors" 
+                      className="w-full bg-background border border-border rounded p-3 text-foreground focus:outline-none focus:border-brand transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
                       placeholder="e.g. Andheri West, Mumbai" 
                     />
                   </div>

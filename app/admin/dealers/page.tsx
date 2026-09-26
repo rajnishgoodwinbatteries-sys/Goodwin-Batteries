@@ -10,7 +10,7 @@ export default function AdminDealersPage() {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDealer, setEditingDealer] = useState<any>(null);
-  const [formData, setFormData] = useState({ name: "", email: "", mobile: "", region: "", seller_code: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", mobile: "", region: "", seller_code: "", role: "dealer", parent_dealer_code: "" });
 
   useEffect(() => {
     fetchDealers();
@@ -41,7 +41,7 @@ export default function AdminDealersPage() {
     
     setIsModalOpen(false);
     setEditingDealer(null);
-    setFormData({ name: "", email: "", mobile: "", region: "", seller_code: "" });
+    setFormData({ name: "", email: "", mobile: "", region: "", seller_code: "", role: "dealer", parent_dealer_code: "" });
     fetchDealers();
   };
 
@@ -59,7 +59,9 @@ export default function AdminDealersPage() {
       email: dealer.email,
       mobile: dealer.mobile || "",
       region: dealer.region,
-      seller_code: dealer.seller_code
+      seller_code: dealer.seller_code,
+      role: dealer.role || "dealer",
+      parent_dealer_code: dealer.parent_dealer_code || ""
     });
     setIsModalOpen(true);
   };
@@ -74,7 +76,7 @@ export default function AdminDealersPage() {
           <p className="text-muted-foreground">Assign regions and seller codes to dealers.</p>
         </div>
         <button 
-          onClick={() => { setEditingDealer(null); setFormData({ name: "", email: "", mobile: "", region: "", seller_code: "" }); setIsModalOpen(true); }}
+          onClick={() => { setEditingDealer(null); setFormData({ name: "", email: "", mobile: "", region: "", seller_code: "", role: "dealer", parent_dealer_code: "" }); setIsModalOpen(true); }}
           className="flex items-center gap-2 bg-brand text-white px-6 py-3 rounded-xl font-bold hover:bg-brand-dark transition-colors"
         >
           <Plus size={20} /> Add Dealer
@@ -86,7 +88,8 @@ export default function AdminDealersPage() {
           <thead className="bg-surface-hover border-b border-border text-muted-foreground text-sm uppercase tracking-wider font-bold">
             <tr>
               <th className="p-4">Seller Code</th>
-              <th className="p-4">Dealer Name</th>
+              <th className="p-4">Role</th>
+              <th className="p-4">Name</th>
               <th className="p-4">Region</th>
               <th className="p-4">Contact</th>
               <th className="p-4">Actions</th>
@@ -96,7 +99,11 @@ export default function AdminDealersPage() {
             {dealers.map((d) => (
               <tr key={d.id} className="hover:bg-surface-hover/50 transition-colors">
                 <td className="p-4 font-mono text-brand font-bold">{d.seller_code}</td>
-                <td className="p-4 font-bold text-foreground">{d.name}</td>
+                <td className="p-4 uppercase text-xs font-bold tracking-wider">{d.role || 'dealer'}</td>
+                <td className="p-4 font-bold text-foreground">
+                  {d.name}
+                  {d.role === 'retailer' && <div className="text-xs text-muted-foreground font-normal">Parent: {d.parent_dealer_code}</div>}
+                </td>
                 <td className="p-4">{d.region}</td>
                 <td className="p-4">
                   <div className="text-sm">{d.email}</div>
@@ -123,11 +130,24 @@ export default function AdminDealersPage() {
             <h3 className="text-xl font-bold text-foreground mb-4">{editingDealer ? 'Edit Dealer' : 'Add Dealer'}</h3>
             <form onSubmit={handleSave} className="flex flex-col gap-4">
               <div>
-                <label className="block text-sm font-bold text-muted-foreground mb-1">Dealer Name</label>
+                <label className="block text-sm font-bold text-muted-foreground mb-1">Role</label>
+                <select value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} className="w-full bg-background border border-border rounded-lg p-3 text-foreground">
+                  <option value="dealer">Dealer</option>
+                  <option value="retailer">Retailer</option>
+                </select>
+              </div>
+              {formData.role === 'retailer' && (
+                <div>
+                  <label className="block text-sm font-bold text-muted-foreground mb-1">Parent Dealer Code (Required for Retailers)</label>
+                  <input required={formData.role === 'retailer'} type="text" value={formData.parent_dealer_code} onChange={e => setFormData({...formData, parent_dealer_code: e.target.value.toUpperCase()})} className="w-full bg-background border border-border rounded-lg p-3 font-mono text-foreground uppercase" placeholder="e.g. GW-DL-001" />
+                </div>
+              )}
+              <div>
+                <label className="block text-sm font-bold text-muted-foreground mb-1">Name (Dealer/Retailer)</label>
                 <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full bg-background border border-border rounded-lg p-3 text-foreground" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-muted-foreground mb-1">Seller Code</label>
+                <label className="block text-sm font-bold text-muted-foreground mb-1">Code (Used as Password)</label>
                 <input required type="text" value={formData.seller_code} onChange={e => setFormData({...formData, seller_code: e.target.value.toUpperCase()})} className="w-full bg-background border border-border rounded-lg p-3 font-mono text-foreground uppercase" />
               </div>
               <div>
