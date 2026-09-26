@@ -557,7 +557,7 @@
   },
   {
     "id": "prod-inverter-tubular",
-    "name": "GW-INVERTER TUBULAR",
+    "name": "GW-INVERTER TUBULAR 150AH",
     "series": "Goodwin Home",
     "slug": "gw-inverter-tubular",
     "voltage": "12V",
@@ -574,7 +574,7 @@
     "warranty_options": [
       "72 Months"
     ],
-    "image": "/assets/products/Goodwin mockups/Inverter Batteries/Inverter Batteries.png",
+    "image": "/assets/products/Goodwin Batteries/Goodwin Inverter Battery 150AH.png",
     "description": "High capacity tall tubular battery for uninterrupted power supply in homes and offices.",
     "dimensions": "505 x 190 x 410 mm",
     "weight": "58.0 kg",
@@ -878,6 +878,398 @@
     ],
     "videos": [
       "/assets/products/Goodwin mockups/gold series 12v 17ah/gold 12v 17ah.mp4"
+    ]
+  },
+  {
+    "id": "prod-tz4lb-12m",
+    "name": "GW-TZ4LB (12 Months)",
+    "series": "Goodwin SMF",
+    "slug": "gw-tz4lb-12m",
+    "voltage": "12V",
+    "ah": "4Ah",
+    "cca": "N/A",
+    "category": "cat-two-wheeler",
+    "technology": "SMF / Maintenance Free",
+    "application": [
+      "Two Wheeler",
+      "Motorcycle"
+    ],
+    "warranty": "12 Months",
+    "warranty_options": [
+      "12 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/TZ4LB__Green 12M.png",
+    "description": "Reliable starting power designed for Indian riding conditions.",
+    "dimensions": "113 x 70 x 85 mm",
+    "weight": "1.45 kg",
+    "terminalLayout": "Right Positive (+)",
+    "datasheet": "/assets/datasheets/gw-tz4lb-datasheet.pdf",
+    "is_published": true,
+    "features": [
+      "Vibration Resistant",
+      "Zero Maintenance",
+      "High Cranking Power"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/TZ4LB__Green 12M.png",
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/TZ4LB Side_GREEN 12M.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/TZ4LB /TZ4LB.mp4",
+      "/assets/products/Goodwin mockups/mockups video/TZ4LB.mp4"
+    ]
+  },
+  {
+    "id": "prod-tz4lb-18m",
+    "name": "GW-TZ4LB (18 Months)",
+    "series": "Goodwin SMF",
+    "slug": "gw-tz4lb-18m",
+    "voltage": "12V",
+    "ah": "4Ah",
+    "cca": "N/A",
+    "category": "cat-two-wheeler",
+    "technology": "SMF / Maintenance Free",
+    "application": [
+      "Two Wheeler",
+      "Motorcycle"
+    ],
+    "warranty": "18 Months",
+    "warranty_options": [
+      "18 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/TZ4LB__Green 18M.png",
+    "description": "Reliable starting power designed for Indian riding conditions.",
+    "dimensions": "113 x 70 x 85 mm",
+    "weight": "1.45 kg",
+    "terminalLayout": "Right Positive (+)",
+    "datasheet": "/assets/datasheets/gw-tz4lb-datasheet.pdf",
+    "is_published": true,
+    "features": [
+      "Vibration Resistant",
+      "Zero Maintenance",
+      "High Cranking Power"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/TZ4LB__Green 18M.png",
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/TZ4LB Side_GREEN 18M.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/TZ4LB /TZ4LB.mp4",
+      "/assets/products/Goodwin mockups/mockups video/TZ4LB.mp4"
+    ]
+  },
+  {
+    "id": "prod-tz5lb-12m",
+    "name": "GW-TZ5LB (12 Months)",
+    "series": "Goodwin SMF",
+    "slug": "gw-tz5lb-12m",
+    "voltage": "12V",
+    "ah": "5Ah",
+    "cca": "N/A",
+    "category": "cat-two-wheeler",
+    "technology": "SMF / Maintenance Free",
+    "application": [
+      "Two Wheeler",
+      "Motorcycle"
+    ],
+    "warranty": "12 Months",
+    "warranty_options": [
+      "12 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/TZ5LB GREEN 12M.png",
+    "description": "Advanced power delivery for modern two wheelers with extra electronics.",
+    "dimensions": "113 x 70 x 105 mm",
+    "weight": "1.75 kg",
+    "terminalLayout": "Right Positive (+)",
+    "datasheet": "/assets/datasheets/gw-tz5lb-datasheet.pdf",
+    "is_published": true,
+    "features": [
+      "High Capacity",
+      "Electronic Ready",
+      "Weather Proof"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/TZ5LB GREEN 12M.png",
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/TZ5LB Side GREEN 12M.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/TZ5LB /TZ5LB.mp4",
+      "/assets/products/Goodwin mockups/mockups video/TZ5LB.mp4"
+    ]
+  },
+  {
+    "id": "prod-tz5lb-18m",
+    "name": "GW-TZ5LB (18 Months)",
+    "series": "Goodwin SMF",
+    "slug": "gw-tz5lb-18m",
+    "voltage": "12V",
+    "ah": "5Ah",
+    "cca": "N/A",
+    "category": "cat-two-wheeler",
+    "technology": "SMF / Maintenance Free",
+    "application": [
+      "Two Wheeler",
+      "Motorcycle"
+    ],
+    "warranty": "18 Months",
+    "warranty_options": [
+      "18 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/TZ5LB GREEN 18M.png",
+    "description": "Advanced power delivery for modern two wheelers with extra electronics.",
+    "dimensions": "113 x 70 x 105 mm",
+    "weight": "1.75 kg",
+    "terminalLayout": "Right Positive (+)",
+    "datasheet": "/assets/datasheets/gw-tz5lb-datasheet.pdf",
+    "is_published": true,
+    "features": [
+      "High Capacity",
+      "Electronic Ready",
+      "Weather Proof"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/TZ5LB GREEN 18M.png",
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/TZ5LB Side GREEN 18M.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/TZ5LB /TZ5LB.mp4",
+      "/assets/products/Goodwin mockups/mockups video/TZ5LB.mp4"
+    ]
+  },
+  {
+    "id": "prod-xl5lb-12m",
+    "name": "GW-XL5LB (12 Months)",
+    "series": "Goodwin SMF",
+    "slug": "gw-xl5lb-12m",
+    "voltage": "12V",
+    "ah": "5Ah",
+    "cca": "N/A",
+    "category": "cat-two-wheeler",
+    "technology": "SMF / Maintenance Free",
+    "application": [
+      "Two Wheeler",
+      "Motorcycle"
+    ],
+    "warranty": "12 Months",
+    "warranty_options": [
+      "12 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/XL5LB__BLACK GREEN 12M.png",
+    "description": "High performance battery providing quick and consistent starts.",
+    "dimensions": "120 x 60 x 130 mm",
+    "weight": "1.80 kg",
+    "terminalLayout": "Right Positive (+)",
+    "datasheet": "/assets/datasheets/gw-xl5lb-datasheet.pdf",
+    "is_published": true,
+    "features": [
+      "Spill Proof",
+      "High Performance",
+      "Long Life"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/XL5LB__BLACK GREEN 12M.png",
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/XL5LB__Side GREEN 12M.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/XL5LB /XL5LB VIDEO.mp4",
+      "/assets/products/Goodwin mockups/mockups video/XL5LB VIDEO.mp4"
+    ]
+  },
+  {
+    "id": "prod-xl5lb-18m",
+    "name": "GW-XL5LB (18 Months)",
+    "series": "Goodwin SMF",
+    "slug": "gw-xl5lb-18m",
+    "voltage": "12V",
+    "ah": "5Ah",
+    "cca": "N/A",
+    "category": "cat-two-wheeler",
+    "technology": "SMF / Maintenance Free",
+    "application": [
+      "Two Wheeler",
+      "Motorcycle"
+    ],
+    "warranty": "18 Months",
+    "warranty_options": [
+      "18 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/XL5LB__BLACK GREEN 18M.png",
+    "description": "High performance battery providing quick and consistent starts.",
+    "dimensions": "120 x 60 x 130 mm",
+    "weight": "1.80 kg",
+    "terminalLayout": "Right Positive (+)",
+    "datasheet": "/assets/datasheets/gw-xl5lb-datasheet.pdf",
+    "is_published": true,
+    "features": [
+      "Spill Proof",
+      "High Performance",
+      "Long Life"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/XL5LB__BLACK GREEN 18M.png",
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/XL5LB__Side GREEN 18M.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/XL5LB /XL5LB VIDEO.mp4",
+      "/assets/products/Goodwin mockups/mockups video/XL5LB VIDEO.mp4"
+    ]
+  },
+  {
+    "id": "prod-xl25lc-12m",
+    "name": "GW-XL2.5LC (12 Months)",
+    "series": "Goodwin SMF",
+    "slug": "gw-xl2-5lc-12m",
+    "voltage": "12V",
+    "ah": "2.5Ah",
+    "cca": "N/A",
+    "category": "cat-two-wheeler",
+    "technology": "SMF / Maintenance Free",
+    "application": [
+      "Two Wheeler",
+      "Motorcycle",
+      "Kick Start"
+    ],
+    "warranty": "12 Months",
+    "warranty_options": [
+      "12 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/XL2.5LC GREEN 12M.png",
+    "description": "Compact and powerful battery optimized for kick-start and basic electricals.",
+    "dimensions": "80 x 70 x 105 mm",
+    "weight": "0.95 kg",
+    "terminalLayout": "Left Positive (+)",
+    "datasheet": "/assets/datasheets/gw-xl2-5lc-datasheet.pdf",
+    "is_published": true,
+    "features": [
+      "Compact Design",
+      "Rapid Charge",
+      "Durable"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/XL2.5LC GREEN 12M.png",
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 12 Months/XL2.5LC Side GREEN 12M.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/xl2.5lc/XL2.5LC.mp4",
+      "/assets/products/Goodwin mockups/mockups video/XL2.5LC.mp4"
+    ]
+  },
+  {
+    "id": "prod-xl25lc-18m",
+    "name": "GW-XL2.5LC (18 Months)",
+    "series": "Goodwin SMF",
+    "slug": "gw-xl2-5lc-18m",
+    "voltage": "12V",
+    "ah": "2.5Ah",
+    "cca": "N/A",
+    "category": "cat-two-wheeler",
+    "technology": "SMF / Maintenance Free",
+    "application": [
+      "Two Wheeler",
+      "Motorcycle",
+      "Kick Start"
+    ],
+    "warranty": "18 Months",
+    "warranty_options": [
+      "18 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/XL2.5LC GREEN 18M.png",
+    "description": "Compact and powerful battery optimized for kick-start and basic electricals.",
+    "dimensions": "80 x 70 x 105 mm",
+    "weight": "0.95 kg",
+    "terminalLayout": "Left Positive (+)",
+    "datasheet": "/assets/datasheets/gw-xl2-5lc-datasheet.pdf",
+    "is_published": true,
+    "features": [
+      "Compact Design",
+      "Rapid Charge",
+      "Durable"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/XL2.5LC GREEN 18M.png",
+      "/assets/products/Goodwin Batteries/Goodwin Battery Mockup_2026 18 Months/XL2.5LC Side GREEN 18M.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/xl2.5lc/XL2.5LC.mp4",
+      "/assets/products/Goodwin mockups/mockups video/XL2.5LC.mp4"
+    ]
+  },
+  {
+    "id": "prod-inverter-tubular-200ah",
+    "name": "GW-INVERTER TUBULAR 200AH",
+    "series": "Goodwin Home",
+    "slug": "gw-inverter-tubular-200ah",
+    "voltage": "12V",
+    "ah": "200Ah",
+    "cca": "N/A",
+    "category": "cat-inverter",
+    "technology": "Tall Tubular",
+    "application": [
+      "Home Inverter",
+      "Solar",
+      "UPS"
+    ],
+    "warranty": "72 Months",
+    "warranty_options": [
+      "72 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Inverter Battery 200AH.png",
+    "description": "High capacity tall tubular battery for uninterrupted power supply in homes and offices.",
+    "dimensions": "505 x 190 x 410 mm",
+    "weight": "58.0 kg",
+    "terminalLayout": "L-Type",
+    "datasheet": "",
+    "is_published": true,
+    "features": [
+      "Tall Tubular",
+      "Low Maintenance",
+      "Long Life"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Inverter Battery 200AH.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/Inverter Batteries/INVERTER BATTERIES.mp4",
+      "/assets/products/Goodwin mockups/mockups video/INVERTER BATTERIES.mp4"
+    ]
+  },
+  {
+    "id": "prod-inverter-tubular-250ah",
+    "name": "GW-INVERTER TUBULAR 250AH",
+    "series": "Goodwin Home",
+    "slug": "gw-inverter-tubular-250ah",
+    "voltage": "12V",
+    "ah": "250Ah",
+    "cca": "N/A",
+    "category": "cat-inverter",
+    "technology": "Tall Tubular",
+    "application": [
+      "Home Inverter",
+      "Solar",
+      "UPS"
+    ],
+    "warranty": "72 Months",
+    "warranty_options": [
+      "72 Months"
+    ],
+    "image": "/assets/products/Goodwin Batteries/Goodwin Inverter Battery 250AH.png",
+    "description": "High capacity tall tubular battery for uninterrupted power supply in homes and offices.",
+    "dimensions": "505 x 190 x 410 mm",
+    "weight": "58.0 kg",
+    "terminalLayout": "L-Type",
+    "datasheet": "",
+    "is_published": true,
+    "features": [
+      "Tall Tubular",
+      "Low Maintenance",
+      "Long Life"
+    ],
+    "gallery": [
+      "/assets/products/Goodwin Batteries/Goodwin Inverter Battery 250AH.png"
+    ],
+    "videos": [
+      "/assets/products/Goodwin mockups/Inverter Batteries/INVERTER BATTERIES.mp4",
+      "/assets/products/Goodwin mockups/mockups video/INVERTER BATTERIES.mp4"
     ]
   }
 ]
