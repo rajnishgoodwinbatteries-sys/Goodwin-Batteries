@@ -18,7 +18,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Image Area */}
-      <div className="relative h-48 bg-white p-4 flex items-center justify-center border-b border-border overflow-hidden">
+      <div className="relative h-48 bg-transparent p-4 flex items-center justify-center border-b border-border overflow-hidden">
         <div className="w-full h-full rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-500 relative">
           <Image 
             src={product.image || "/assets/logo/Goodwin.png"} 

@@ -14,9 +14,21 @@ export default function ProductsClient({
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedWarranty, setSelectedWarranty] = useState<string>("All");
+  const [selectedVoltage, setSelectedVoltage] = useState<string>("All");
+
+  const warrantyOptions = useMemo(() => {
+    const options = new Set(initialProducts.map(p => p.warranty).filter(Boolean));
+    return Array.from(options).sort();
+  }, [initialProducts]);
+
+  const voltageOptions = useMemo(() => {
+    const options = new Set(initialProducts.map(p => p.voltage).filter(Boolean));
+    return Array.from(options).sort();
+  }, [initialProducts]);
 
   const filteredProducts = useMemo(() => {
-    return initialProducts.filter((product) => {
+    const filtered = initialProducts.filter((product) => {
       // Search matching
       const query = searchQuery.toLowerCase();
       const matchesSearch =
@@ -29,9 +41,26 @@ export default function ProductsClient({
       const matchesCategory =
         selectedCategory === "All" || product.category === selectedCategory;
 
-      return matchesSearch && matchesCategory;
+      const matchesWarranty = 
+        selectedWarranty === "All" || product.warranty === selectedWarranty;
+        
+      const matchesVoltage =
+        selectedVoltage === "All" || product.voltage === selectedVoltage;
+
+      return matchesSearch && matchesCategory && matchesWarranty && matchesVoltage;
     });
-  }, [initialProducts, searchQuery, selectedCategory]);
+
+    // Sort logically
+    return filtered.sort((a, b) => {
+      if (a.category !== b.category) {
+        return (a.category || "").localeCompare(b.category || "");
+      }
+      if (a.voltage !== b.voltage) {
+        return (a.voltage || "").localeCompare(b.voltage || "");
+      }
+      return (a.name || "").localeCompare(b.name || "");
+    });
+  }, [initialProducts, searchQuery, selectedCategory, selectedWarranty, selectedVoltage]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
@@ -61,7 +90,7 @@ export default function ProductsClient({
             <h4 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wider">
               Categories
             </h4>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2 mb-6">
               <li>
                 <button
                   onClick={() => setSelectedCategory("All")}
@@ -71,7 +100,7 @@ export default function ProductsClient({
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  All Products
+                  All Categories
                 </button>
               </li>
               {categories.map((cat) => (
@@ -89,6 +118,56 @@ export default function ProductsClient({
                 </li>
               ))}
             </ul>
+
+            <h4 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wider">
+              Voltage
+            </h4>
+            <div className="flex flex-wrap gap-2 mb-6">
+              <button
+                onClick={() => setSelectedVoltage("All")}
+                className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                  selectedVoltage === "All" ? "bg-brand text-white border-brand" : "bg-transparent text-muted-foreground border-border hover:border-foreground"
+                }`}
+              >
+                All
+              </button>
+              {voltageOptions.map(volt => (
+                <button
+                  key={volt}
+                  onClick={() => setSelectedVoltage(volt)}
+                  className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                    selectedVoltage === volt ? "bg-brand text-white border-brand" : "bg-transparent text-muted-foreground border-border hover:border-foreground"
+                  }`}
+                >
+                  {volt}
+                </button>
+              ))}
+            </div>
+
+            <h4 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wider">
+              Warranty
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedWarranty("All")}
+                className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                  selectedWarranty === "All" ? "bg-brand text-white border-brand" : "bg-transparent text-muted-foreground border-border hover:border-foreground"
+                }`}
+              >
+                All
+              </button>
+              {warrantyOptions.map(warr => (
+                <button
+                  key={warr}
+                  onClick={() => setSelectedWarranty(warr)}
+                  className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                    selectedWarranty === warr ? "bg-brand text-white border-brand" : "bg-transparent text-muted-foreground border-border hover:border-foreground"
+                  }`}
+                >
+                  {warr}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </aside>
@@ -119,6 +198,8 @@ export default function ProductsClient({
               onClick={() => {
                 setSearchQuery("");
                 setSelectedCategory("All");
+                setSelectedWarranty("All");
+                setSelectedVoltage("All");
               }}
               className="mt-4 text-brand font-semibold hover:underline"
             >
