@@ -30,6 +30,10 @@ export default function DealerLogin() {
         throw new Error("Invalid Email or Seller Code.");
       }
 
+      if (data.is_authorized === false) {
+        throw new Error("This account is currently inactive. Please contact support.");
+      }
+
       if (data.role === 'retailer' && data.parent_dealer_code) {
         const { data: parentDealer } = await supabase
           .from("dealers")

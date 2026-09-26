@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { Loader2, Plus, Edit2, Trash2, ArrowLeft } from "lucide-react";
+import { Loader2, Plus, Edit2, Power, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function DealerRetailersPage() {
@@ -76,9 +76,14 @@ export default function DealerRetailersPage() {
     fetchRetailers(dealer.seller_code);
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this retailer?")) {
-      await supabase.from("dealers").delete().eq("id", id);
+  const handleToggleStatus = async (id: string, currentStatus: boolean | null) => {
+    // If currentStatus is null or undefined, default it to true
+    const isActive = currentStatus === false ? false : true;
+    const newStatus = !isActive;
+    
+    const action = newStatus ? "activate" : "deactivate";
+    if (confirm(`Are you sure you want to ${action} this retailer?`)) {
+      await supabase.from("dealers").update({ is_authorized: newStatus }).eq("id", id);
       fetchRetailers(dealer.seller_code);
     }
   };
@@ -132,6 +137,7 @@ export default function DealerRetailersPage() {
                 <th className="p-4">Name</th>
                 <th className="p-4">Region</th>
                 <th className="p-4">Contact</th>
+                <th className="p-4">Status</th>
                 <th className="p-4">Actions</th>
               </tr>
             </thead>
@@ -145,9 +151,16 @@ export default function DealerRetailersPage() {
                     <div className="text-sm">{r.email}</div>
                     <div className="text-sm text-muted-foreground">{r.mobile}</div>
                   </td>
+                  <td className="p-4">
+                    <span className={`px-3 py-1 rounded text-xs font-bold uppercase tracking-wider ${r.is_authorized !== false ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                      {r.is_authorized !== false ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
                   <td className="p-4 flex gap-2">
-                    <button onClick={() => openEdit(r)} className="p-2 text-muted-foreground hover:text-brand bg-background border border-border rounded"><Edit2 size={16} /></button>
-                    <button onClick={() => handleDelete(r.id)} className="p-2 text-muted-foreground hover:text-red-500 bg-background border border-border rounded"><Trash2 size={16} /></button>
+                    <button onClick={() => openEdit(r)} className="p-2 text-muted-foreground hover:text-brand bg-background border border-border rounded" title="Edit Retailer"><Edit2 size={16} /></button>
+                    <button onClick={() => handleToggleStatus(r.id, r.is_authorized)} className={`p-2 bg-background border border-border rounded ${r.is_authorized !== false ? 'text-red-500 hover:bg-red-500/10' : 'text-green-500 hover:bg-green-500/10'}`} title={r.is_authorized !== false ? "Deactivate Retailer" : "Activate Retailer"}>
+                      <Power size={16} />
+                    </button>
                   </td>
                 </tr>
               ))}
