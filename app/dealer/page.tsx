@@ -81,6 +81,14 @@ export default function DealerDashboard() {
               </p>
             </div>
             <div className="flex items-center gap-4">
+              {dealer.role !== 'retailer' && (
+                <Link 
+                  href="/dealer/retailers" 
+                  className="flex items-center gap-2 bg-surface hover:bg-surface-hover border border-border text-foreground px-4 py-3 rounded-xl font-bold transition-colors"
+                >
+                  <Package size={20} /> Manage Retailers
+                </Link>
+              )}
               <Link 
                 href="/dealer/register-warranty" 
                 className="flex items-center gap-2 bg-brand text-white px-6 py-3 rounded-xl font-bold hover:bg-brand-dark transition-colors"
