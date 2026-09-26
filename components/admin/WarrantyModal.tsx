@@ -21,6 +21,8 @@ export default function WarrantyModal({ isOpen, onClose, registration, onSuccess
     purchase_date: "",
     invoice_number: "",
     dealer_name: "",
+    retailer_name: "",
+    retailer_location: "",
     vehicle_reg_number: "",
     vehicle_make_model: "",
     status: "",
@@ -38,6 +40,8 @@ export default function WarrantyModal({ isOpen, onClose, registration, onSuccess
         purchase_date: registration.purchase_date || "",
         invoice_number: registration.invoice_number || "",
         dealer_name: registration.dealer_name || "",
+        retailer_name: registration.retailer_name || "",
+        retailer_location: registration.retailer_location || "",
         vehicle_reg_number: registration.vehicle_reg_number || "",
         vehicle_make_model: registration.vehicle_make_model || "",
         status: registration.status || "Registered",
@@ -129,6 +133,14 @@ export default function WarrantyModal({ isOpen, onClose, registration, onSuccess
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-muted-foreground mb-1">Dealer Name</label>
               <input type="text" value={formData.dealer_name} onChange={(e) => setFormData({...formData, dealer_name: e.target.value})} className="w-full bg-background border border-border rounded p-2 text-foreground" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-muted-foreground mb-1">Retailer Name</label>
+              <input type="text" value={formData.retailer_name} onChange={(e) => setFormData({...formData, retailer_name: e.target.value})} className="w-full bg-background border border-border rounded p-2 text-foreground" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-muted-foreground mb-1">Retailer Location</label>
+              <input type="text" value={formData.retailer_location} onChange={(e) => setFormData({...formData, retailer_location: e.target.value})} className="w-full bg-background border border-border rounded p-2 text-foreground" />
             </div>
             <div>
               <label className="block text-sm font-bold text-muted-foreground mb-1">Vehicle Reg Number</label>

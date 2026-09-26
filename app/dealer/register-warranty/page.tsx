@@ -51,6 +51,8 @@ export default function DealerWarrantyRegistrationPage() {
     purchase_date: "",
     invoice_number: "",
     dealer_name: "",
+    retailer_name: "",
+    retailer_location: "",
     vehicle_reg_number: "",
     vehicle_make_model: "",
   });
@@ -108,6 +110,8 @@ export default function DealerWarrantyRegistrationPage() {
         invoice_number: formData.invoice_number,
         invoice_url: finalInvoiceUrl,
         dealer_name: dealer.name,
+        retailer_name: formData.retailer_name || null,
+        retailer_location: formData.retailer_location || null,
         seller_code: dealer.seller_code,
         region: dealer.region,
         vehicle_reg_number: formData.vehicle_reg_number.toUpperCase(),
@@ -316,6 +320,26 @@ export default function DealerWarrantyRegistrationPage() {
                     />
                   </div>
                   <div>
+                    <label className="block text-sm font-semibold text-muted-foreground mb-2">Retailer Name (Optional)</label>
+                    <input 
+                      type="text" 
+                      value={formData.retailer_name}
+                      onChange={(e) => setFormData({...formData, retailer_name: e.target.value})}
+                      className="w-full bg-background border border-border rounded p-3 text-foreground focus:outline-none focus:border-brand transition-colors" 
+                      placeholder="e.g. Battery Point" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-muted-foreground mb-2">Retailer Location (Optional)</label>
+                    <input 
+                      type="text" 
+                      value={formData.retailer_location}
+                      onChange={(e) => setFormData({...formData, retailer_location: e.target.value})}
+                      className="w-full bg-background border border-border rounded p-3 text-foreground focus:outline-none focus:border-brand transition-colors" 
+                      placeholder="e.g. Andheri West, Mumbai" 
+                    />
+                  </div>
+                  <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-muted-foreground mb-2">Upload Invoice (Image or PDF) *</label>
                     <input 
                       required
