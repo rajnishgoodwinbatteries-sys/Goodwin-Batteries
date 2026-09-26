@@ -52,6 +52,10 @@ export default function AdminDashboard() {
     fetchStats();
   }, []);
 
+  if (role === "warehouse") {
+    return null; // Will redirect via layout
+  }
+
   return (
     <div>
       <div className="mb-8">

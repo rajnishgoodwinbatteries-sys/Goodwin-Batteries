@@ -160,10 +160,36 @@ export default function WarrantySearchPage() {
                     <label className="block text-sm font-bold text-muted-foreground mb-2">Vehicle Make & Model</label>
                     <input type="text" value={vehicleMakeModel} onChange={e => setVehicleMakeModel(e.target.value)} className="w-full px-4 py-2 bg-background border border-border rounded-lg text-foreground focus:border-brand outline-none" />
                   </div>
-                  {/* Ideally fetch warranty plans dynamically, using text input for fallback for now */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-bold text-muted-foreground mb-2">Warranty Plan ID</label>
-                    <input type="text" placeholder="e.g. plan-24-months" value={warrantyPlanId} onChange={e => setWarrantyPlanId(e.target.value)} className="w-full px-4 py-2 bg-background border border-border rounded-lg text-foreground focus:border-brand outline-none" />
+                    <label className="block text-sm font-bold text-muted-foreground mb-2">Select Warranty Plan *</label>
+                    <select 
+                      required
+                      value={warrantyPlanId} 
+                      onChange={e => setWarrantyPlanId(e.target.value)} 
+                      className="w-full px-4 py-2 bg-background border border-border rounded-lg text-foreground focus:border-brand outline-none"
+                    >
+                      <option value="">-- Choose Plan --</option>
+                      {/* Show perfectly matching plans first if they exist, otherwise show all */}
+                      {result.available_plans && result.available_plans.length > 0 && (
+                        <optgroup label="Matched to Product">
+                          {result.available_plans.map((p: any) => (
+                            <option key={`avail-${p.id}`} value={p.id}>
+                              {p.warranty_months} Months ({p.free_replacement_months}F + {p.pro_rata_months}P)
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                      
+                      {result.all_plans && result.all_plans.length > 0 && (
+                        <optgroup label="All Warranty Plans">
+                          {result.all_plans.map((p: any) => (
+                            <option key={`all-${p.id}`} value={p.id}>
+                              {p.warranty_months} Months ({p.free_replacement_months}F + {p.pro_rata_months}P)
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                    </select>
                   </div>
                 </div>
 

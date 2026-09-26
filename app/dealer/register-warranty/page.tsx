@@ -5,14 +5,18 @@ import { ChevronRight, ShieldCheck, Upload, CheckCircle2, Loader2 } from "lucide
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default function WarrantyRegistrationPage() {
+export default function DealerWarrantyRegistrationPage() {
+  const router = useRouter();
+  const [dealer, setDealer] = useState<any>(null);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [warrantyId, setWarrantyId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [products, setProducts] = useState<any[]>([]);
   const [allPlans, setAllPlans] = useState<any[]>([]);
   const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
+  
   useEffect(() => {
     supabase.from('products').select('id, name, ah').eq('is_published', true).order('name').then(({ data }) => {
       if (data) setProducts(data);
@@ -24,6 +28,17 @@ export default function WarrantyRegistrationPage() {
         setAllPlans(uniquePlans);
       }
     });
+    
+    const auth = localStorage.getItem("dealer_auth");
+    if (!auth) {
+      router.push("/dealer/login");
+      return;
+    }
+    try {
+      setDealer(JSON.parse(auth));
+    } catch (e) {
+      router.push("/dealer/login");
+    }
   }, []);
 
   const [formData, setFormData] = useState({
@@ -35,8 +50,7 @@ export default function WarrantyRegistrationPage() {
     serial_number: "",
     purchase_date: "",
     invoice_number: "",
-    platform: "",
-    invoice_url: "",
+    dealer_name: "",
     vehicle_reg_number: "",
     vehicle_make_model: "",
   });
@@ -62,11 +76,13 @@ export default function WarrantyRegistrationPage() {
         expiryDate = start.toISOString().split('T')[0];
       }
       
-      let finalInvoiceUrl = formData.invoice_url;
+      if (!dealer) throw new Error("Dealer authentication lost.");
+
+      let finalInvoiceUrl = null;
       if (invoiceFile) {
         const fileExt = invoiceFile.name.split('.').pop();
         const fileName = `${generatedId}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const { error: uploadError, data } = await supabase.storage.from('invoices').upload(fileName, invoiceFile);
+        const { error: uploadError } = await supabase.storage.from('invoices').upload(fileName, invoiceFile);
         
         if (uploadError) {
           throw new Error("Failed to upload invoice file: " + uploadError.message);
@@ -77,7 +93,7 @@ export default function WarrantyRegistrationPage() {
       } else {
         throw new Error("Invoice upload is mandatory.");
       }
-      
+
       const { error } = await supabase.from('warranty_registrations').insert({
         id: generatedId,
         customer_name: formData.customer_name,
@@ -91,9 +107,9 @@ export default function WarrantyRegistrationPage() {
         warranty_expiry_date: expiryDate,
         invoice_number: formData.invoice_number,
         invoice_url: finalInvoiceUrl,
-        dealer_name: formData.platform,
-        seller_code: "DIRECT",
-        region: "Online",
+        dealer_name: dealer.name,
+        seller_code: dealer.seller_code,
+        region: dealer.region,
         vehicle_reg_number: formData.vehicle_reg_number.toUpperCase(),
         vehicle_make_model: formData.vehicle_make_model,
         status: 'Registered'
@@ -291,19 +307,13 @@ export default function WarrantyRegistrationPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-muted-foreground mb-2">Purchased From (Platform)</label>
-                    <select 
-                      required 
-                      value={formData.platform}
-                      onChange={(e) => setFormData({...formData, platform: e.target.value})}
-                      className="w-full bg-background border border-border rounded p-3 text-foreground focus:outline-none focus:border-brand transition-colors appearance-none"
-                    >
-                      <option value="">Select Platform</option>
-                      <option value="Goodwin Website">Goodwin Website</option>
-                      <option value="Amazon">Amazon</option>
-                      <option value="Flipkart">Flipkart</option>
-                      <option value="Other">Other</option>
-                    </select>
+                    <label className="block text-sm font-semibold text-muted-foreground mb-2">Dealer Name</label>
+                    <input 
+                      disabled
+                      type="text" 
+                      value={dealer?.name || "Loading..."}
+                      className="w-full bg-background border border-border rounded p-3 text-muted-foreground focus:outline-none focus:border-brand transition-colors cursor-not-allowed opacity-50 font-bold" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-muted-foreground mb-2">Upload Invoice (Image or PDF) *</label>

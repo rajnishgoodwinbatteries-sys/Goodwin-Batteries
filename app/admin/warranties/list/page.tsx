@@ -18,6 +18,9 @@ export default function AdminWarrantiesPage() {
   const [selectedClaim, setSelectedClaim] = useState<any>(null);
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false);
 
+  const [statusUpdatePrompt, setStatusUpdatePrompt] = useState<{ id: string, type: 'reg'|'claim', currentStatus: string, newStatus: string } | null>(null);
+  const [statusNote, setStatusNote] = useState("");
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -36,13 +39,37 @@ export default function AdminWarrantiesPage() {
 
   const updateRegStatus = async (id: string, currentStatus: string) => {
     const newStatus = currentStatus === 'Registered' ? 'Verified' : currentStatus === 'Verified' ? 'Rejected' : 'Registered';
-    await supabase.from("warranty_registrations").update({ status: newStatus }).eq("id", id);
-    fetchData();
+    setStatusUpdatePrompt({ id, type: 'reg', currentStatus, newStatus });
+    setStatusNote("");
   };
 
   const updateClaimStatus = async (id: string, currentStatus: string) => {
     const newStatus = currentStatus === 'Pending Review' ? 'Under Inspection' : currentStatus === 'Under Inspection' ? 'Approved' : currentStatus === 'Approved' ? 'Rejected' : 'Pending Review';
-    await supabase.from("warranty_claims").update({ status: newStatus }).eq("id", id);
+    setStatusUpdatePrompt({ id, type: 'claim', currentStatus, newStatus });
+    setStatusNote("");
+  };
+
+  const submitStatusUpdate = async () => {
+    if (!statusUpdatePrompt) return;
+    if (statusNote.trim().length < 10) {
+      alert("Note must be at least 10 characters.");
+      return;
+    }
+
+    if (statusUpdatePrompt.type === 'reg') {
+      await supabase.from("warranty_registrations").update({ 
+        status: statusUpdatePrompt.newStatus, 
+        admin_notes: statusNote 
+      }).eq("id", statusUpdatePrompt.id);
+    } else {
+      await supabase.from("warranty_claims").update({ 
+        status: statusUpdatePrompt.newStatus, 
+        admin_notes: statusNote 
+      }).eq("id", statusUpdatePrompt.id);
+    }
+    
+    setStatusUpdatePrompt(null);
+    setStatusNote("");
     fetchData();
   };
 
@@ -60,34 +87,152 @@ export default function AdminWarrantiesPage() {
     }
   };
 
+  const [filterType, setFilterType] = useState<"all" | "customers" | "dealers">("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [platformFilter, setPlatformFilter] = useState("all");
+  const [dealerFilter, setDealerFilter] = useState("all");
+
+  const filterList = (list: any[]) => {
+    return list.filter(item => {
+      // 1. Source filter
+      if (filterType === "customers") {
+        if (item.seller_code !== "DIRECT" && item.seller_code) return false;
+      }
+      if (filterType === "dealers") {
+        if (item.seller_code === "DIRECT" || !item.seller_code) return false;
+      }
+
+      // 2. Status filter
+      if (statusFilter !== "all" && item.status !== statusFilter) return false;
+
+      // 3. Platform filter
+      if (filterType === "customers" && platformFilter !== "all") {
+        if (item.dealer_name !== platformFilter) return false;
+      }
+
+      // 4. Dealer filter
+      if (filterType === "dealers" && dealerFilter !== "all") {
+        if (item.dealer_name !== dealerFilter) return false;
+      }
+
+      return true;
+    });
+  };
+
+  const filteredRegistrations = filterList(registrations);
+  const filteredClaims = filterList(claims);
+
+  // Unique Dealers for the dropdown
+  const uniqueDealers = Array.from(new Set([...registrations, ...claims].filter(i => i.seller_code && i.seller_code !== "DIRECT").map(i => i.dealer_name)));
+
   if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-brand" size={32} /></div>;
 
   return (
     <div>
-      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="mb-8 flex flex-col xl:flex-row xl:items-start justify-between gap-6">
         <div>
           <h1 className="text-3xl font-heading font-bold text-foreground">Warranties & Claims</h1>
-          <p className="text-muted-foreground">Manage product warranty registrations and service claims.</p>
+          <p className="text-muted-foreground mt-1">Manage product warranty registrations and service claims.</p>
         </div>
-        <div className="flex bg-surface p-1 rounded-xl border border-border">
-          <button 
-            onClick={() => setActiveTab("registrations")}
-            className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'registrations' ? 'bg-brand text-white' : 'text-muted-foreground hover:text-foreground'}`}
-          >
-            Registrations ({registrations.length})
-          </button>
-          <button 
-            onClick={() => setActiveTab("claims")}
-            className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'claims' ? 'bg-brand text-white' : 'text-muted-foreground hover:text-foreground'}`}
-          >
-            Claims ({claims.length})
-          </button>
+        
+        <div className="flex flex-col gap-3 w-full xl:w-auto">
+          <div className="flex bg-surface p-1 rounded-xl border border-border w-full md:w-fit self-end">
+            <button 
+              onClick={() => { setActiveTab("registrations"); setStatusFilter("all"); }}
+              className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'registrations' ? 'bg-brand text-white' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              Registrations ({registrations.length})
+            </button>
+            <button 
+              onClick={() => { setActiveTab("claims"); setStatusFilter("all"); }}
+              className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'claims' ? 'bg-brand text-white' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              Claims ({claims.length})
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 bg-surface p-4 rounded-xl border border-border">
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Source</label>
+              <select
+                value={filterType}
+                onChange={(e) => {
+                  setFilterType(e.target.value as any);
+                  setPlatformFilter("all");
+                  setDealerFilter("all");
+                }}
+                className="w-full bg-background border border-border text-foreground px-3 py-2 rounded-lg focus:outline-none focus:border-brand text-sm"
+              >
+                <option value="all">All Sources</option>
+                <option value="customers">Direct Customers</option>
+                <option value="dealers">Dealers Only</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Status</label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full bg-background border border-border text-foreground px-3 py-2 rounded-lg focus:outline-none focus:border-brand text-sm"
+              >
+                <option value="all">All Statuses</option>
+                {activeTab === 'registrations' ? (
+                  <>
+                    <option value="Registered">Registered</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Rejected">Rejected</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="Pending Review">Pending Review</option>
+                    <option value="Under Inspection">Under Inspection</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                  </>
+                )}
+              </select>
+            </div>
+
+            {filterType === "customers" && (
+              <div className="md:col-span-2">
+                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Platform</label>
+                <select
+                  value={platformFilter}
+                  onChange={(e) => setPlatformFilter(e.target.value)}
+                  className="w-full bg-background border border-border text-foreground px-3 py-2 rounded-lg focus:outline-none focus:border-brand text-sm"
+                >
+                  <option value="all">All Platforms</option>
+                  <option value="Goodwin Website">Goodwin Website</option>
+                  <option value="Amazon">Amazon</option>
+                  <option value="Flipkart">Flipkart</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            )}
+
+            {filterType === "dealers" && (
+              <div className="md:col-span-2">
+                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Dealer Name</label>
+                <select
+                  value={dealerFilter}
+                  onChange={(e) => setDealerFilter(e.target.value)}
+                  className="w-full bg-background border border-border text-foreground px-3 py-2 rounded-lg focus:outline-none focus:border-brand text-sm"
+                >
+                  <option value="all">All Dealers</option>
+                  {uniqueDealers.map(dealerName => (
+                    <option key={dealerName} value={dealerName}>{dealerName}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {activeTab === "registrations" && (
         <div className="grid grid-cols-1 gap-4">
-          {registrations.map((reg) => (
+          {filteredRegistrations.map((reg) => (
             <div key={reg.id} className="bg-surface border border-border rounded-xl p-6 shadow-sm hover:border-brand/30 transition-colors">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4 pb-4 border-b border-border">
                 <div>
@@ -153,7 +298,15 @@ export default function AdminWarrantiesPage() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mb-1">Purchase Date</p>
-                  <p className="text-foreground">{reg.purchase_date}</p>
+                  <p className="font-mono text-foreground">{reg.purchase_date}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mb-1">Invoice</p>
+                  {reg.invoice_url ? (
+                    <a href={reg.invoice_url} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline font-bold text-sm">View Invoice</a>
+                  ) : (
+                    <p className="text-muted-foreground text-sm">Not provided</p>
+                  )}
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mb-1">Invoice No.</p>
@@ -163,7 +316,7 @@ export default function AdminWarrantiesPage() {
             </div>
           ))}
 
-          {registrations.length === 0 && (
+          {filteredRegistrations.length === 0 && (
             <div className="bg-surface border border-border rounded-xl p-12 text-center text-muted-foreground">
               <ShieldCheck size={48} className="mx-auto mb-4 opacity-20" />
               <p>No warranty registrations found.</p>
@@ -174,7 +327,7 @@ export default function AdminWarrantiesPage() {
 
       {activeTab === "claims" && (
         <div className="grid grid-cols-1 gap-4">
-          {claims.map((claim) => (
+          {filteredClaims.map((claim) => (
             <div key={claim.id} className="bg-surface border border-border rounded-xl p-6 shadow-sm hover:border-brand/30 transition-colors">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4 pb-4 border-b border-border">
                 <div>
@@ -239,7 +392,7 @@ export default function AdminWarrantiesPage() {
             </div>
           ))}
 
-          {claims.length === 0 && (
+          {filteredClaims.length === 0 && (
             <div className="bg-surface border border-border rounded-xl p-12 text-center text-muted-foreground">
               <AlertTriangle size={48} className="mx-auto mb-4 opacity-20" />
               <p>No warranty claims found.</p>
@@ -261,6 +414,39 @@ export default function AdminWarrantiesPage() {
         claim={selectedClaim}
         onSuccess={fetchData}
       />
+
+      {statusUpdatePrompt && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in">
+          <div className="bg-surface border border-border w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+            <h3 className="text-xl font-bold text-foreground mb-4">Confirm Status Update</h3>
+            <p className="text-muted-foreground mb-4">
+              You are updating this {statusUpdatePrompt.type === 'reg' ? 'registration' : 'claim'} to <span className="font-bold text-foreground">{statusUpdatePrompt.newStatus}</span>.
+            </p>
+            <label className="block text-sm font-bold text-muted-foreground mb-2">Mandatory Admin Note (Min 10-15 chars)</label>
+            <textarea
+              className="w-full bg-background border border-border rounded-lg p-3 text-foreground focus:outline-none focus:border-brand h-24 mb-6"
+              placeholder="E.g. Verified purchase details, approved."
+              value={statusNote}
+              onChange={(e) => setStatusNote(e.target.value)}
+            />
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setStatusUpdatePrompt(null)} 
+                className="flex-1 bg-surface border border-border py-3 rounded-lg font-bold text-foreground hover:bg-background transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={submitStatusUpdate} 
+                disabled={statusNote.trim().length < 10}
+                className="flex-1 bg-brand text-white py-3 rounded-lg font-bold transition-colors disabled:opacity-50"
+              >
+                Confirm Update
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -92,41 +92,40 @@ ALTER TABLE battery_serials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE battery_replacements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
 
+-- Security definer functions to prevent infinite recursion
+CREATE OR REPLACE FUNCTION is_admin() RETURNS boolean AS $$
+BEGIN
+  RETURN EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin', 'admin'));
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION is_dealer() RETURNS boolean AS $$
+BEGIN
+  RETURN EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'dealer');
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Policies for user_profiles
 CREATE POLICY "Users can view their own profile" ON user_profiles FOR SELECT USING (auth.uid() = id);
-CREATE POLICY "Admins can view all profiles" ON user_profiles FOR SELECT USING (
-  EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin', 'admin'))
-);
-CREATE POLICY "Admins can insert profiles" ON user_profiles FOR INSERT WITH CHECK (
-  EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin', 'admin'))
-);
-CREATE POLICY "Admins can update profiles" ON user_profiles FOR UPDATE USING (
-  EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin', 'admin'))
-);
+CREATE POLICY "Admins can view all profiles" ON user_profiles FOR SELECT USING (is_admin());
+CREATE POLICY "Admins can insert profiles" ON user_profiles FOR INSERT WITH CHECK (is_admin());
+CREATE POLICY "Admins can update profiles" ON user_profiles FOR UPDATE USING (is_admin());
 
 -- Policies for warranty_plans
 CREATE POLICY "Enable read access for all authenticated users" ON warranty_plans FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY "Admins can full access warranty plans" ON warranty_plans FOR ALL USING (
-  EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin', 'admin'))
-);
+CREATE POLICY "Admins can full access warranty plans" ON warranty_plans FOR ALL USING (is_admin());
 
 -- Policies for battery_serials
 CREATE POLICY "Enable read for public by serial_number" ON battery_serials FOR SELECT USING (true);
 CREATE POLICY "Authenticated can read battery serials" ON battery_serials FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY "Admins can full access battery serials" ON battery_serials FOR ALL USING (
-  EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin', 'admin'))
-);
+CREATE POLICY "Admins can full access battery serials" ON battery_serials FOR ALL USING (is_admin());
 -- Dealers can update battery serial status (e.g. from INVENTORY to SOLD)
-CREATE POLICY "Dealers can update battery serials" ON battery_serials FOR UPDATE USING (
-  EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'dealer')
-);
+CREATE POLICY "Dealers can update battery serials" ON battery_serials FOR UPDATE USING (is_dealer());
 
 -- Policies for warranty_registrations (replacing the generic one)
 DROP POLICY IF EXISTS "Enable full access for authenticated users" ON warranty_registrations;
 
-CREATE POLICY "Admins have full access to warranty_registrations" ON warranty_registrations FOR ALL USING (
-  EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin', 'admin'))
-);
+CREATE POLICY "Admins have full access to warranty_registrations" ON warranty_registrations FOR ALL USING (is_admin());
 
 CREATE POLICY "Enable read for public by serial_number" ON warranty_registrations FOR SELECT USING (true);
 
@@ -145,9 +144,7 @@ CREATE POLICY "Dealers can update their own registrations" ON warranty_registrat
 -- Policies for warranty_claims (replacing the generic one)
 DROP POLICY IF EXISTS "Enable full access for authenticated users" ON warranty_claims;
 
-CREATE POLICY "Admins have full access to warranty_claims" ON warranty_claims FOR ALL USING (
-  EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin', 'admin'))
-);
+CREATE POLICY "Admins have full access to warranty_claims" ON warranty_claims FOR ALL USING (is_admin());
 
 CREATE POLICY "Dealers can view their own claims" ON warranty_claims FOR SELECT USING (
   dealer_id = (SELECT dealer_id FROM user_profiles WHERE id = auth.uid())
@@ -162,7 +159,5 @@ CREATE POLICY "Dealers can update their own claims" ON warranty_claims FOR UPDAT
 );
 
 -- Policies for audit_logs
-CREATE POLICY "Admins can view audit_logs" ON audit_logs FOR SELECT USING (
-  EXISTS (SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role IN ('super_admin', 'admin'))
-);
+CREATE POLICY "Admins can view audit_logs" ON audit_logs FOR SELECT USING (is_admin());
 CREATE POLICY "Authenticated can insert audit_logs" ON audit_logs FOR INSERT WITH CHECK (auth.role() = 'authenticated');

@@ -17,6 +17,18 @@ export async function checkBatteryStatus(serialNumber: string) {
     return { status: "NOT_FOUND", message: "Battery serial number not found in Goodwin inventory." };
   }
 
+  // 1b. Fetch all available warranty plans
+  const { data: plans } = await supabase
+    .from("warranty_plans")
+    .select("*")
+    .eq("active", true);
+
+  const available_plans = plans?.filter(p => p.product_id === battery.product_id) || [];
+  
+  // Get unique plans for fallback/admin override
+  const all_plans = Array.from(new Map(plans?.map(p => [p.warranty_months, p]) || []).values());
+  all_plans.sort((a: any, b: any) => a.warranty_months - b.warranty_months);
+
   // 2. Check if it's already registered
   const { data: registration, error: regError } = await supabase
     .from("warranty_registrations")
@@ -28,7 +40,7 @@ export async function checkBatteryStatus(serialNumber: string) {
     .single();
 
   if (!registration || regError) {
-    return { status: "NOT_REGISTERED", battery };
+    return { status: "NOT_REGISTERED", battery, available_plans, all_plans };
   }
 
   // 3. Determine if dealer is authorized to view details
@@ -41,7 +53,9 @@ export async function checkBatteryStatus(serialNumber: string) {
     status: "REGISTERED",
     battery,
     registration: isAuthorized ? registration : { ...registration, customer_name: "MASKED", mobile: "MASKED" },
-    isAuthorized
+    isAuthorized,
+    available_plans,
+    all_plans
   };
 }
 

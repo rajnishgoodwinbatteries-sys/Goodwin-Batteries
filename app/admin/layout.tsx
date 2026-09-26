@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import { LayoutDashboard, Package, MapPin, MessageSquare, ShieldCheck, Settings, LogOut, Car, HelpCircle, Loader2 } from "lucide-react";
+import { LayoutDashboard, Package, MapPin, MessageSquare, ShieldCheck, Settings, LogOut, Car, HelpCircle, Loader2, Printer, FileText } from "lucide-react";
 import clsx from "clsx";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -28,6 +28,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           .single();
         if (profile) {
           setUserRole(profile.role);
+          if (profile.role === "warehouse" && pathname === "/admin") {
+            router.push("/admin/serial-generator");
+          }
         }
       }
       setLoading(false);
@@ -47,6 +50,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           .single();
         if (profile) {
           setUserRole(profile.role);
+          if (profile.role === "warehouse" && pathname === "/admin") {
+            router.push("/admin/serial-generator");
+          }
         }
       }
     });
@@ -85,6 +91,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: "Enquiries", href: "/admin/enquiries", icon: <MessageSquare size={20} />, roles: ["super_admin", "admin", "dealer"] },
     { label: "Warranties", href: "/admin/warranties", icon: <ShieldCheck size={20} />, roles: ["super_admin", "admin", "dealer"] },
     { label: "Warranty Plans", href: "/admin/warranty-plans", icon: <Package size={20} />, roles: ["super_admin", "admin", "dealer"] },
+    { label: "Factory Stickers", href: "/admin/serial-generator", icon: <Printer size={20} />, roles: ["super_admin", "admin", "warehouse"] },
+    { label: "Sticker Batches", href: "/admin/sticker-batches", icon: <FileText size={20} />, roles: ["super_admin", "admin", "warehouse"] },
     { label: "Settings", href: "/admin/settings", icon: <Settings size={20} />, roles: ["super_admin", "admin", "dealer"] },
   ].filter(item => item.roles.includes(userRole));
 

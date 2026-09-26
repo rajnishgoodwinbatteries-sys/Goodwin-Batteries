@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight, Search, Activity, Package, Wrench, CheckCircle2, Loader2 } from "lucide-react";
+import { ChevronRight, Search, Activity, Package, Wrench, CheckCircle2, Loader2, FileText } from "lucide-react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
@@ -22,7 +22,7 @@ export default function WarrantyStatusPage() {
       let { data: claimData } = await supabase
         .from('warranty_claims')
         .select('*')
-        .or(`id.eq.${upperQuery},serial_number.eq.${upperQuery}`)
+        .or(`id.eq.${upperQuery},serial_number.eq.${upperQuery},mobile.eq.${upperQuery}`)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -31,7 +31,7 @@ export default function WarrantyStatusPage() {
       let { data: regData } = await supabase
         .from('warranty_registrations')
         .select('*')
-        .or(`id.eq.${upperQuery},serial_number.eq.${upperQuery}`)
+        .or(`id.eq.${upperQuery},serial_number.eq.${upperQuery},mobile.eq.${upperQuery}`)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -155,7 +155,13 @@ export default function WarrantyStatusPage() {
                         <div className="absolute -left-[11px] top-0 w-5 h-5 rounded-full bg-brand border-4 border-surface" />
                         <h5 className="font-bold text-foreground">Warranty Registered</h5>
                         <p className="text-sm text-muted-foreground mb-1">{new Date(result.registration.created_at).toLocaleString()}</p>
-                        <p className="text-sm text-muted-foreground">Battery Serial {result.registration.serial_number} successfully registered to {result.registration.customer_name}.</p>
+                        <p className="text-sm text-muted-foreground mb-3">Battery Serial {result.registration.serial_number} successfully registered to {result.registration.customer_name}.</p>
+                        
+                        {result.registration.invoice_url && (
+                          <a href={result.registration.invoice_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-surface border border-border px-4 py-2 rounded-lg text-brand font-bold text-sm hover:bg-surface-hover transition-colors">
+                            <FileText size={16} /> View Original Invoice
+                          </a>
+                        )}
                       </div>
                     )}
                     

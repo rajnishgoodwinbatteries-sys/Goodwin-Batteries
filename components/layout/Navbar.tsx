@@ -16,6 +16,7 @@ const navLinks = [
   { name: "Why Goodwin", href: "/why-goodwin" },
   { name: "About", href: "/about" },
   { name: "Support", href: "/support" },
+  { name: "Dealer", href: "/dealer/login" },
   { name: "Admin", href: "/admin/login" },
 ];
 
