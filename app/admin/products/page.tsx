@@ -44,6 +44,7 @@ export default function AdminProductsPage() {
         name: p.name,
         slug: p.slug,
         series: p.series,
+        category_id: p.category,
         voltage: p.voltage,
         ah: (p as any).ah, 
         warranty: (p as any).warranty_options ? (p as any).warranty_options.join(" / ") : (p as any).warranty,
