@@ -49,7 +49,7 @@ export default function PrintFactoryBatchPage() {
   const labelsToPrint: string[] = [];
   for (let i = batch.start_sequence; i <= batch.end_sequence; i++) {
     const seqStr = String(i).padStart(5, '0');
-    labelsToPrint.push(`${batch.prefix_key}-${seqStr}`);
+    labelsToPrint.push(`\${batch.prefix_key}-\${seqStr}`);
   }
 
   const handlePrint = () => {
@@ -95,41 +95,60 @@ export default function PrintFactoryBatchPage() {
 				<form corner="1" hole="0" holesize="0" order="LTH"/>
 			</labelformat>
 			<labelobjects>
-				<drawobj type="drawtext" id="1" name="" left="100" top="100" right="2000" bottom="400" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
-					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
-					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
-					<font facename="Arial" style="1" charset="1" height="300" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
-				</drawobj>
-				<drawobj type="drawtext" id="2" name="" left="100" top="400" right="2000" bottom="600" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
-					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
-					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
-					<font facename="Arial" style="0" charset="1" height="150" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
-				</drawobj>
-				<drawobj type="drawtext" id="3" name="" left="2200" top="100" right="3700" bottom="500" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+				<!-- GOODWIN BATTERIES -->
+				<drawobj type="drawtext" id="1" name="" left="100" top="100" right="1800" bottom="450" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
 					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
 					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
 					<font facename="Arial" style="1" charset="1" height="250" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
 				</drawobj>
-				<drawobj type="drawtext" id="5" name="" left="1200" top="700" right="3700" bottom="900" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+				<!-- Your Trusted Power Source -->
+				<drawobj type="drawtext" id="2" name="" left="100" top="450" right="1800" bottom="650" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
 					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
 					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
-					<font facename="Arial" style="0" charset="1" height="200" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
+					<font facename="Arial" style="0" charset="1" height="120" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
 				</drawobj>
-				<drawobj type="drawtext" id="6" name="" left="1200" top="950" right="3700" bottom="1150" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+				<!-- Model -->
+				<drawobj type="drawtext" id="3" name="" left="1800" top="100" right="3700" bottom="450" rotation="none" style="0" halign="2" valign="0" tpalign="0" tvalign="0">
 					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
 					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
-					<font facename="Arial" style="0" charset="1" height="200" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
+					<font facename="Arial" style="1" charset="1" height="200" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
 				</drawobj>
-				<drawobj type="drawbarcode" id="7" name="" left="1200" top="1300" right="3700" bottom="2300" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+				<!-- Line -->
+				<drawobj type="drawtext" id="4" name="" left="100" top="650" right="3700" bottom="850" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
 					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
-					<barcode type="1" />
+					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
+					<font facename="Arial" style="1" charset="1" height="150" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
 				</drawobj>
-				<drawobj type="drawbarcode" id="8" name="" left="100" top="700" right="1100" bottom="1700" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+				<!-- QR Code -->
+				<drawobj type="drawbarcode" id="5" name="" left="100" top="800" right="1100" bottom="1800" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
 					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
 					<barcode type="31" />
 				</drawobj>
+				<!-- Barcode -->
+				<drawobj type="drawbarcode" id="6" name="" left="1300" top="900" right="3700" bottom="1700" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
+					<barcode type="1" />
+				</drawobj>
+				<!-- MFG -->
+				<drawobj type="drawtext" id="7" name="" left="100" top="1900" right="1500" bottom="2100" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
+					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
+					<font facename="Arial" style="1" charset="1" height="150" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
+				</drawobj>
+				<!-- WTY -->
+				<drawobj type="drawtext" id="8" name="" left="100" top="2150" right="1500" bottom="2350" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
+					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
+					<font facename="Arial" style="1" charset="1" height="150" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
+				</drawobj>
+				<!-- Serial Text -->
+				<drawobj type="drawtext" id="9" name="" left="1500" top="1900" right="3700" bottom="2200" rotation="none" style="0" halign="2" valign="0" tpalign="0" tvalign="0">
+					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
+					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
+					<font facename="Arial" style="1" charset="1" height="150" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
+				</drawobj>
 			</labelobjects>
-			<objvarlink link=":1,101:2,102:3,103:5,105:6,106:7,107:8,108"/>
+			<objvarlink link=":1,101:2,102:3,103:4,104:5,105:6,106:7,107:8,108:9,109"/>
 		</labellayer>
 		<variables>
 			<variable type="constant" id="101" name="" shareid="" data="R09PRFdJTiBCQVRURVJJRVM=" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
@@ -144,19 +163,27 @@ export default function PrintFactoryBatchPage() {
 				<limit filled="left" fillchar="0" cutout="right"/>
 				<cut/>
 			</variable>
-			<variable type="constant" id="105" name="" shareid="" data="\${mfgData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
+			<variable type="constant" id="104" name="" shareid="" data="X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18=" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
 				<limit filled="left" fillchar="0" cutout="right"/>
 				<cut/>
 			</variable>
-			<variable type="constant" id="106" name="" shareid="" data="\${warrantyData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
+			<variable type="constant" id="105" name="" shareid="" data="\${qrData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
 				<limit filled="left" fillchar="0" cutout="right"/>
 				<cut/>
 			</variable>
-			<variable type="constant" id="107" name="" shareid="" data="\${serialData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
+			<variable type="constant" id="106" name="" shareid="" data="\${serialData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
 				<limit filled="left" fillchar="0" cutout="right"/>
 				<cut/>
 			</variable>
-			<variable type="constant" id="108" name="" shareid="" data="\${qrData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
+			<variable type="constant" id="107" name="" shareid="" data="\${mfgData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
+			<variable type="constant" id="108" name="" shareid="" data="\${warrantyData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
+			<variable type="constant" id="109" name="" shareid="" data="\${serialData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
 				<limit filled="left" fillchar="0" cutout="right"/>
 				<cut/>
 			</variable>
@@ -173,23 +200,24 @@ export default function PrintFactoryBatchPage() {
               const base64Encode = (str: string) => typeof btoa !== 'undefined' ? btoa(str) : Buffer.from(str).toString('base64');
               
               const modelData = base64Encode(batch.product_name);
-              const mfgDataText = base64Encode(`Mfg: ${batch.manufacturing_date}`);
-              const warrantyDataText = base64Encode(`Warranty: ${batch.warranty_duration}`);
+              const mfgDataText = base64Encode(`Mfg: \${batch.manufacturing_date}`);
+              const warrantyDataText = base64Encode(`Warranty: \${batch.warranty_duration}`);
               const serialData = base64Encode(labelsToPrint[0] || 'SAMPLE-123');
-              const qrData = base64Encode(`https://goodwinbatteries.in/warranty?serial=${labelsToPrint[0] || 'SAMPLE-123'}`);
+              const qrData = base64Encode(`https://goodwinbatteries.in/warranty?serial=\${labelsToPrint[0] || 'SAMPLE-123'}`);
               
               const finalLsdx = lsdxTemplate
-                .replace('${modelData}', modelData)
-                .replace('${mfgData}', mfgDataText)
-                .replace('${warrantyData}', warrantyDataText)
-                .replace('${serialData}', serialData)
-                .replace('${qrData}', qrData);
+                .replace('\${modelData}', modelData)
+                .replace('\${qrData}', qrData)
+                .replace('\${serialData}', serialData) // replaces first occurrence (barcode)
+                .replace('\${serialData}', serialData) // replaces second occurrence (text)
+                .replace('\${mfgData}', mfgDataText)
+                .replace('\${warrantyData}', warrantyDataText);
                 
               const blob = new Blob([finalLsdx], { type: 'application/xml' });
               const url = window.URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
-              a.download = `Batch_${batchId}.lsdx`;
+              a.download = `Batch_\${batchId}.lsdx`;
               a.click();
               window.URL.revokeObjectURL(url);
             }}
@@ -210,7 +238,7 @@ export default function PrintFactoryBatchPage() {
       {/* Printable area */}
       <style dangerouslySetInnerHTML={{__html: `
         @page {
-          size: ${width}mm ${height}mm;
+          size: \${width}mm \${height}mm;
           margin: 0;
         }
         @media print {
