@@ -25,7 +25,7 @@ export default function MRPLabel({
   widthMm = 75,
   heightMm = 50
 }: MRPLabelProps) {
-  const verifyUrl = `https://goodwinbatteries.in/product/${productModel}`;
+  const verifyUrl = `https://goodwinbatteries.in/warranty`;
 
   return (
     <div 
@@ -99,11 +99,11 @@ export default function MRPLabel({
           />
           
           {serialNumber && (
-            <div className="mt-[2mm]" style={{ transform: 'scale(0.5)', transformOrigin: 'right bottom' }}>
+            <div className="mt-[2mm] w-full flex-grow min-h-0 flex items-center justify-end overflow-hidden [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[15mm] [&>svg]:max-w-max">
               <Barcode 
                 value={serialNumber} 
                 format="CODE128"
-                width={1.5}
+                width={1.2}
                 height={35}
                 displayValue={true}
                 fontSize={16}
