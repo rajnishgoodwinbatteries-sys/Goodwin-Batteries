@@ -31,16 +31,10 @@ export default function FactoryLabel({
         padding: '1.5mm',
         overflow: 'hidden',
         display: 'flex',
-        flexDirection: 'column',
-        textRendering: 'optimizeSpeed',
-        WebkitFontSmoothing: 'none',
-        imageRendering: 'pixelated',
-        filter: 'grayscale(100%) contrast(1000%)'
+        display: 'flex',
+        flexDirection: 'column'
       }}
     >
-      <style dangerouslySetInnerHTML={{__html: `
-        .factory-label-container svg { shape-rendering: crispEdges; }
-      `}} />
       {/* Header */}
       <div className="flex justify-between items-start border-b border-black pb-[0.5mm] mb-[1mm]">
         <div className="flex flex-col">
@@ -86,7 +80,7 @@ export default function FactoryLabel({
               />
             </div>
           </div>
-          <div className="font-extrabold text-right mt-[0.5mm] tracking-tight shrink-0 w-full" style={{ fontSize: '1.2mm', lineHeight: '1.1', wordBreak: 'break-all' }}>
+          <div className="font-bold text-right mt-[0.5mm] tracking-tighter shrink-0 w-full" style={{ fontSize: '1.1mm', lineHeight: '1.1', wordBreak: 'break-all' }}>
             {serialNumber}
           </div>
         </div>
