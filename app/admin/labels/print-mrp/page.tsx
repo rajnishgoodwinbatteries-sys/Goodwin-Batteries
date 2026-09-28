@@ -92,21 +92,17 @@ export default function PrintMRPPage() {
             margin: 0;
           }
           body {
-            visibility: hidden;
             margin: 0;
             padding: 0;
             background: white;
           }
-          .print-page-wrapper, .print-page-wrapper * {
-            visibility: visible;
+          /* Hide non-printable controls inside this page */
+          .print\\:hidden {
+            display: none !important;
           }
           .print-page-wrapper {
-            position: absolute;
-            left: 0;
-            top: 0;
             margin: 0;
             padding: 0;
-            width: 100%;
           }
           /* Remove gaps between pages/labels */
           .mrp-label-container {

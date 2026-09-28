@@ -98,9 +98,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ].filter(item => item.roles.includes(userRole));
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background print:bg-white print:block">
       {/* Sidebar */}
-      <aside className="w-64 bg-surface border-r border-border flex flex-col fixed h-full z-20">
+      <aside className="w-64 bg-surface border-r border-border flex flex-col fixed h-full z-20 print:hidden">
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-brand text-white font-bold flex items-center justify-center rounded">G</div>
@@ -137,8 +137,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-8">
-        <div className="max-w-7xl mx-auto">
+      <main className="flex-1 ml-64 p-8 print:ml-0 print:p-0">
+        <div className="max-w-7xl mx-auto print:max-w-none print:mx-0">
           {children}
         </div>
       </main>
