@@ -46,7 +46,7 @@ export default function PrintFactoryBatchPage() {
   }
 
   // Reconstruct serial numbers from batch
-  const labelsToPrint = [];
+  const labelsToPrint: string[] = [];
   for (let i = batch.start_sequence; i <= batch.end_sequence; i++) {
     const seqStr = String(i).padStart(5, '0');
     labelsToPrint.push(`${batch.prefix_key}-${seqStr}`);
