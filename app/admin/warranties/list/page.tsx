@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
-import { Loader2, Calendar, ShieldCheck, AlertTriangle, Edit2, Trash2 } from "lucide-react";
+import { Loader2, Calendar, ShieldCheck, AlertTriangle, Edit2, Trash2, Download, Upload, CheckSquare, Square, SortDesc } from "lucide-react";
 import WarrantyModal from "@/components/admin/WarrantyModal";
 import ClaimModal from "@/components/admin/ClaimModal";
 
@@ -21,6 +21,11 @@ export default function AdminWarrantiesPage() {
   const [statusUpdatePrompt, setStatusUpdatePrompt] = useState<{ id: string, type: 'reg'|'claim', currentStatus: string, newStatus: string } | null>(null);
   const [statusNote, setStatusNote] = useState("");
 
+  // New Features State
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [sortOrder, setSortOrder] = useState<string>("newest");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -34,6 +39,7 @@ export default function AdminWarrantiesPage() {
     
     if (regRes.data) setRegistrations(regRes.data);
     if (claimsRes.data) setClaims(claimsRes.data);
+    setSelectedIds([]);
     setLoading(false);
   }
 
@@ -56,73 +62,182 @@ export default function AdminWarrantiesPage() {
       return;
     }
 
-    if (statusUpdatePrompt.type === 'reg') {
-      await supabase.from("warranty_registrations").update({ 
-        status: statusUpdatePrompt.newStatus, 
-        admin_notes: statusNote 
-      }).eq("id", statusUpdatePrompt.id);
-    } else {
-      await supabase.from("warranty_claims").update({ 
-        status: statusUpdatePrompt.newStatus, 
-        admin_notes: statusNote 
-      }).eq("id", statusUpdatePrompt.id);
-    }
+    const table = statusUpdatePrompt.type === 'reg' ? "warranty_registrations" : "warranty_claims";
+    await supabase.from(table).update({ 
+      status: statusUpdatePrompt.newStatus, 
+      admin_notes: statusNote 
+    }).eq("id", statusUpdatePrompt.id);
     
     setStatusUpdatePrompt(null);
     setStatusNote("");
     fetchData();
   };
 
-  const deleteReg = async (id: string) => {
-    if (confirm("Are you sure you want to delete this warranty registration?")) {
-      await supabase.from("warranty_registrations").delete().eq("id", id);
+  const deleteSingle = async (id: string) => {
+    if (confirm("Are you sure you want to delete this record?")) {
+      const table = activeTab === "registrations" ? "warranty_registrations" : "warranty_claims";
+      await supabase.from(table).delete().eq("id", id);
       fetchData();
     }
   };
 
-  const deleteClaim = async (id: string) => {
-    if (confirm("Are you sure you want to delete this warranty claim?")) {
-      await supabase.from("warranty_claims").delete().eq("id", id);
+  const deleteSelected = async () => {
+    if (selectedIds.length === 0) return;
+    if (confirm(`Are you sure you want to delete ${selectedIds.length} selected records?`)) {
+      const table = activeTab === "registrations" ? "warranty_registrations" : "warranty_claims";
+      await supabase.from(table).delete().in("id", selectedIds);
       fetchData();
     }
+  };
+
+  const toggleSelect = (id: string) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(i => i !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
+    }
+  };
+
+  const toggleSelectAll = (list: any[]) => {
+    if (selectedIds.length === list.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(list.map(i => i.id));
+    }
+  };
+
+  const handleExportCSV = (list: any[], filename: string) => {
+    if (list.length === 0) return;
+    const keys = Object.keys(list[0]);
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += keys.join(",") + "\n";
+    list.forEach(row => {
+      const values = keys.map(k => {
+        const val = row[k] === null || row[k] === undefined ? "" : String(row[k]);
+        return `"${val.replace(/"/g, '""')}"`;
+      });
+      csvContent += values.join(",") + "\n";
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleImportCSV = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const text = event.target?.result as string;
+      if (!text) return;
+      
+      const rows = text.split("\n").filter(r => r.trim());
+      if (rows.length < 2) {
+        alert("CSV file is empty or missing headers.");
+        return;
+      }
+      
+      const headers = rows[0].split(",").map(h => h.trim().replace(/"/g, ''));
+      const dataToInsert = [];
+      
+      for (let i = 1; i < rows.length; i++) {
+        // Simple CSV parser that respects quotes (basic)
+        const rowData = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+        if (!rowData) continue;
+        const record: any = {};
+        headers.forEach((h, index) => {
+          if (rowData[index]) {
+            record[h] = rowData[index].replace(/(^"|"$)/g, '').trim();
+          }
+        });
+        if (Object.keys(record).length > 0) {
+          // Remove ID so it gets auto-generated
+          delete record.id;
+          dataToInsert.push(record);
+        }
+      }
+      
+      if (dataToInsert.length > 0) {
+        setLoading(true);
+        const table = activeTab === "registrations" ? "warranty_registrations" : "warranty_claims";
+        const { error } = await supabase.from(table).insert(dataToInsert);
+        if (error) {
+          alert("Import failed: " + error.message);
+        } else {
+          alert(`Successfully imported ${dataToInsert.length} records.`);
+          fetchData();
+        }
+        setLoading(false);
+      }
+    };
+    reader.readAsText(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const [filterType, setFilterType] = useState<"all" | "customers" | "dealers">("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [platformFilter, setPlatformFilter] = useState("all");
   const [dealerFilter, setDealerFilter] = useState("all");
+  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [productFilter, setProductFilter] = useState("all");
 
-  const filterList = (list: any[]) => {
-    return list.filter(item => {
-      // 1. Source filter
+  const filterAndSortList = (list: any[]) => {
+    const filtered = list.filter(item => {
       if (filterType === "customers") {
         if (item.seller_code !== "DIRECT" && item.seller_code) return false;
       }
       if (filterType === "dealers") {
         if (item.seller_code === "DIRECT" || !item.seller_code) return false;
       }
-
-      // 2. Status filter
       if (statusFilter !== "all" && item.status !== statusFilter) return false;
-
-      // 3. Platform filter
       if (filterType === "customers" && platformFilter !== "all") {
         if (item.dealer_name !== platformFilter) return false;
       }
-
-      // 4. Dealer filter
       if (filterType === "dealers" && dealerFilter !== "all") {
         if (item.dealer_name !== dealerFilter) return false;
       }
-
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        const matchesName = (item.customer_name || "").toLowerCase().includes(term);
+        const matchesPhone = (item.mobile || "").toLowerCase().includes(term);
+        const matchesSerial = (item.serial_number || "").toLowerCase().includes(term);
+        const matchesEmail = (item.email || "").toLowerCase().includes(term);
+        if (!matchesName && !matchesPhone && !matchesSerial && !matchesEmail) return false;
+      }
+      if (dateFrom) {
+        if (new Date(item.created_at) < new Date(dateFrom)) return false;
+      }
+      if (dateTo) {
+         const end = new Date(dateTo);
+         end.setHours(23, 59, 59, 999);
+         if (new Date(item.created_at) > end) return false;
+      }
+      if (productFilter !== "all" && item.battery_model_id !== productFilter) return false;
+      
       return true;
+    });
+
+    return filtered.sort((a, b) => {
+      if (sortOrder === "newest") return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      if (sortOrder === "oldest") return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      if (sortOrder === "name_asc") return (a.customer_name || "").localeCompare(b.customer_name || "");
+      if (sortOrder === "name_desc") return (b.customer_name || "").localeCompare(a.customer_name || "");
+      return 0;
     });
   };
 
-  const filteredRegistrations = filterList(registrations);
-  const filteredClaims = filterList(claims);
+  const filteredRegistrations = filterAndSortList(registrations);
+  const filteredClaims = filterAndSortList(claims);
+  const currentList = activeTab === "registrations" ? filteredRegistrations : filteredClaims;
 
-  // Unique Dealers for the dropdown
   const uniqueDealers = Array.from(new Set([...registrations, ...claims].filter(i => i.seller_code && i.seller_code !== "DIRECT").map(i => i.dealer_name)));
 
   if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin text-brand" size={32} /></div>;
@@ -136,22 +251,50 @@ export default function AdminWarrantiesPage() {
         </div>
         
         <div className="flex flex-col gap-3 w-full xl:w-auto">
-          <div className="flex bg-surface p-1 rounded-xl border border-border w-full md:w-fit self-end">
-            <button 
-              onClick={() => { setActiveTab("registrations"); setStatusFilter("all"); }}
-              className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'registrations' ? 'bg-brand text-white' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              Registrations ({registrations.length})
-            </button>
-            <button 
-              onClick={() => { setActiveTab("claims"); setStatusFilter("all"); }}
-              className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'claims' ? 'bg-brand text-white' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              Claims ({claims.length})
-            </button>
+          <div className="flex flex-col md:flex-row gap-3">
+            <div className="flex bg-surface p-1 rounded-xl border border-border w-full md:w-fit self-end">
+              <button 
+                onClick={() => { setActiveTab("registrations"); setStatusFilter("all"); setSelectedIds([]); }}
+                className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'registrations' ? 'bg-brand text-white' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Registrations ({registrations.length})
+              </button>
+              <button 
+                onClick={() => { setActiveTab("claims"); setStatusFilter("all"); setSelectedIds([]); }}
+                className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors ${activeTab === 'claims' ? 'bg-brand text-white' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Claims ({claims.length})
+              </button>
+            </div>
+            <div className="flex gap-2 items-end">
+              <input type="file" accept=".csv" className="hidden" ref={fileInputRef} onChange={handleImportCSV} />
+              <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 bg-surface border border-border px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-border transition-colors">
+                <Upload size={16} /> Import
+              </button>
+              <button onClick={() => handleExportCSV(currentList, `${activeTab}_export.csv`)} className="flex items-center gap-2 bg-surface border border-border px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-border transition-colors">
+                <Download size={16} /> Export
+              </button>
+              {selectedIds.length > 0 && (
+                <button onClick={deleteSelected} className="flex items-center gap-2 bg-red-500/10 text-red-500 border border-red-500/20 px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-red-500/20 transition-colors">
+                  <Trash2 size={16} /> Delete ({selectedIds.length})
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 bg-surface p-4 rounded-xl border border-border">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 bg-surface p-4 rounded-xl border border-border">
+            {/* SEARCH */}
+            <div className="md:col-span-2 xl:col-span-5 mb-2">
+              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Search</label>
+              <input
+                type="text"
+                placeholder="Search by Name, Mobile, Email, or Serial Number..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-background border border-border text-foreground px-4 py-2.5 rounded-lg focus:outline-none focus:border-brand text-sm"
+              />
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Source</label>
               <select
@@ -193,6 +336,54 @@ export default function AdminWarrantiesPage() {
                 )}
               </select>
             </div>
+            
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Product Model</label>
+              <select
+                value={productFilter}
+                onChange={(e) => setProductFilter(e.target.value)}
+                className="w-full bg-background border border-border text-foreground px-3 py-2 rounded-lg focus:outline-none focus:border-brand text-sm"
+              >
+                <option value="all">All Products</option>
+                {Array.from(new Set([...registrations, ...claims].map(i => i.battery_model_id).filter(Boolean))).map(model => (
+                  <option key={model as string} value={model as string}>{model as string}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Date From</label>
+              <input
+                type="date"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                className="w-full bg-background border border-border text-foreground px-3 py-2 rounded-lg focus:outline-none focus:border-brand text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Date To</label>
+              <input
+                type="date"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                className="w-full bg-background border border-border text-foreground px-3 py-2 rounded-lg focus:outline-none focus:border-brand text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Sort By</label>
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                className="w-full bg-background border border-border text-foreground px-3 py-2 rounded-lg focus:outline-none focus:border-brand text-sm"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="name_asc">Name (A-Z)</option>
+                <option value="name_desc">Name (Z-A)</option>
+              </select>
+            </div>
 
             {filterType === "customers" && (
               <div className="md:col-span-2">
@@ -221,20 +412,57 @@ export default function AdminWarrantiesPage() {
                 >
                   <option value="all">All Dealers</option>
                   {uniqueDealers.map(dealerName => (
-                    <option key={dealerName} value={dealerName}>{dealerName}</option>
+                    <option key={dealerName as string} value={dealerName as string}>{dealerName as string}</option>
                   ))}
                 </select>
               </div>
             )}
+            
+            <div className="md:col-span-2 lg:col-span-4 xl:col-span-5 flex justify-end mt-2">
+              <button 
+                onClick={() => {
+                  setSearchTerm("");
+                  setDateFrom("");
+                  setDateTo("");
+                  setProductFilter("all");
+                  setFilterType("all");
+                  setStatusFilter("all");
+                  setPlatformFilter("all");
+                  setDealerFilter("all");
+                  setSortOrder("newest");
+                }}
+                className="text-sm font-bold text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Clear All Filters
+              </button>
+            </div>
+
           </div>
         </div>
+      </div>
+
+      <div className="flex items-center gap-3 mb-4 pl-2">
+        <button 
+          onClick={() => toggleSelectAll(currentList)} 
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground font-medium"
+        >
+          {selectedIds.length === currentList.length && currentList.length > 0 ? <CheckSquare size={18} className="text-brand"/> : <Square size={18}/>}
+          Select All
+        </button>
       </div>
 
       {activeTab === "registrations" && (
         <div className="grid grid-cols-1 gap-4">
           {filteredRegistrations.map((reg) => (
-            <div key={reg.id} className="bg-surface border border-border rounded-xl p-6 shadow-sm hover:border-brand/30 transition-colors">
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4 pb-4 border-b border-border">
+            <div key={reg.id} className={`bg-surface border ${selectedIds.includes(reg.id) ? 'border-brand shadow-md ring-1 ring-brand' : 'border-border'} rounded-xl p-6 shadow-sm transition-all relative`}>
+              <button 
+                onClick={() => toggleSelect(reg.id)}
+                className="absolute top-6 right-6 text-muted-foreground hover:text-brand"
+              >
+                {selectedIds.includes(reg.id) ? <CheckSquare size={24} className="text-brand"/> : <Square size={24}/>}
+              </button>
+
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4 pb-4 border-b border-border pr-12">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-xl font-bold text-foreground">{reg.customer_name}</h3>
@@ -258,7 +486,7 @@ export default function AdminWarrantiesPage() {
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => { setSelectedReg(reg); setIsRegModalOpen(true); }} className="p-1.5 bg-background border border-border rounded hover:text-brand transition-colors"><Edit2 size={16} /></button>
-                    <button onClick={() => deleteReg(reg.id)} className="p-1.5 bg-background border border-border rounded hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                    <button onClick={() => deleteSingle(reg.id)} className="p-1.5 bg-background border border-border rounded hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
                   </div>
                 </div>
               </div>
@@ -328,8 +556,15 @@ export default function AdminWarrantiesPage() {
       {activeTab === "claims" && (
         <div className="grid grid-cols-1 gap-4">
           {filteredClaims.map((claim) => (
-            <div key={claim.id} className="bg-surface border border-border rounded-xl p-6 shadow-sm hover:border-brand/30 transition-colors">
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4 pb-4 border-b border-border">
+            <div key={claim.id} className={`bg-surface border ${selectedIds.includes(claim.id) ? 'border-brand shadow-md ring-1 ring-brand' : 'border-border'} rounded-xl p-6 shadow-sm transition-all relative`}>
+              <button 
+                onClick={() => toggleSelect(claim.id)}
+                className="absolute top-6 right-6 text-muted-foreground hover:text-brand"
+              >
+                {selectedIds.includes(claim.id) ? <CheckSquare size={24} className="text-brand"/> : <Square size={24}/>}
+              </button>
+
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4 pb-4 border-b border-border pr-12">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-xl font-bold text-foreground">{claim.customer_name}</h3>
@@ -354,7 +589,7 @@ export default function AdminWarrantiesPage() {
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => { setSelectedClaim(claim); setIsClaimModalOpen(true); }} className="p-1.5 bg-background border border-border rounded hover:text-brand transition-colors"><Edit2 size={16} /></button>
-                    <button onClick={() => deleteClaim(claim.id)} className="p-1.5 bg-background border border-border rounded hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                    <button onClick={() => deleteSingle(claim.id)} className="p-1.5 bg-background border border-border rounded hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
                   </div>
                 </div>
               </div>

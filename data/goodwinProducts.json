@@ -1,7 +1,7 @@
 [
   {
     "id": "prod-tz4lb",
-    "name": "GW-TZ4LB",
+    "name": "GW-TZ4LB (48 Months)",
     "series": "Goodwin SMF",
     "slug": "gw-tz4lb",
     "voltage": "12V",
@@ -58,7 +58,7 @@
   },
   {
     "id": "prod-xl5lb",
-    "name": "GW-XL5LB",
+    "name": "GW-XL5LB (48 Months)",
     "series": "Goodwin SMF",
     "slug": "gw-xl5lb",
     "voltage": "12V",
@@ -116,7 +116,7 @@
   },
   {
     "id": "prod-xl25lc",
-    "name": "GW-XL2.5LC",
+    "name": "GW-XL2.5LC (48 Months)",
     "series": "Goodwin SMF",
     "slug": "gw-xl2-5lc",
     "voltage": "12V",
@@ -173,7 +173,7 @@
   },
   {
     "id": "prod-tz5lb",
-    "name": "GW-TZ5LB",
+    "name": "GW-TZ5LB (48 Months)",
     "series": "Goodwin SMF",
     "slug": "gw-tz5lb",
     "voltage": "12V",
@@ -231,7 +231,7 @@
   },
   {
     "id": "prod-12smf8",
-    "name": "GW-12SMF8-UPS",
+    "name": "GW-12SMF8-UPS (12 Months)",
     "series": "Goodwin Industrial",
     "slug": "gw-12smf8-ups",
     "voltage": "12V",
@@ -276,7 +276,7 @@
   },
   {
     "id": "prod-4smf5",
-    "name": "GW-4SMF5",
+    "name": "GW-4SMF5 (6 Months)",
     "series": "Goodwin Industrial",
     "slug": "gw-4smf5",
     "voltage": "4V",
@@ -319,7 +319,7 @@
   },
   {
     "id": "prod-4v7ah",
-    "name": "GW-4V7AH-VRLA",
+    "name": "GW-4V7AH-VRLA (6 Months)",
     "series": "Goodwin Industrial",
     "slug": "gw-4v7ah-vrla",
     "voltage": "4V",
@@ -361,7 +361,7 @@
   },
   {
     "id": "prod-6v5ah",
-    "name": "GW-6V5AH",
+    "name": "GW-6V5AH (6 Months)",
     "series": "Goodwin Industrial",
     "slug": "gw-6v5ah",
     "voltage": "6V",
@@ -402,7 +402,7 @@
   },
   {
     "id": "prod-li-agro14",
-    "name": "GW-LITHIUM-AGRO-14AH",
+    "name": "GW-LITHIUM-AGRO-14AH (12 Months)",
     "series": "Goodwin Lithium",
     "slug": "gw-lithium-agro-14ah",
     "voltage": "12V",
@@ -436,7 +436,7 @@
   },
   {
     "id": "prod-li-ups8",
-    "name": "GW-LITHIUM-UPS-8AH",
+    "name": "GW-LITHIUM-UPS-8AH (12 Months)",
     "series": "Goodwin Lithium",
     "slug": "gw-lithium-ups-8ah",
     "voltage": "12V",
@@ -475,7 +475,7 @@
   },
   {
     "id": "prod-vrla-agro14",
-    "name": "GW-VRLA-AGRO-14AH",
+    "name": "GW-VRLA-AGRO-14AH (6 Months)",
     "series": "Goodwin Industrial",
     "slug": "gw-vrla-agro-14ah",
     "voltage": "12V",
@@ -518,7 +518,7 @@
   },
   {
     "id": "prod-gold-14ah",
-    "name": "GW-GOLD 14AH",
+    "name": "GW-GOLD 14AH (12 Months)",
     "series": "Goodwin Gold",
     "slug": "gw-gold-14ah",
     "voltage": "12V",
@@ -557,7 +557,7 @@
   },
   {
     "id": "prod-inverter-tubular",
-    "name": "GW-INVERTER TUBULAR 150AH",
+    "name": "GW-INVERTER TUBULAR 150AH (72 Months)",
     "series": "Goodwin Home",
     "slug": "gw-inverter-tubular",
     "voltage": "12V",
@@ -609,7 +609,7 @@
   },
   {
     "id": "prod-gold-series-6v-4-2ah",
-    "name": "GOLD SERIES 6V 4.2AH",
+    "name": "GOLD SERIES 6V 4.2AH (12 Months)",
     "series": "Goodwin Gold",
     "slug": "gold-series-6v-4-2ah",
     "voltage": "6V",
@@ -648,7 +648,7 @@
   },
   {
     "id": "prod-gold-series-12v-12ah",
-    "name": "GOLD SERIES 12V 12AH",
+    "name": "GOLD SERIES 12V 12AH (12 Months)",
     "series": "Goodwin Gold",
     "slug": "gold-series-12v-12ah",
     "voltage": "12V",
@@ -687,7 +687,7 @@
   },
   {
     "id": "prod-gold-series-12v-15ah",
-    "name": "GOLD SERIES 12V 15AH",
+    "name": "GOLD SERIES 12V 15AH (12 Months)",
     "series": "Goodwin Gold",
     "slug": "gold-series-12v-15ah",
     "voltage": "12V",
@@ -726,7 +726,7 @@
   },
   {
     "id": "prod-gold-series-6v-4-5ah",
-    "name": "GOLD SERIES 6V 4.5AH",
+    "name": "GOLD SERIES 6V 4.5AH (12 Months)",
     "series": "Goodwin Gold",
     "slug": "gold-series-6v-4-5ah",
     "voltage": "6V",
@@ -765,7 +765,7 @@
   },
   {
     "id": "prod-gold-series-12v-7-2ah",
-    "name": "GOLD SERIES 12V 7.2AH",
+    "name": "GOLD SERIES 12V 7.2AH (12 Months)",
     "series": "Goodwin Gold",
     "slug": "gold-series-12v-7-2ah",
     "voltage": "12V",
@@ -804,7 +804,7 @@
   },
   {
     "id": "prod-gold-series-12v-9ah",
-    "name": "GOLD SERIES 12V 9AH",
+    "name": "GOLD SERIES 12V 9AH (12 Months)",
     "series": "Goodwin Gold",
     "slug": "gold-series-12v-9ah",
     "voltage": "12V",
@@ -843,7 +843,7 @@
   },
   {
     "id": "prod-gold-series-12v-17ah",
-    "name": "GOLD SERIES 12V 17AH",
+    "name": "GOLD SERIES 12V 17AH (12 Months)",
     "series": "Goodwin Gold",
     "slug": "gold-series-12v-17ah",
     "voltage": "12V",
@@ -1196,7 +1196,7 @@
   },
   {
     "id": "prod-inverter-tubular-200ah",
-    "name": "GW-INVERTER TUBULAR 200AH",
+    "name": "GW-INVERTER TUBULAR 200AH (72 Months)",
     "series": "Goodwin Home",
     "slug": "gw-inverter-tubular-200ah",
     "voltage": "12V",
@@ -1235,7 +1235,7 @@
   },
   {
     "id": "prod-inverter-tubular-250ah",
-    "name": "GW-INVERTER TUBULAR 250AH",
+    "name": "GW-INVERTER TUBULAR 250AH (72 Months)",
     "series": "Goodwin Home",
     "slug": "gw-inverter-tubular-250ah",
     "voltage": "12V",
