@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Download, Tag, FileText } from "lucide-react";
+import { Download, Tag, FileText, Printer } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Product {
   id: string;
@@ -26,6 +27,7 @@ export default function MRPGeneratorPage() {
     return d.toISOString().substring(0, 7); 
   });
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchProducts() {
@@ -41,7 +43,7 @@ export default function MRPGeneratorPage() {
     fetchProducts();
   }, []);
 
-  const generateAndDownloadCSV = () => {
+  const generateAndDownloadCSV = (skipCsv = false) => {
     if (!selectedProduct || quantity <= 0 || !mrp) return;
     setLoading(true);
     
@@ -61,15 +63,16 @@ export default function MRPGeneratorPage() {
     let csvContent = "data:text/csv;charset=utf-8,";
     csvContent += "Product_Name,Model,Voltage,Capacity_AH,CCA,Dimensions,Weight,Mfg_Month,MRP_Rs,Quantity\n";
 
-    // Escape fields that might have commas
-    const name = `"${prod.name || ''}"`;
-    const model = `"${prod.slug || ''}"`;
-    const voltage = `"${prod.voltage || ''}"`;
-    const ah = `"${prod.ah || ''}"`;
-    const cca = `"${prod.cca || ''}"`;
-    const dimensions = `"${prod.dimensions || ''}"`;
-    const weight = `"${prod.weight || ''}"`;
-    const mrpVal = `"${mrp}"`;
+    // Escape fields that might have commas or quotes
+    const escapeCSV = (val: string) => `"${(val || '').replace(/"/g, '""')}"`;
+    const name = escapeCSV(prod.name);
+    const model = escapeCSV(prod.slug);
+    const voltage = escapeCSV(prod.voltage);
+    const ah = escapeCSV(prod.ah);
+    const cca = escapeCSV(prod.cca);
+    const dimensions = escapeCSV(prod.dimensions);
+    const weight = escapeCSV(prod.weight);
+    const mrpVal = escapeCSV(mrp);
     
     csvContent += `${name},${model},${voltage},${ah},${cca},${dimensions},${weight},"${displayDate}",${mrpVal},${quantity}\n`;
 
@@ -82,6 +85,24 @@ export default function MRPGeneratorPage() {
     document.body.removeChild(link);
     
     setLoading(false);
+  };
+
+  const handlePrint = () => {
+    if (!selectedProduct || quantity <= 0 || !mrp || !mfgDate) return;
+    
+    const [yearStr, monthStr] = mfgDate.split("-");
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthName = monthNames[parseInt(monthStr) - 1];
+    const displayDate = `${monthName} ${yearStr}`;
+
+    const params = new URLSearchParams({
+      productId: selectedProduct,
+      qty: quantity.toString(),
+      mrp: mrp,
+      mfgDate: displayDate
+    });
+    
+    router.push(`/admin/labels/print-mrp?${params.toString()}`);
   };
 
   return (
@@ -157,14 +178,24 @@ export default function MRPGeneratorPage() {
             <p className="text-xs text-muted-foreground mt-2">Maximum 50,000 per export.</p>
           </div>
 
-          <button 
-            onClick={generateAndDownloadCSV}
-            disabled={!selectedProduct || quantity <= 0 || !mrp || !mfgDate || loading}
-            className="w-full bg-brand text-white font-bold py-3 rounded-lg hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-8"
-          >
-            <Download size={20} />
-            {loading ? "Generating..." : "Download MRP Stickers CSV"}
-          </button>
+          <div className="flex gap-4 mt-8">
+            <button 
+              onClick={handlePrint}
+              disabled={!selectedProduct || quantity <= 0 || !mrp || !mfgDate || loading}
+              className="flex-1 bg-black text-white font-bold py-3 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <Printer size={20} />
+              {loading ? "Generating..." : "Generate & Print"}
+            </button>
+            <button 
+              onClick={() => generateAndDownloadCSV(false)}
+              disabled={!selectedProduct || quantity <= 0 || !mrp || !mfgDate || loading}
+              className="flex-1 bg-brand text-white font-bold py-3 rounded-lg hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <Download size={20} />
+              Export CSV
+            </button>
+          </div>
         </div>
       </div>
       

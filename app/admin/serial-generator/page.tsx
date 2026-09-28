@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Download, FileText, Settings2 } from "lucide-react";
+import { Download, FileText, Settings2, Printer } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function SerialGeneratorPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -18,6 +19,7 @@ export default function SerialGeneratorPage() {
   const [salesChannel, setSalesChannel] = useState<string>("Dealer Network");
   const [dealers, setDealers] = useState<any[]>([]);
   const [selectedDealer, setSelectedDealer] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchProducts() {
@@ -60,7 +62,7 @@ export default function SerialGeneratorPage() {
     return code;
   };
 
-  const generateAndDownloadCSV = async () => {
+  const generateAndDownloadCSV = async (skipCsv = false) => {
     if (!selectedProduct || quantity <= 0) return;
     setLoading(true);
     
@@ -107,7 +109,11 @@ export default function SerialGeneratorPage() {
     const endSeqStr = String(newLastSeq).padStart(5, '0');
     const prefix = `GW-${shortCode}-${wtyCode}-${dateCode}-`;
 
-    csvContent += `${prod.id},"${prod.name}",${warrantyDuration},${salesChannel},"${dealerName}",${prefix},${startSeqStr},${endSeqStr},${quantity}\n`;
+    const escapeCSV = (val: string) => `"${(val || '').replace(/"/g, '""')}"`;
+    const safeProdName = escapeCSV(prod.name);
+    const safeDealerName = escapeCSV(dealerName);
+
+    csvContent += `${prod.id},${safeProdName},${warrantyDuration},${salesChannel},${safeDealerName},${prefix},${startSeqStr},${endSeqStr},${quantity}\n`;
 
     // Save the new last sequence to database
     const { error: upsertError } = await supabase
@@ -123,7 +129,7 @@ export default function SerialGeneratorPage() {
       alert("Warning: Could not update the sequence tracker in the database. Next batch might start with duplicate numbers.");
     }
 
-    const { error: batchError } = await supabase
+    const { data: batchData, error: batchError } = await supabase
       .from('sticker_batches')
       .insert({
         product_id: prod.id,
@@ -136,10 +142,17 @@ export default function SerialGeneratorPage() {
         end_sequence: newLastSeq,
         sales_channel: salesChannel,
         dealer_id: selectedDealer || null
-      });
+      })
+      .select('id')
+      .single();
 
     if (batchError) {
       console.error("Error saving batch details:", batchError);
+    }
+
+    if (skipCsv) {
+      setLoading(false);
+      return batchData;
     }
 
     const encodedUri = encodeURI(csvContent);
@@ -151,6 +164,14 @@ export default function SerialGeneratorPage() {
     document.body.removeChild(link);
     
     setLoading(false);
+    return batchData;
+  };
+
+  const handlePrint = async () => {
+    const batchData = await generateAndDownloadCSV(true);
+    if (batchData) {
+      router.push(`/admin/labels/print/${batchData.id}`);
+    }
   };
 
   return (
@@ -266,14 +287,24 @@ export default function SerialGeneratorPage() {
             <p className="text-xs text-muted-foreground mt-2">This will be encoded into the serial number (e.g. {mfgDate.split("-")[2]}{mfgDate.split("-")[1]}{mfgDate.split("-")[0].slice(-2)}).</p>
           </div>
 
-          <button 
-            onClick={generateAndDownloadCSV}
-            disabled={!selectedProduct || quantity <= 0 || !mfgDate || loading}
-            className="w-full bg-brand text-white font-bold py-3 rounded-lg hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-8"
-          >
-            <Download size={20} />
-            {loading ? "Generating..." : "Download Stickers CSV"}
-          </button>
+          <div className="flex gap-4 mt-8">
+            <button 
+              onClick={handlePrint}
+              disabled={!selectedProduct || quantity <= 0 || !mfgDate || loading}
+              className="flex-1 bg-black text-white font-bold py-3 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <Printer size={20} />
+              {loading ? "Generating..." : "Generate & Print"}
+            </button>
+            <button 
+              onClick={() => generateAndDownloadCSV(false)}
+              disabled={!selectedProduct || quantity <= 0 || !mfgDate || loading}
+              className="flex-1 bg-brand text-white font-bold py-3 rounded-lg hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <Download size={20} />
+              Export CSV
+            </button>
+          </div>
         </div>
       </div>
       
