@@ -46,6 +46,10 @@ export default function MRPGeneratorPage() {
     setLoading(true);
     
     const prod = products.find(p => p.id === selectedProduct);
+    if (!prod) {
+      setLoading(false);
+      return;
+    }
     
     // Parse the selected YYYY-MM
     const [yearStr, monthStr] = mfgDate.split("-");
