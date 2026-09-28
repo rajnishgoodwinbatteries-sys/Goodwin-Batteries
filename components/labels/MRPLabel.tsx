@@ -35,9 +35,15 @@ export default function MRPLabel({
         height: `${heightMm}mm`,
         pageBreakInside: 'avoid',
         padding: '3mm',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        textRendering: 'optimizeSpeed',
+        WebkitFontSmoothing: 'none',
+        imageRendering: 'pixelated'
       }}
     >
+      <style dangerouslySetInnerHTML={{__html: `
+        .mrp-label-container svg { shape-rendering: crispEdges; }
+      `}} />
       {/* Top Header */}
       <div className="flex justify-between items-start border-b-[0.5mm] border-black pb-[1mm] mb-[2mm]">
         <div>
