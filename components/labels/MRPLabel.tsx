@@ -44,12 +44,12 @@ export default function MRPLabel({
           <h1 className="font-extrabold m-0 tracking-tight" style={{ fontSize: '3.5mm', lineHeight: '1.2' }}>
             GOODWIN BATTERIES
           </h1>
-          <div className="font-semibold" style={{ fontSize: '2.5mm' }}>
+          <div className="font-semibold truncate max-w-[45mm]" style={{ fontSize: '2.5mm' }}>
             {productName}
           </div>
         </div>
-        <div className="text-right">
-          <div className="font-bold bg-black text-white px-[1mm] inline-block" style={{ fontSize: '3.5mm' }}>
+        <div className="text-right flex-shrink-0 ml-[2mm] max-w-[25mm]">
+          <div className="font-bold bg-black text-white px-[1mm] inline-block truncate w-full" style={{ fontSize: '3.5mm' }}>
             {productModel}
           </div>
           <div className="font-bold mt-[0.5mm]" style={{ fontSize: '2.5mm' }}>

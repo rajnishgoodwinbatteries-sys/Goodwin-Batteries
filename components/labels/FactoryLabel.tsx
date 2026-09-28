@@ -40,7 +40,7 @@ export default function FactoryLabel({
           <div className="font-extrabold tracking-tighter" style={{ fontSize: '2.5mm', lineHeight: '1' }}>GOODWIN BATTERIES</div>
           <div className="font-normal tracking-tight" style={{ fontSize: '1.2mm' }}>Your Trusted Power Source</div>
         </div>
-        <div className="font-bold text-right" style={{ fontSize: '1.8mm', lineHeight: '1.1', maxWidth: '50%' }}>
+        <div className="font-bold text-right truncate" style={{ fontSize: '1.8mm', lineHeight: '1.1', maxWidth: '50%' }}>
           {productModel}
         </div>
       </div>
@@ -79,7 +79,7 @@ export default function FactoryLabel({
               />
             </div>
           </div>
-          <div className="font-bold text-right mt-[0.5mm] tracking-tighter shrink-0 w-full truncate text-ellipsis" style={{ fontSize: '1.3mm' }}>
+          <div className="font-bold text-right mt-[0.5mm] tracking-tighter shrink-0 w-full" style={{ fontSize: '1.1mm', lineHeight: '1.1', wordBreak: 'break-all' }}>
             {serialNumber}
           </div>
         </div>
