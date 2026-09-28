@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { FileText, Search, RefreshCw, BarChart2 } from "lucide-react";
+import { FileText, Search, RefreshCw, BarChart2, Trash2 } from "lucide-react";
 
 export default function StickerBatchesPage() {
   const [batches, setBatches] = useState<any[]>([]);
@@ -16,6 +16,8 @@ export default function StickerBatchesPage() {
   const [sortOrder, setSortOrder] = useState("newest");
   const [soldCounts, setSoldCounts] = useState<Record<string, number>>({});
   const [dealers, setDealers] = useState<Record<string, string>>({});
+  const [selectedBatches, setSelectedBatches] = useState<string[]>([]);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchBatches = async () => {
     setLoading(true);
@@ -83,6 +85,38 @@ export default function StickerBatchesPage() {
     fetchBatches();
   }, []);
 
+  const handleDeleteSelected = async () => {
+    if (!window.confirm(`Are you sure you want to delete ${selectedBatches.length} batches? This cannot be undone.`)) return;
+    setIsDeleting(true);
+    
+    const { error } = await supabase
+      .from('sticker_batches')
+      .delete()
+      .in('id', selectedBatches);
+      
+    if (error) {
+      alert("Error deleting batches: " + error.message);
+    } else {
+      setSelectedBatches([]);
+      fetchBatches();
+    }
+    setIsDeleting(false);
+  };
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedBatches(filteredBatches.map(b => b.id));
+    } else {
+      setSelectedBatches([]);
+    }
+  };
+  
+  const handleSelectBatch = (id: string) => {
+    setSelectedBatches(prev => 
+      prev.includes(id) ? prev.filter(batchId => batchId !== id) : [...prev, id]
+    );
+  };
+
   const uniqueProducts = Array.from(new Set(batches.map(b => b.product_name))).filter(Boolean) as string[];
 
   const filteredBatches = batches.filter(batch => {
@@ -119,13 +153,25 @@ export default function StickerBatchesPage() {
           <h1 className="text-3xl font-heading font-bold text-foreground">Sticker Batches</h1>
           <p className="text-muted-foreground">Manage generated factory stickers and track sales.</p>
         </div>
-        <button 
-          onClick={fetchBatches}
-          className="bg-surface border border-border text-foreground px-4 py-2 rounded-lg hover:bg-border transition-colors flex items-center gap-2 font-medium"
-        >
-          <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
-          Refresh
-        </button>
+        <div className="flex gap-2">
+          {selectedBatches.length > 0 && (
+            <button 
+              onClick={handleDeleteSelected}
+              disabled={isDeleting}
+              className="bg-red-500/10 text-red-500 border border-red-500/20 px-4 py-2 rounded-lg hover:bg-red-500/20 transition-colors flex items-center gap-2 font-medium"
+            >
+              <Trash2 size={18} />
+              {isDeleting ? "Deleting..." : `Delete (${selectedBatches.length})`}
+            </button>
+          )}
+          <button 
+            onClick={fetchBatches}
+            className="bg-surface border border-border text-foreground px-4 py-2 rounded-lg hover:bg-border transition-colors flex items-center gap-2 font-medium"
+          >
+            <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
+            Refresh
+          </button>
+        </div>
       </div>
 
       <div className="bg-surface border border-border rounded-xl shadow-sm overflow-hidden">
@@ -228,6 +274,14 @@ export default function StickerBatchesPage() {
           <table className="w-full text-left">
             <thead className="bg-background border-b border-border">
               <tr>
+                <th className="p-4 w-12">
+                  <input 
+                    type="checkbox" 
+                    onChange={handleSelectAll}
+                    checked={filteredBatches.length > 0 && selectedBatches.length === filteredBatches.length}
+                    className="w-4 h-4 rounded border-border text-brand focus:ring-brand"
+                  />
+                </th>
                 <th className="p-4 font-bold text-foreground">Date Generated</th>
                 <th className="p-4 font-bold text-foreground">Product</th>
                 <th className="p-4 font-bold text-foreground">Mfg Date</th>
@@ -251,7 +305,7 @@ export default function StickerBatchesPage() {
                 </tr>
               ) : filteredBatches.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="p-8 text-center text-muted-foreground">
+                  <td colSpan={10} className="p-8 text-center text-muted-foreground">
                     <FileText size={48} className="mx-auto mb-4 opacity-20" />
                     <p>No sticker batches found.</p>
                   </td>
@@ -264,6 +318,14 @@ export default function StickerBatchesPage() {
                   
                   return (
                     <tr key={batch.id} className="border-b border-border hover:bg-background/50 transition-colors">
+                      <td className="p-4">
+                        <input 
+                          type="checkbox" 
+                          checked={selectedBatches.includes(batch.id)}
+                          onChange={() => handleSelectBatch(batch.id)}
+                          className="w-4 h-4 rounded border-border text-brand focus:ring-brand"
+                        />
+                      </td>
                       <td className="p-4 text-sm">
                         {new Date(batch.created_at).toLocaleDateString()} <br/>
                         <span className="text-xs text-muted-foreground">{new Date(batch.created_at).toLocaleTimeString()}</span>
