@@ -16,7 +16,7 @@ export default function FactoryLabel({
   productModel,
   warranty,
   mfgDate,
-  widthMm = 50,
+  widthMm = 38,
   heightMm = 25
 }: FactoryLabelProps) {
   // Convert mm to pixels roughly for screen display, but print CSS will handle exact sizing
@@ -65,20 +65,20 @@ export default function FactoryLabel({
         </div>
 
         {/* Right Side: Barcode */}
-        <div className="flex flex-col items-end justify-center h-full">
-          <div className="w-full flex justify-end" style={{ transform: 'scale(0.8)', transformOrigin: 'right center' }}>
+        <div className="flex flex-col items-end justify-center h-full w-[60%] overflow-hidden">
+          <div className="w-full flex justify-end" style={{ transform: 'scale(0.65)', transformOrigin: 'right center' }}>
             <Barcode 
               value={serialNumber} 
               format="CODE128"
-              width={1.2}
-              height={35}
+              width={1.1}
+              height={30}
               displayValue={false}
               margin={0}
               background="#ffffff"
               lineColor="#000000"
             />
           </div>
-          <div className="text-center font-bold mt-1 tracking-wider" style={{ fontSize: '9px', width: '100%', textAlign: 'right' }}>
+          <div className="text-center font-bold mt-1 tracking-wider" style={{ fontSize: '7px', width: '100%', textAlign: 'right' }}>
             {serialNumber}
           </div>
         </div>

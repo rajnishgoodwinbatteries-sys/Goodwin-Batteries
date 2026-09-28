@@ -14,8 +14,8 @@ export default function PrintFactoryBatchPage() {
   const [batch, setBatch] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // Default dimensions
-  const [width, setWidth] = useState(50);
+  // Default dimensions from user screenshot
+  const [width, setWidth] = useState(38);
   const [height, setHeight] = useState(25);
 
   useEffect(() => {
