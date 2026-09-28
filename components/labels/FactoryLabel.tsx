@@ -34,7 +34,8 @@ export default function FactoryLabel({
         flexDirection: 'column',
         textRendering: 'optimizeSpeed',
         WebkitFontSmoothing: 'none',
-        imageRendering: 'pixelated'
+        imageRendering: 'pixelated',
+        filter: 'grayscale(100%) contrast(1000%)'
       }}
     >
       <style dangerouslySetInnerHTML={{__html: `
