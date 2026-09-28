@@ -119,13 +119,8 @@ export default function PrintFactoryBatchPage() {
 					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
 					<font facename="Arial" style="1" charset="1" height="150" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
 				</drawobj>
-				<!-- QR Code -->
-				<drawobj type="drawbarcode" id="5" name="" left="100" top="800" right="1100" bottom="1800" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
-					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
-					<barcode type="31" />
-				</drawobj>
-				<!-- Barcode -->
-				<drawobj type="drawbarcode" id="6" name="" left="1300" top="900" right="3700" bottom="1700" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+								<!-- Barcode -->
+				<drawobj type="drawbarcode" id="6" name="" left="100" top="900" right="3700" bottom="1700" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
 					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
 					<barcode type="1" />
 				</drawobj>
@@ -148,7 +143,7 @@ export default function PrintFactoryBatchPage() {
 					<font facename="Arial" style="1" charset="1" height="150" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
 				</drawobj>
 			</labelobjects>
-			<objvarlink link=":1,101:2,102:3,103:4,104:5,105:6,106:7,107:8,108:9,109"/>
+			<objvarlink link=":1,101:2,102:3,103:4,104:6,106:7,107:8,108:9,109"/>
 		</labellayer>
 		<variables>
 			<variable type="constant" id="101" name="" shareid="" data="R09PRFdJTiBCQVRURVJJRVM=" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
