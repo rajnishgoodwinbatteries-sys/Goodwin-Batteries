@@ -25,56 +25,54 @@ export default function MRPLabel({
   widthMm = 75,
   heightMm = 50
 }: MRPLabelProps) {
-  const pxHeight = Math.round(heightMm * 3.78);
   const verifyUrl = `https://goodwinbatteries.in/product/${productModel}`;
 
   return (
     <div 
-      className="mrp-label-container bg-white border border-gray-300 relative overflow-hidden text-black font-sans box-border"
+      className="mrp-label-container bg-white text-black font-sans box-border relative"
       style={{
         width: `${widthMm}mm`,
         height: `${heightMm}mm`,
-        pageBreakAfter: 'always',
-        display: 'flex',
-        flexDirection: 'column',
+        pageBreakInside: 'avoid',
         padding: '3mm',
+        overflow: 'hidden'
       }}
     >
       {/* Top Header */}
-      <div className="flex justify-between items-start border-b-2 border-black pb-1 mb-1">
+      <div className="flex justify-between items-start border-b-[0.5mm] border-black pb-[1mm] mb-[2mm]">
         <div>
-          <h1 className="font-extrabold m-0 tracking-tight" style={{ fontSize: '14px', lineHeight: '1.2' }}>
+          <h1 className="font-extrabold m-0 tracking-tight" style={{ fontSize: '3.5mm', lineHeight: '1.2' }}>
             GOODWIN BATTERIES
           </h1>
-          <div className="font-semibold" style={{ fontSize: '9px' }}>
+          <div className="font-semibold" style={{ fontSize: '2.5mm' }}>
             {productName}
           </div>
         </div>
         <div className="text-right">
-          <div className="font-bold text-lg bg-black text-white px-2" style={{ fontSize: '12px' }}>
+          <div className="font-bold bg-black text-white px-[1mm] inline-block" style={{ fontSize: '3.5mm' }}>
             {productModel}
           </div>
-          <div className="font-bold mt-1" style={{ fontSize: '8px' }}>
+          <div className="font-bold mt-[0.5mm]" style={{ fontSize: '2.5mm' }}>
             {voltage} | {capacity}
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-row flex-grow justify-between mt-1">
+      <div className="flex flex-row flex-grow justify-between mt-[1mm]">
         
         {/* Left Side: Specs & Price */}
-        <div className="flex flex-col space-y-1" style={{ fontSize: '8px', lineHeight: '1.4' }}>
+        <div className="flex flex-col space-y-[1mm]" style={{ fontSize: '2.5mm', lineHeight: '1.4' }}>
           <div>
             <strong>MRP: </strong> 
-            <span className="font-bold text-black" style={{ fontSize: '11px' }}>
+            <span className="font-bold text-black" style={{ fontSize: '4mm' }}>
               ₹{mrp}
             </span>
-            <div style={{ fontSize: '5px' }}>(Incl. of all taxes)</div>
+            <div style={{ fontSize: '1.5mm' }}>(Incl. of all taxes)</div>
           </div>
           
-          <div className="pt-1">
-            <strong>MFG Month/Year:</strong> {mfgDate}
+          <div className="pt-[1mm]">
+            <strong>MFG:</strong> {mfgDate}
           </div>
           
           {serialNumber && (
@@ -83,7 +81,7 @@ export default function MRPLabel({
             </div>
           )}
 
-          <div className="mt-auto pt-2" style={{ fontSize: '5px' }}>
+          <div className="mt-auto pt-[2mm]" style={{ fontSize: '1.8mm', lineHeight: '1.2' }}>
             <strong>Customer Care:</strong> 9220404411<br/>
             <strong>Website:</strong> goodwinbatteries.in<br/>
             Made in India
@@ -94,20 +92,21 @@ export default function MRPLabel({
         <div className="flex flex-col justify-between items-end">
           <QRCodeSVG 
             value={verifyUrl} 
-            size={pxHeight * 0.3} 
+            size={100}
+            style={{ width: '100%', height: '100%', maxWidth: '15mm', maxHeight: '15mm' }}
             level="M" 
             includeMargin={false} 
           />
           
           {serialNumber && (
-            <div className="mt-2" style={{ transform: 'scale(0.85)', transformOrigin: 'right bottom' }}>
+            <div className="mt-[2mm]" style={{ transform: 'scale(0.5)', transformOrigin: 'right bottom' }}>
               <Barcode 
                 value={serialNumber} 
                 format="CODE128"
-                width={1.2}
-                height={25}
+                width={1.5}
+                height={35}
                 displayValue={true}
-                fontSize={12}
+                fontSize={16}
                 margin={0}
                 background="#ffffff"
                 lineColor="#000000"

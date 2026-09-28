@@ -19,66 +19,64 @@ export default function FactoryLabel({
   widthMm = 38,
   heightMm = 25
 }: FactoryLabelProps) {
-  // Convert mm to pixels roughly for screen display, but print CSS will handle exact sizing
-  // 1 mm is approx 3.78 px at 96 dpi
-  const pxWidth = Math.round(widthMm * 3.78);
-  const pxHeight = Math.round(heightMm * 3.78);
   const verifyUrl = `https://goodwinbatteries.in/verify/${serialNumber}`;
 
   return (
     <div 
-      className="factory-label-container bg-white border border-gray-300 relative overflow-hidden text-black font-sans box-border"
+      className="factory-label-container bg-white text-black font-sans box-border relative"
       style={{
         width: `${widthMm}mm`,
         height: `${heightMm}mm`,
-        pageBreakAfter: 'always',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '2mm',
+        pageBreakInside: 'avoid',
+        padding: '1.5mm',
+        overflow: 'hidden'
       }}
     >
-      {/* Top Header */}
-      <div className="flex justify-between items-center border-b border-black pb-1 mb-1">
-        <div className="font-bold tracking-tighter" style={{ fontSize: '10px', lineHeight: '1' }}>
-          GOODWIN BATTERIES
-          <div className="font-normal" style={{ fontSize: '5px' }}>Your Trusted Power Source</div>
+      {/* Header */}
+      <div className="flex justify-between items-start border-b border-black pb-[0.5mm] mb-[1mm]">
+        <div className="flex flex-col">
+          <div className="font-extrabold tracking-tighter" style={{ fontSize: '2.5mm', lineHeight: '1' }}>GOODWIN BATTERIES</div>
+          <div className="font-normal tracking-tight" style={{ fontSize: '1.2mm' }}>Your Trusted Power Source</div>
         </div>
-        <div className="font-bold" style={{ fontSize: '10px' }}>
+        <div className="font-bold text-right" style={{ fontSize: '2mm', lineHeight: '1.1', maxWidth: '45%' }}>
           {productModel}
         </div>
       </div>
 
       {/* Main Body */}
-      <div className="flex flex-row flex-grow justify-between items-center">
+      <div className="flex flex-row justify-between h-[15mm]">
         {/* Left Side: QR & Text */}
-        <div className="flex flex-col justify-between h-full">
-          <QRCodeSVG 
-            value={verifyUrl} 
-            size={pxHeight * 0.4} 
-            level="H" 
-            includeMargin={false} 
-          />
-          <div style={{ fontSize: '6px', lineHeight: '1.2' }} className="mt-1">
+        <div className="flex flex-col h-full w-[40%]">
+          <div className="flex-1 flex items-center">
+            <QRCodeSVG 
+              value={verifyUrl} 
+              size={100}
+              style={{ width: '100%', height: '100%', maxWidth: '10mm', maxHeight: '10mm' }}
+              level="M" 
+              includeMargin={false} 
+            />
+          </div>
+          <div className="mt-[0.5mm]" style={{ fontSize: '1.5mm', lineHeight: '1.2' }}>
             <div><strong>MFG:</strong> {mfgDate}</div>
-            <div><strong>WTY:</strong> {warranty} Months</div>
+            <div><strong>WTY:</strong> {warranty}</div>
           </div>
         </div>
 
         {/* Right Side: Barcode */}
-        <div className="flex flex-col items-end justify-center h-full w-[60%] overflow-hidden">
-          <div className="w-full flex justify-end" style={{ transform: 'scale(0.65)', transformOrigin: 'right center' }}>
+        <div className="flex flex-col h-full w-[55%] justify-center items-end">
+          <div style={{ transform: 'scale(0.35)', transformOrigin: 'right center', whiteSpace: 'nowrap' }}>
             <Barcode 
               value={serialNumber} 
               format="CODE128"
-              width={1.1}
-              height={30}
+              width={1.5}
+              height={45}
               displayValue={false}
               margin={0}
               background="#ffffff"
               lineColor="#000000"
             />
           </div>
-          <div className="text-center font-bold mt-1 tracking-wider" style={{ fontSize: '7px', width: '100%', textAlign: 'right' }}>
+          <div className="font-bold text-right mt-[0.5mm] tracking-tight" style={{ fontSize: '1.5mm' }}>
             {serialNumber}
           </div>
         </div>
