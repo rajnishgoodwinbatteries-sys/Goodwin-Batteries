@@ -99,19 +99,17 @@ export default function SerialGeneratorPage() {
 
     // Header
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Product_ID,Product_Name,Warranty,Sales_Channel,Assigned_Dealer,Serial_Number\n";
+    csvContent += "Product_ID,Product_Name,Warranty,Sales_Channel,Assigned_Dealer,Prefix,Start_Sequence,End_Sequence,Quantity\n";
 
-    for (let i = 1; i <= quantity; i++) {
-      const currentSeq = lastSeq + i;
-      // Padded sequence number e.g., 00001
-      const seq = String(currentSeq).padStart(5, '0');
-      // New format: GW-[MODEL]-[WTY]-[DATE]-[SEQ]
-      const serial = `GW-${shortCode}-${wtyCode}-${dateCode}-${seq}`;
-      csvContent += `${prod.id},${prod.name},${warrantyDuration},${salesChannel},${dealerName},${serial}\n`;
-    }
+    const startSeq = lastSeq + 1;
+    const newLastSeq = lastSeq + quantity;
+    const startSeqStr = String(startSeq).padStart(5, '0');
+    const endSeqStr = String(newLastSeq).padStart(5, '0');
+    const prefix = `GW-${shortCode}-${wtyCode}-${dateCode}-`;
+
+    csvContent += `${prod.id},"${prod.name}",${warrantyDuration},${salesChannel},"${dealerName}",${prefix},${startSeqStr},${endSeqStr},${quantity}\n`;
 
     // Save the new last sequence to database
-    const newLastSeq = lastSeq + quantity;
     const { error: upsertError } = await supabase
       .from('serial_sequences')
       .upsert({ 

@@ -59,21 +59,19 @@ export default function MRPGeneratorPage() {
 
     // Header
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Product_Name,Model,Voltage,Capacity_AH,CCA,Dimensions,Weight,Mfg_Month,MRP_Rs\n";
+    csvContent += "Product_Name,Model,Voltage,Capacity_AH,CCA,Dimensions,Weight,Mfg_Month,MRP_Rs,Quantity\n";
 
-    for (let i = 1; i <= quantity; i++) {
-      // Escape fields that might have commas
-      const name = `"${prod.name || ''}"`;
-      const model = `"${prod.slug || ''}"`;
-      const voltage = `"${prod.voltage || ''}"`;
-      const ah = `"${prod.ah || ''}"`;
-      const cca = `"${prod.cca || ''}"`;
-      const dimensions = `"${prod.dimensions || ''}"`;
-      const weight = `"${prod.weight || ''}"`;
-      const mrpVal = `"${mrp}"`;
-      
-      csvContent += `${name},${model},${voltage},${ah},${cca},${dimensions},${weight},"${displayDate}",${mrpVal}\n`;
-    }
+    // Escape fields that might have commas
+    const name = `"${prod.name || ''}"`;
+    const model = `"${prod.slug || ''}"`;
+    const voltage = `"${prod.voltage || ''}"`;
+    const ah = `"${prod.ah || ''}"`;
+    const cca = `"${prod.cca || ''}"`;
+    const dimensions = `"${prod.dimensions || ''}"`;
+    const weight = `"${prod.weight || ''}"`;
+    const mrpVal = `"${mrp}"`;
+    
+    csvContent += `${name},${model},${voltage},${ah},${cca},${dimensions},${weight},"${displayDate}",${mrpVal},${quantity}\n`;
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
