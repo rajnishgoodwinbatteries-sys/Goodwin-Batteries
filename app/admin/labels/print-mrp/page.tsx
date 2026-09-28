@@ -86,11 +86,11 @@ export default function PrintMRPPage() {
 
       {/* Printable area */}
       <style dangerouslySetInnerHTML={{__html: `
+        @page {
+          size: ${width}mm ${height}mm;
+          margin: 0;
+        }
         @media print {
-          @page {
-            size: ${width}mm ${height}mm;
-            margin: 0;
-          }
           body {
             margin: 0;
             padding: 0;
