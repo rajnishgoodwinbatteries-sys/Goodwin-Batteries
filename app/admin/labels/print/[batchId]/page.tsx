@@ -105,7 +105,7 @@ export default function PrintFactoryBatchPage() {
 					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
 					<font facename="Arial" style="0" charset="1" height="150" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
 				</drawobj>
-				<drawobj type="drawtext" id="3" name="" left="2200" top="100" right="3700" bottom="500" rotation="none" style="0" halign="2" valign="0" tpalign="0" tvalign="0">
+				<drawobj type="drawtext" id="3" name="" left="2200" top="100" right="3700" bottom="500" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
 					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
 					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
 					<font facename="Arial" style="1" charset="1" height="250" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
@@ -124,8 +124,12 @@ export default function PrintFactoryBatchPage() {
 					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
 					<barcode type="1" />
 				</drawobj>
+				<drawobj type="drawbarcode" id="8" name="" left="100" top="700" right="1100" bottom="1700" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
+					<barcode type="31" />
+				</drawobj>
 			</labelobjects>
-			<objvarlink link=":1,101:2,102:3,103:5,105:6,106:7,107"/>
+			<objvarlink link=":1,101:2,102:3,103:5,105:6,106:7,107:8,108"/>
 		</labellayer>
 		<variables>
 			<variable type="constant" id="101" name="" shareid="" data="R09PRFdJTiBCQVRURVJJRVM=" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
@@ -152,6 +156,10 @@ export default function PrintFactoryBatchPage() {
 				<limit filled="left" fillchar="0" cutout="right"/>
 				<cut/>
 			</variable>
+			<variable type="constant" id="108" name="" shareid="" data="\${qrData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
 		</variables>
 	</labelform>
 	<database version="1.0">
@@ -171,11 +179,11 @@ export default function PrintFactoryBatchPage() {
               const qrData = base64Encode(`https://goodwinbatteries.in/warranty?serial=${labelsToPrint[0] || 'SAMPLE-123'}`);
               
               const finalLsdx = lsdxTemplate
-                .replace('\\${modelData}', modelData)
-                .replace('\\${mfgDataText}', mfgDataText)
-                .replace('\\${warrantyDataText}', warrantyDataText)
-                .replace('\\${serialData}', serialData)
-                .replace('\\${qrData}', qrData);
+                .replace('${modelData}', modelData)
+                .replace('${mfgData}', mfgDataText)
+                .replace('${warrantyData}', warrantyDataText)
+                .replace('${serialData}', serialData)
+                .replace('${qrData}', qrData);
                 
               const blob = new Blob([finalLsdx], { type: 'application/xml' });
               const url = window.URL.createObjectURL(blob);
