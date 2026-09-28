@@ -81,7 +81,7 @@ export default function PrintFactoryBatchPage() {
           <button 
             onClick={() => {
               // We encode the exact LSDX structure they provided, injecting the batch details.
-              const lsdxTemplate = \`<?xml version="1.0" encoding="utf-8"?>
+              const lsdxTemplate = `<?xml version="1.0" encoding="utf-8"?>
 <labelshopdocument version="1.2" tag="for Zenpart" date="2026-09-17 12:13:50">
 	<labelform version="1.1">
 		<paper name="Untitled" code="0" brand="0" cate="0" syslabel="0" otype="0" type="0" maxid="37">
@@ -243,7 +243,7 @@ export default function PrintFactoryBatchPage() {
 	</database>
 	<pictures/>
 </labelshopdocument>
-\`;
+`;
               const base64Encode = (str: string) => typeof btoa !== 'undefined' ? btoa(str) : Buffer.from(str).toString('base64');
               
               const modelData = base64Encode(batch.product_name);
