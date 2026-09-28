@@ -31,7 +31,6 @@ export default function FactoryLabel({
         padding: '1.5mm',
         overflow: 'hidden',
         display: 'flex',
-        display: 'flex',
         flexDirection: 'column'
       }}
     >
