@@ -167,8 +167,8 @@ export default function PrintFactoryBatchPage() {
               const modelData = base64Encode(batch.product_name);
               const mfgDataText = base64Encode(`Mfg: ${batch.manufacturing_date}`);
               const warrantyDataText = base64Encode(`Warranty: ${batch.warranty_duration}`);
-              const serialData = base64Encode(serials[0]?.serial_number || 'SAMPLE-123');
-              const qrData = base64Encode(`https://goodwinbatteries.in/warranty?serial=${serials[0]?.serial_number || 'SAMPLE-123'}`);
+              const serialData = base64Encode(labelsToPrint[0] || 'SAMPLE-123');
+              const qrData = base64Encode(`https://goodwinbatteries.in/warranty?serial=${labelsToPrint[0] || 'SAMPLE-123'}`);
               
               const finalLsdx = lsdxTemplate
                 .replace('\\${modelData}', modelData)
