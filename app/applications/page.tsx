@@ -41,7 +41,7 @@ export default function ApplicationsPage() {
                     <Settings size={24} className="text-white" />
                   </div>
                   <h3 className="text-white font-heading font-bold text-3xl mb-3">{cat.name}</h3>
-                  <p className="text-muted-foreground text-sm mb-6 line-clamp-3">
+                  <p className="text-slate-200 text-sm mb-6 line-clamp-3">
                     {cat.description}
                   </p>
                   <Link 

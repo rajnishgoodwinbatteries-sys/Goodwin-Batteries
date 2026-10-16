@@ -62,7 +62,7 @@ export default function DealersLocatorPage() {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="Enter City or Pincode..." 
-                  className="w-full bg-surface border border-border/50 rounded-xl pl-14 pr-4 py-5 text-white focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all font-medium text-lg"
+                  className="w-full bg-surface border border-border rounded-xl pl-14 pr-4 py-5 text-foreground placeholder-slate-400 focus:outline-none focus:border-[#00843D] focus:ring-2 focus:ring-emerald-500/20 transition-all font-medium text-lg shadow-sm"
                 />
                 <Search size={24} className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground" />
               </div>
@@ -70,7 +70,7 @@ export default function DealersLocatorPage() {
               <button 
                 type="submit" 
                 disabled={loading}
-                className="w-full bg-primary text-black font-bold uppercase tracking-wider py-5 rounded-xl hover:bg-primary/80 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 border-glow shadow-lg shadow-primary/20 text-lg"
+                className="w-full bg-[#00843D] hover:bg-[#006830] text-white font-bold uppercase tracking-wider py-5 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 shadow-lg shadow-emerald-700/20 text-lg active:scale-98"
               >
                 {loading ? <Loader2 size={24} className="animate-spin" /> : "Connect on WhatsApp"}
               </button>

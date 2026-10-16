@@ -257,17 +257,17 @@ export default function VehicleFinder() {
   const whatsappUrl = `https://wa.me/${settings?.whatsapp_main || "919667724411"}?text=${whatsappMessage}`;
 
   return (
-    <div className="bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 overflow-hidden min-h-[500px] flex flex-col relative text-white">
+    <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-200/90 overflow-hidden min-h-[500px] flex flex-col relative text-slate-900">
       {/* Header */}
-      <div className="bg-slate-950 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between shrink-0 border-b border-slate-800 gap-4">
+      <div className="bg-gradient-to-r from-slate-50 via-white to-slate-50 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between shrink-0 border-b border-slate-200 gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 text-xs font-black tracking-widest text-brand uppercase mb-1">
-            <Zap size={14} className="text-amber-400" /> Instant Match Engine
+          <div className="inline-flex items-center gap-2 text-xs font-black tracking-widest text-[#00843D] uppercase mb-1">
+            <Zap size={14} className="text-amber-500" /> Instant Match Engine
           </div>
-          <h3 className="text-2xl font-heading font-black tracking-tight text-white uppercase">
+          <h3 className="text-2xl font-heading font-black tracking-tight text-slate-900 uppercase">
             Goodwin Battery Finder
           </h3>
-          <p className="text-slate-400 text-xs sm:text-sm">
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
             Select your vehicle parameters to get an OEM-grade verified battery recommendation.
           </p>
         </div>
@@ -280,28 +280,28 @@ export default function VehicleFinder() {
               placeholder="Search make or model..." 
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-full bg-slate-900 text-white placeholder:text-slate-500 border border-slate-700 rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-brand text-xs sm:text-sm transition-all shadow-inner"
+              className="w-full bg-slate-50 hover:bg-white focus:bg-white text-slate-900 placeholder:text-slate-400 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-[#00843D] focus:ring-2 focus:ring-emerald-500/20 text-xs sm:text-sm transition-all shadow-sm"
             />
             <Search size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
           </div>
           
           {searchQuery.length >= 2 && (
-            <div className="absolute top-full mt-2 w-full bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden max-h-60 overflow-y-auto z-50">
+            <div className="absolute top-full mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden max-h-60 overflow-y-auto z-50">
               {isSearching ? (
-                <div className="p-4 text-center text-slate-400 text-xs">Searching database...</div>
+                <div className="p-4 text-center text-slate-500 text-xs">Searching database...</div>
               ) : searchResults.length > 0 ? (
                 searchResults.map(res => (
                   <button 
                     key={res.id} 
                     onClick={() => selectSearchResult(res)}
-                    className="w-full text-left px-4 py-3 border-b border-slate-800 hover:bg-slate-800 text-slate-200 text-xs font-semibold transition-colors flex items-center justify-between"
+                    className="w-full text-left px-4 py-3 border-b border-slate-100 hover:bg-emerald-50/50 text-slate-800 text-xs font-semibold transition-colors flex items-center justify-between"
                   >
                     <span>{res.brand} {res.model}</span>
-                    <span className="text-[10px] text-slate-500 uppercase">{res.type}</span>
+                    <span className="text-[10px] text-slate-500 uppercase font-bold">{res.type}</span>
                   </button>
                 ))
               ) : (
-                <div className="p-4 text-center text-slate-400 text-xs">No matching vehicle found</div>
+                <div className="p-4 text-center text-slate-500 text-xs">No matching vehicle found</div>
               )}
             </div>
           )}
@@ -309,35 +309,35 @@ export default function VehicleFinder() {
       </div>
 
       {/* Stepped Progress Bar */}
-      <div className="flex items-center justify-between bg-slate-950/70 px-6 py-3 border-b border-slate-800">
-        <div className="flex text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 overflow-x-auto whitespace-nowrap scrollbar-hide shrink-0 items-center gap-1 sm:gap-2">
-          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 1 ? "text-brand bg-brand/10" : "hover:text-white")} onClick={() => setStep(1)}>1. Type</span>
-          <span className="text-slate-600">&rsaquo;</span>
-          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 2 ? "text-brand bg-brand/10" : "hover:text-white")} onClick={() => step >= 2 && setStep(2)}>2. Brand</span>
-          <span className="text-slate-600">&rsaquo;</span>
-          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 3 ? "text-brand bg-brand/10" : "hover:text-white")} onClick={() => step >= 3 && setStep(3)}>3. Model</span>
-          <span className="text-slate-600">&rsaquo;</span>
-          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 4 ? "text-brand bg-brand/10" : "hover:text-white")} onClick={() => step >= 4 && setStep(4)}>4. Variant</span>
-          <span className="text-slate-600">&rsaquo;</span>
-          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 5 ? "text-brand bg-brand/10" : "hover:text-white")} onClick={() => step >= 5 && setStep(5)}>5. Fuel</span>
-          <span className="text-slate-600">&rsaquo;</span>
-          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 6 ? "text-brand bg-brand/10" : "hover:text-white")} onClick={() => step >= 6 && setStep(6)}>6. Year</span>
+      <div className="flex items-center justify-between bg-slate-50/90 px-6 py-3 border-b border-slate-200">
+        <div className="flex text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 overflow-x-auto whitespace-nowrap scrollbar-hide shrink-0 items-center gap-1 sm:gap-2">
+          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 1 ? "text-[#00843D] bg-emerald-100/60 font-black" : "hover:text-slate-900")} onClick={() => setStep(1)}>1. Type</span>
+          <span className="text-slate-300">&rsaquo;</span>
+          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 2 ? "text-[#00843D] bg-emerald-100/60 font-black" : "hover:text-slate-900")} onClick={() => step >= 2 && setStep(2)}>2. Brand</span>
+          <span className="text-slate-300">&rsaquo;</span>
+          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 3 ? "text-[#00843D] bg-emerald-100/60 font-black" : "hover:text-slate-900")} onClick={() => step >= 3 && setStep(3)}>3. Model</span>
+          <span className="text-slate-300">&rsaquo;</span>
+          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 4 ? "text-[#00843D] bg-emerald-100/60 font-black" : "hover:text-slate-900")} onClick={() => step >= 4 && setStep(4)}>4. Variant</span>
+          <span className="text-slate-300">&rsaquo;</span>
+          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 5 ? "text-[#00843D] bg-emerald-100/60 font-black" : "hover:text-slate-900")} onClick={() => step >= 5 && setStep(5)}>5. Fuel</span>
+          <span className="text-slate-300">&rsaquo;</span>
+          <span className={clsx("cursor-pointer transition-colors px-2 py-1 rounded-md", step >= 6 ? "text-[#00843D] bg-emerald-100/60 font-black" : "hover:text-slate-900")} onClick={() => step >= 6 && setStep(6)}>6. Year</span>
         </div>
         
         <button 
           onClick={resetFinder} 
-          className="text-slate-400 hover:text-white flex items-center gap-1 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-colors shrink-0 ml-4 hover:underline"
+          className="text-slate-500 hover:text-slate-900 flex items-center gap-1 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-colors shrink-0 ml-4 hover:underline"
         >
           <RotateCcw size={13} /> Reset
         </button>
       </div>
 
       {/* Main Content Area */}
-      <div className="p-6 md:p-8 flex-1 flex flex-col relative min-h-[360px] bg-slate-900">
+      <div className="p-6 md:p-8 flex-1 flex flex-col relative min-h-[360px] bg-white">
         {loading && (
-          <div className="absolute inset-0 z-20 bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-center rounded-2xl">
-            <Loader2 size={36} className="animate-spin text-brand mb-3" />
-            <p className="text-white font-black tracking-widest uppercase text-xs">{loadingText}</p>
+          <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center rounded-2xl">
+            <Loader2 size={36} className="animate-spin text-[#00843D] mb-3" />
+            <p className="text-slate-900 font-black tracking-widest uppercase text-xs">{loadingText}</p>
           </div>
         )}
 
@@ -345,7 +345,7 @@ export default function VehicleFinder() {
         {step > 1 && step < 7 && !loading && (
           <button 
             onClick={goBack} 
-            className="mb-4 inline-flex items-center gap-1 text-slate-400 hover:text-white transition-colors text-xs font-bold tracking-wider uppercase"
+            className="mb-4 inline-flex items-center gap-1 text-slate-500 hover:text-[#00843D] transition-colors text-xs font-bold tracking-wider uppercase self-start"
           >
             <ArrowLeft size={14} /> Back to Previous Step
           </button>
@@ -354,15 +354,15 @@ export default function VehicleFinder() {
         {/* Step 1: Type */}
         {step === 1 && (
           <div className="animate-in fade-in duration-300">
-            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-white">Select Vehicle Category</h4>
+            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-slate-900">Select Vehicle Category</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
               {types.map((vt) => (
                 <button
                   key={vt}
                   onClick={() => handleTypeSelect(vt)}
-                  className="flex flex-col items-center justify-center p-6 border border-slate-800 bg-slate-950/80 rounded-2xl hover:border-brand/70 hover:bg-slate-800/80 transition-all text-white group active:scale-95 shadow-md hover:-translate-y-1"
+                  className="flex flex-col items-center justify-center p-6 border border-slate-200 bg-slate-50/70 rounded-2xl hover:border-[#00843D] hover:bg-emerald-50/40 hover:shadow-lg transition-all text-slate-800 group active:scale-95 hover:-translate-y-1"
                 >
-                  <div className="text-slate-400 group-hover:text-brand transition-colors mb-3 group-hover:scale-110">
+                  <div className="text-slate-500 group-hover:text-[#00843D] transition-colors mb-3 group-hover:scale-110">
                     {getIconForType(vt)}
                   </div>
                   <span className="font-bold text-xs sm:text-sm text-center">{vt}</span>
@@ -375,13 +375,13 @@ export default function VehicleFinder() {
         {/* Step 2: Brand */}
         {step === 2 && (
           <div className="animate-in fade-in duration-300">
-            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-white">Select Vehicle Make</h4>
+            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-slate-900">Select Vehicle Make</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-w-4xl mx-auto">
               {brands.map((brand) => (
                 <button
                   key={brand}
                   onClick={() => handleBrandSelect(brand)}
-                  className="py-3.5 px-3 border border-slate-800 bg-slate-950/80 rounded-xl hover:border-brand/70 hover:bg-slate-800 text-center font-bold text-xs sm:text-sm text-white active:scale-95 transition-all truncate"
+                  className="py-3.5 px-3 border border-slate-200 bg-slate-50 hover:bg-white hover:border-[#00843D] hover:shadow-md rounded-xl text-center font-bold text-xs sm:text-sm text-slate-800 active:scale-95 transition-all truncate"
                 >
                   {brand}
                 </button>
@@ -393,13 +393,13 @@ export default function VehicleFinder() {
         {/* Step 3: Model */}
         {step === 3 && (
           <div className="animate-in fade-in duration-300">
-            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-white">Select {selections.brand} Model</h4>
+            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-slate-900">Select {selections.brand} Model</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-w-4xl mx-auto">
               {models.map((model) => (
                 <button
                   key={model}
                   onClick={() => handleModelSelect(model)}
-                  className="py-3.5 px-3 border border-slate-800 bg-slate-950/80 rounded-xl hover:border-brand/70 hover:bg-slate-800 text-center font-bold text-xs sm:text-sm text-white active:scale-95 transition-all truncate"
+                  className="py-3.5 px-3 border border-slate-200 bg-slate-50 hover:bg-white hover:border-[#00843D] hover:shadow-md rounded-xl text-center font-bold text-xs sm:text-sm text-slate-800 active:scale-95 transition-all truncate"
                 >
                   {model}
                 </button>
@@ -411,13 +411,13 @@ export default function VehicleFinder() {
         {/* Step 4: Variant */}
         {step === 4 && (
           <div className="animate-in fade-in duration-300">
-            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-white">Select Vehicle Variant</h4>
+            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-slate-900">Select Vehicle Variant</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-w-4xl mx-auto">
               {variants.map((variant) => (
                 <button
                   key={variant}
                   onClick={() => handleVariantSelect(variant)}
-                  className="py-3.5 px-3 border border-slate-800 bg-slate-950/80 rounded-xl hover:border-brand/70 hover:bg-slate-800 text-center font-bold text-xs sm:text-sm text-white active:scale-95 transition-all truncate"
+                  className="py-3.5 px-3 border border-slate-200 bg-slate-50 hover:bg-white hover:border-[#00843D] hover:shadow-md rounded-xl text-center font-bold text-xs sm:text-sm text-slate-800 active:scale-95 transition-all truncate"
                 >
                   {variant}
                 </button>
@@ -429,13 +429,13 @@ export default function VehicleFinder() {
         {/* Step 5: Fuel */}
         {step === 5 && (
           <div className="animate-in fade-in duration-300">
-            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-white">Select Fuel Type</h4>
+            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-slate-900">Select Fuel Type</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
               {fuels.map((fuel) => (
                 <button
                   key={fuel}
                   onClick={() => handleFuelSelect(fuel)}
-                  className="py-5 px-4 border border-slate-800 bg-slate-950/80 rounded-2xl hover:border-brand/70 hover:bg-slate-800 text-center font-bold text-white flex flex-col items-center justify-center gap-2 active:scale-95 transition-all"
+                  className="py-5 px-4 border border-slate-200 bg-slate-50 hover:bg-white hover:border-[#00843D] hover:shadow-md rounded-2xl text-center font-bold text-slate-800 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all"
                 >
                   <span className="text-2xl">{fuel === "Electric" ? "⚡" : fuel === "Diesel" ? "🛢️" : "⛽"}</span>
                   <span className="text-xs sm:text-sm">{fuel}</span>
@@ -448,13 +448,13 @@ export default function VehicleFinder() {
         {/* Step 6: Year */}
         {step === 6 && (
           <div className="animate-in fade-in duration-300">
-            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-white">Select Manufacturing Year</h4>
+            <h4 className="text-base sm:text-lg font-bold mb-6 text-center text-slate-900">Select Manufacturing Year</h4>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 max-w-3xl mx-auto">
               {years.map((year) => (
                 <button
                   key={year}
                   onClick={() => handleYearSelect(year)}
-                  className="py-3.5 px-2 border border-slate-800 bg-slate-950/80 rounded-xl hover:border-brand/70 hover:bg-slate-800 text-center font-bold text-xs sm:text-sm text-white active:scale-95 transition-all"
+                  className="py-3.5 px-2 border border-slate-200 bg-slate-50 hover:bg-white hover:border-[#00843D] hover:shadow-md rounded-xl text-center font-bold text-xs sm:text-sm text-slate-800 active:scale-95 transition-all"
                 >
                   {year}
                 </button>
@@ -466,14 +466,14 @@ export default function VehicleFinder() {
         {/* Step 7: Result - VERIFIED MATCH (Amaron / VARTA Benchmark) */}
         {step === 7 && fitmentStatus === "verified" && recommendedProduct && (
           <div className="animate-in zoom-in-95 duration-400 flex flex-col items-center py-2">
-            <div className="w-full max-w-3xl bg-slate-950 border border-slate-800 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden">
+            <div className="w-full max-w-3xl bg-gradient-to-br from-emerald-50/40 via-white to-slate-50 border border-emerald-200/90 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 shadow-xl relative overflow-hidden">
               {/* Verified Badge */}
-              <div className="absolute top-0 right-0 bg-brand text-white px-4 py-1.5 text-[11px] font-black uppercase tracking-wider rounded-bl-xl flex items-center gap-1 shadow-md">
+              <div className="absolute top-0 right-0 bg-[#00843D] text-white px-4 py-1.5 text-[11px] font-black uppercase tracking-wider rounded-bl-xl flex items-center gap-1 shadow-md">
                 <CheckCircle size={14} /> OEM VERIFIED FITMENT
               </div>
               
               {/* Battery Visual */}
-              <div className="w-48 h-48 bg-slate-900 rounded-2xl flex items-center justify-center shrink-0 border border-slate-800 p-4 relative z-10 drop-shadow-xl">
+              <div className="w-48 h-48 bg-white rounded-2xl flex items-center justify-center shrink-0 border border-slate-200 p-4 relative z-10 shadow-sm">
                 {recommendedProduct.image ? (
                   <div className="w-full h-full relative">
                     <Image 
@@ -484,53 +484,53 @@ export default function VehicleFinder() {
                     />
                   </div>
                 ) : (
-                  <Battery size={64} className="text-slate-600" />
+                  <Battery size={64} className="text-slate-400" />
                 )}
               </div>
               
               {/* Product Information */}
               <div className="flex-1 text-center md:text-left relative z-10">
-                <span className="text-brand font-bold text-xs tracking-widest uppercase mb-1 block">
+                <span className="text-[#00843D] font-bold text-xs tracking-widest uppercase mb-1 block">
                   {recommendedProduct.series || "Goodwin Power"} Series
                 </span>
-                <h4 className="text-2xl sm:text-3xl font-heading font-black text-white mb-4">
+                <h4 className="text-2xl sm:text-3xl font-heading font-black text-slate-900 mb-4">
                   {recommendedProduct.name}
                 </h4>
                 
                 {/* Specs Matrix */}
                 <div className="grid grid-cols-3 gap-2.5 mb-5">
-                  <div className="bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-center">
-                    <span className="text-[10px] text-slate-400 block uppercase font-bold">Capacity</span>
-                    <strong className="text-white text-sm">{recommendedProduct.ah || "N/A"}</strong>
+                  <div className="bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-center">
+                    <span className="text-[10px] text-slate-500 block uppercase font-bold">Capacity</span>
+                    <strong className="text-slate-900 text-sm">{recommendedProduct.ah || "N/A"}</strong>
                   </div>
-                  <div className="bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-center">
-                    <span className="text-[10px] text-slate-400 block uppercase font-bold">Voltage</span>
-                    <strong className="text-white text-sm">{recommendedProduct.voltage || "12V"}</strong>
+                  <div className="bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-center">
+                    <span className="text-[10px] text-slate-500 block uppercase font-bold">Voltage</span>
+                    <strong className="text-slate-900 text-sm">{recommendedProduct.voltage || "12V"}</strong>
                   </div>
-                  <div className="bg-brand/10 px-3 py-2 rounded-xl border border-brand/30 text-center">
-                    <span className="text-[10px] text-emerald-400 block uppercase font-bold">Warranty</span>
-                    <strong className="text-emerald-300 text-sm">
+                  <div className="bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-200 text-center">
+                    <span className="text-[10px] text-emerald-800 block uppercase font-bold">Warranty</span>
+                    <strong className="text-[#00843D] text-sm font-black">
                       {recommendedProduct.warranty_options?.length ? recommendedProduct.warranty_options[0] : recommendedProduct.warranty || "36M"}
                     </strong>
                   </div>
                 </div>
 
-                <div className="bg-slate-900 rounded-xl p-3 mb-6 border border-slate-800 text-xs text-slate-400 text-left">
-                  <span className="font-bold text-white block mb-0.5">Matched for your vehicle:</span>
+                <div className="bg-slate-50 rounded-xl p-3 mb-6 border border-slate-200 text-xs text-slate-600 text-left">
+                  <span className="font-bold text-slate-900 block mb-0.5">Matched for your vehicle:</span>
                   {selections.brand} {selections.model} ({selections.variant}) • {selections.fuel} • {selections.year}
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link 
                     href={`/products/${recommendedProduct.slug}`} 
-                    className="bg-slate-800 hover:bg-slate-700 text-white px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-center flex-1 border border-slate-700"
+                    className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-center flex-1 shadow-md hover:shadow-lg"
                   >
                     View Specs
                   </Link>
                   <a 
                     href={`/api/datasheet/${recommendedProduct.slug}?download=true`} 
                     download 
-                    className="glass-dark hover:bg-slate-800 text-slate-300 hover:text-white px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 flex-1 border border-slate-700"
+                    className="bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 flex-1 border border-slate-200 shadow-sm"
                   >
                     <Download size={14} /> Datasheet
                   </a>
@@ -538,7 +538,7 @@ export default function VehicleFinder() {
                     href={whatsappUrl} 
                     target="_blank" 
                     rel="noreferrer" 
-                    className="bg-brand hover:bg-brand-dark text-white px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 flex-1 shadow-lg shadow-brand/20 active:scale-95"
+                    className="bg-[#00843D] hover:bg-[#006830] text-white px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 flex-1 shadow-lg shadow-emerald-700/20 active:scale-95"
                   >
                     <Phone size={14} /> WhatsApp Dealer
                   </a>
@@ -551,16 +551,16 @@ export default function VehicleFinder() {
         {/* Step 7: Empty State / UNVERIFIED MATCH */}
         {step === 7 && fitmentStatus === "unverified" && (
           <div className="animate-in zoom-in-95 duration-400 flex flex-col items-center py-6">
-            <div className="w-16 h-16 bg-slate-950 border border-slate-800 rounded-2xl flex items-center justify-center mb-5 text-amber-400">
+            <div className="w-16 h-16 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-center mb-5 text-amber-600">
               <Info size={28} />
             </div>
-            <h4 className="text-xl font-heading font-black mb-3 text-center text-white uppercase tracking-wider">
+            <h4 className="text-xl font-heading font-black mb-3 text-center text-slate-900 uppercase tracking-wider">
               Custom Vehicle Verification
             </h4>
-            <p className="text-slate-300 font-semibold mb-2 text-center text-sm">
+            <p className="text-slate-700 font-semibold mb-2 text-center text-sm">
               We want to ensure 100% exact tray dimensions and terminal polarity for your vehicle.
             </p>
-            <p className="text-slate-400 mb-6 max-w-md text-center text-xs leading-relaxed">
+            <p className="text-slate-500 mb-6 max-w-md text-center text-xs leading-relaxed">
               For <strong>{selections.brand} {selections.model} {selections.variant}</strong> ({selections.fuel}, {selections.year}), contact our technical fitment team directly via WhatsApp for an immediate match confirmation.
             </p>
             
@@ -569,13 +569,13 @@ export default function VehicleFinder() {
                 href={whatsappUrl} 
                 target="_blank" 
                 rel="noreferrer" 
-                className="bg-brand hover:bg-brand-dark text-white px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all w-full flex items-center justify-center gap-2 shadow-lg shadow-brand/20"
+                className="bg-[#00843D] hover:bg-[#006830] text-white px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all w-full flex items-center justify-center gap-2 shadow-lg shadow-emerald-700/20"
               >
                 <Phone size={16} /> WhatsApp Fitment Team
               </a>
               <Link 
                 href="/products" 
-                className="glass-dark hover:bg-slate-800 text-slate-200 px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all w-full flex items-center justify-center gap-2 border border-slate-700"
+                className="bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 px-6 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all w-full flex items-center justify-center gap-2 border border-slate-200 shadow-sm"
               >
                 Browse All Batteries
               </Link>

@@ -10,13 +10,12 @@ export default function BatteryCarePage() {
 
   return (
     <div className="flex flex-col w-full min-h-screen pt-20">
-      <section className="bg-[#09090b] py-20 border-b border-white/5 relative overflow-hidden">
-        <div className="absolute right-0 top-0 w-1/2 h-full bg-brand/5 blur-[100px] pointer-events-none" />
+      <section className="bg-gradient-to-b from-slate-50 to-white py-20 border-b border-slate-200 relative overflow-hidden">
         <div className="container relative z-10 text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-heading font-bold text-white mb-6">
-            BATTERY <span className="text-brand">CARE</span>
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-heading font-black text-slate-900 mb-6">
+            BATTERY <span className="text-[#00843D]">CARE</span>
           </h1>
-          <p className="text-muted-foreground text-lg md:text-xl leading-relaxed">
+          <p className="text-slate-600 text-lg md:text-xl leading-relaxed">
             Get the most out of your Goodwin battery with these expert maintenance tips and guidelines.
           </p>
         </div>
