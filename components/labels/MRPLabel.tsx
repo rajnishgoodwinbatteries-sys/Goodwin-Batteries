@@ -38,38 +38,51 @@ export default function MRPLabel({
       style={{
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '1.5mm',
+        maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
+        padding: '1mm 1.2mm',
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box'
       }}
     >
       {/* Top Header */}
-      <div className="flex justify-between items-start border-b-[0.5mm] border-black pb-[0.5mm] mb-[0.6mm]">
-        <div className="flex flex-col flex-1 min-w-0 pr-[1mm]">
-          {/* Logo with high-clarity typography and anti-bleed tracking */}
-          <h1 
-            className="font-black m-0 tracking-normal text-black uppercase" 
-            style={{ 
-              fontFamily: logoFont,
-              fontSize: '7.2pt', 
-              lineHeight: '1.05',
-              letterSpacing: letterSpacing,
-              fontWeight: 900
-            }}
+      <div className="flex justify-between items-center border-b-[0.4mm] border-black pb-[0.35mm] mb-[0.4mm]">
+        <div className="flex items-center gap-[0.8mm] flex-1 min-w-0 pr-[1mm]">
+          {/* Authentic Goodwin Tilak Vector Logo */}
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 100 120" 
+            className="w-[2.8mm] h-[3.4mm] shrink-0" 
+            fill="black"
           >
-            GOODWIN BATTERIES
-          </h1>
-          <div 
-            className="font-bold truncate text-black mt-[0.2mm]" 
-            style={{ 
-              fontFamily: bodyFont,
-              fontSize: '5pt', 
-              lineHeight: '1.1',
-              letterSpacing: '0.15px'
-            }}
-          >
-            {productName}
+            <path d="M 20 10 C 20 60, 20 80, 50 100 C 80 80, 80 60, 80 10 C 70 10, 65 30, 65 60 C 65 75, 55 85, 50 85 C 45 85, 35 75, 35 60 C 35 30, 30 10, 20 10 Z" fill="#000000" />
+            <path d="M 40 100 C 45 115, 55 115, 60 100 Z" fill="#000000" />
+            <path d="M 46 20 C 46 50, 48 70, 50 80 C 52 70, 54 50, 54 20 C 54 10, 46 10, 46 20 Z" fill="#000000" />
+          </svg>
+          <div className="flex flex-col min-w-0">
+            <h1 
+              className="font-black m-0 text-black uppercase whitespace-nowrap leading-none" 
+              style={{ 
+                fontFamily: logoFont,
+                fontSize: '5.8pt', 
+                lineHeight: '1',
+                letterSpacing: letterSpacing,
+                fontWeight: 900
+              }}
+            >
+              GOODWIN BATTERIES
+            </h1>
+            <div 
+              className="font-bold truncate text-black mt-[0.2mm] leading-none" 
+              style={{ 
+                fontFamily: bodyFont,
+                fontSize: '4.2pt', 
+                lineHeight: '1',
+                letterSpacing: '0.15px'
+              }}
+            >
+              {productName}
+            </div>
           </div>
         </div>
 

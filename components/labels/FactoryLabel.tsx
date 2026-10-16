@@ -19,127 +19,142 @@ export default function FactoryLabel({
   productModel,
   warranty,
   mfgDate,
-  logoFont = "'Arial Black', 'Trebuchet MS', Impact, sans-serif",
-  bodyFont = "Tahoma, Verdana, sans-serif",
+  logoFont = "'Arial Black', Impact, sans-serif",
+  bodyFont = "Tahoma, Arial, sans-serif",
   serialFont = "'Consolas', 'Courier New', monospace",
-  letterSpacing = "0.4px",
+  letterSpacing = "0.2px",
 }: FactoryLabelProps) {
   const verifyUrl = `https://goodwinbatteries.in/warranty`;
 
+  // Clean model name for display (e.g. "GW-XL2.5LC (12 Months)" -> "GW-XL2.5LC")
+  const cleanModel = productModel.replace(/\s*\([^)]*\)/g, '').trim() || productModel;
+
   return (
     <div 
-      className="label-container bg-white text-black box-border relative flex flex-col"
+      className="label-container bg-white text-black box-border relative flex flex-col justify-between"
       style={{
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '1.5mm',
+        maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
+        padding: '1mm 1.2mm',
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box'
       }}
     >
-      {/* Header with high-clarity logo typography and anti-bleed tracking */}
-      <div className="flex justify-between items-start border-b-[0.5mm] border-black pb-[0.5mm] mb-[0.8mm]">
-        <div className="flex flex-col flex-1 min-w-0 pr-[1mm]">
-          <div 
-            className="font-black tracking-normal text-black uppercase" 
-            style={{ 
-              fontFamily: logoFont,
-              fontSize: '8pt', 
-              lineHeight: '1.05',
-              letterSpacing: letterSpacing,
-              fontWeight: 900
-            }}
+      {/* 1. Header: Authentic Goodwin Vector Logo + Brand Name + Model Pill */}
+      <div className="flex items-center justify-between border-b-[0.4mm] border-black pb-[0.35mm] leading-none shrink-0">
+        <div className="flex items-center gap-[0.8mm] min-w-0">
+          {/* Authentic Goodwin Tilak Vector Logo */}
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 100 120" 
+            className="w-[2.8mm] h-[3.4mm] shrink-0" 
+            fill="black"
           >
-            GOODWIN BATTERIES
+            <path d="M 20 10 C 20 60, 20 80, 50 100 C 80 80, 80 60, 80 10 C 70 10, 65 30, 65 60 C 65 75, 55 85, 50 85 C 45 85, 35 75, 35 60 C 35 30, 30 10, 20 10 Z" fill="#000000" />
+            <path d="M 40 100 C 45 115, 55 115, 60 100 Z" fill="#000000" />
+            <path d="M 46 20 C 46 50, 48 70, 50 80 C 52 70, 54 50, 54 20 C 54 10, 46 10, 46 20 Z" fill="#000000" />
+          </svg>
+
+          <div className="flex flex-col">
+            <span 
+              className="font-black text-black tracking-tight uppercase whitespace-nowrap"
+              style={{ 
+                fontFamily: logoFont,
+                fontSize: '5.8pt', 
+                lineHeight: 1,
+                letterSpacing: letterSpacing,
+                fontWeight: 900
+              }}
+            >
+              GOODWIN BATTERIES
+            </span>
+            <span 
+              className="font-bold text-black tracking-tight uppercase"
+              style={{ 
+                fontFamily: bodyFont,
+                fontSize: '3.6pt', 
+                lineHeight: 1,
+                marginTop: '0.2mm'
+              }}
+            >
+              Your Trusted Power Source
+            </span>
           </div>
-          <div 
-            className="font-bold text-black" 
+        </div>
+
+        {/* Product Model Pill */}
+        <div className="shrink-0 ml-[0.8mm]">
+          <span 
+            className="bg-black text-white font-black px-[1mm] py-[0.3mm] rounded-[0.4mm] uppercase inline-block whitespace-nowrap"
             style={{ 
               fontFamily: bodyFont,
-              fontSize: '4.5pt',
-              lineHeight: '1.1',
+              fontSize: '5.6pt',
+              lineHeight: 1,
               letterSpacing: '0.2px'
             }}
           >
-            Your Trusted Power Source
-          </div>
-        </div>
-        <div 
-          className="font-extrabold text-right truncate text-black ml-[1mm]" 
-          style={{ 
-            fontFamily: bodyFont,
-            fontSize: '6.5pt', 
-            lineHeight: '1.1', 
-            maxWidth: '48%',
-            letterSpacing: '0.15px'
-          }}
-        >
-          {productModel}
+            {cleanModel}
+          </span>
         </div>
       </div>
 
-      {/* Main Body */}
-      <div className="flex flex-row justify-between flex-grow min-h-0">
-        {/* Left Side: QR & Clear High-Contrast Bottom Text */}
-        <div className="flex flex-col justify-between h-full w-[36%]">
-          <div className="flex-1 min-h-0 flex items-center justify-start">
-            <QRCodeSVG 
-              value={verifyUrl} 
-              style={{ width: '100%', height: '100%', maxWidth: '11.5mm', maxHeight: '11.5mm' }}
-              level="M" 
-              includeMargin={false} 
-              fgColor="#000000"
-              bgColor="#FFFFFF"
+      {/* 2. Middle Row: QR Code + Barcode */}
+      <div className="flex flex-row items-center justify-between gap-[1mm] my-[0.3mm] shrink-0">
+        {/* QR Code */}
+        <div className="shrink-0 flex items-center justify-center p-[0.2mm] bg-white border border-black/40 rounded-[0.3mm]">
+          <QRCodeSVG 
+            value={verifyUrl} 
+            size={28}
+            style={{ width: '7.6mm', height: '7.6mm' }}
+            level="M" 
+            includeMargin={false} 
+            fgColor="#000000"
+            bgColor="#FFFFFF"
+          />
+        </div>
+
+        {/* Barcode */}
+        <div className="flex-1 min-w-0 flex items-center justify-end overflow-hidden">
+          <div className="w-full flex items-center justify-end [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[7.6mm]">
+            <Barcode 
+              value={serialNumber} 
+              format="CODE128"
+              width={1}
+              height={28}
+              displayValue={false}
+              margin={0}
+              background="#ffffff"
+              lineColor="#000000"
             />
           </div>
-          <div 
-            className="mt-[0.5mm] shrink-0 text-black font-bold" 
-            style={{ 
-              fontFamily: bodyFont,
-              fontSize: '5.2pt', 
-              lineHeight: '1.25',
-              letterSpacing: '0.15px'
-            }}
-          >
-            <div className="truncate text-ellipsis">
-              <strong className="font-black">MFG:</strong> {mfgDate}
-            </div>
-            <div className="truncate text-ellipsis">
-              <strong className="font-black">WTY:</strong> {warranty}
-            </div>
+        </div>
+      </div>
+
+      {/* 3. Bottom Section: Clear Full-Width Metadata (NO Ellipses, NO Cutoff) */}
+      <div className="border-t-[0.3mm] border-black/70 pt-[0.35mm] shrink-0">
+        <div className="flex justify-between items-center text-black font-extrabold" style={{ fontSize: '4.8pt', lineHeight: 1 }}>
+          <div className="whitespace-nowrap">
+            <span className="font-black">MFG:</span> {mfgDate}
+          </div>
+          <div className="whitespace-nowrap">
+            <span className="font-black">WTY:</span> {warranty}
           </div>
         </div>
 
-        {/* Right Side: Barcode & Crisp Serial Number */}
-        <div className="flex flex-col h-full w-[62%] justify-between items-end ml-[1mm]">
-          <div className="w-full flex-grow min-h-0 flex items-center justify-end overflow-hidden">
-            <div className="w-full h-full flex items-center justify-end [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[11.5mm] [&>svg]:max-w-[21mm]">
-              <Barcode 
-                value={serialNumber} 
-                format="CODE128"
-                width={1.2}
-                height={35}
-                displayValue={false}
-                margin={0}
-                background="#ffffff"
-                lineColor="#000000"
-              />
-            </div>
-          </div>
-          <div 
-            className="font-bold text-right mt-[0.5mm] shrink-0 w-full text-black" 
-            style={{ 
-              fontFamily: serialFont,
-              fontSize: '5.2pt', 
-              lineHeight: '1.1', 
-              wordBreak: 'break-all',
-              letterSpacing: '0.4px',
-              fontWeight: 800
-            }}
-          >
-            {serialNumber}
-          </div>
+        {/* Full Serial Number */}
+        <div 
+          className="font-black text-center text-black tracking-wider mt-[0.3mm] whitespace-nowrap" 
+          style={{ 
+            fontFamily: serialFont,
+            fontSize: '5.2pt', 
+            lineHeight: 1,
+            letterSpacing: '0.3px',
+            fontWeight: 800
+          }}
+        >
+          {serialNumber}
         </div>
       </div>
     </div>

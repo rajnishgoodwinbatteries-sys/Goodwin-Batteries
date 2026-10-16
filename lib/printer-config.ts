@@ -30,9 +30,9 @@ export const THERMAL_FONT_PRESETS = {
     { id: "courier", name: "Courier New (Monospaced)", value: "'Courier New', Courier, monospace" },
   ],
   trackingOptions: [
-    { id: "anti-bleed", name: "Anti-Bleed (+0.4px - Recommended)", value: "0.4px" },
+    { id: "anti-bleed", name: "Anti-Bleed (+0.2px - Recommended)", value: "0.2px" },
     { id: "standard", name: "Standard (0px)", value: "0px" },
-    { id: "wide", name: "Wide (+0.8px)", value: "0.8px" },
+    { id: "wide", name: "Wide (+0.4px)", value: "0.4px" },
   ]
 };
 
@@ -46,8 +46,11 @@ export const getPrintCss = () => `
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       color-adjust: exact !important;
+      box-sizing: border-box !important;
     }
-    body, html {
+    html, body {
+      width: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm !important;
+      height: auto !important;
       margin: 0 !important;
       padding: 0 !important;
       background: #ffffff !important;
@@ -62,24 +65,52 @@ export const getPrintCss = () => `
     .print-page-wrapper {
       margin: 0 !important;
       padding: 0 !important;
-      background: white !important;
+      background: #ffffff !important;
+      width: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm !important;
+      height: auto !important;
     }
-    .label-container {
+    .print-labels-container {
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      gap: 0 !important;
+      width: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm !important;
+      height: auto !important;
+    }
+    .print-label-item {
+      display: block !important;
       width: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm !important;
       height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
+      max-height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       margin: 0 !important;
-      padding: 1.5mm !important;
-      box-sizing: border-box !important;
+      padding: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
       page-break-after: always !important;
       break-after: page !important;
       page-break-inside: avoid !important;
       break-inside: avoid !important;
+      overflow: hidden !important;
+    }
+    .print-label-item:last-child {
+      page-break-after: auto !important;
+      break-after: auto !important;
+    }
+    .label-container {
+      width: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm !important;
+      height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
+      max-height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
+      margin: 0 !important;
+      padding: 1mm 1.2mm !important;
+      box-sizing: border-box !important;
       overflow: hidden !important;
       background: #ffffff !important;
       color: #000000 !important;
       position: relative !important;
       border: none !important;
       box-shadow: none !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
       -webkit-font-smoothing: antialiased !important;
       text-rendering: geometricPrecision !important;
     }

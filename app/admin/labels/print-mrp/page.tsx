@@ -99,11 +99,11 @@ export default function PrintMRPPage() {
       )}
 
       {/* Preview container (styled for screen, reset for 38x25mm thermal print) */}
-      <div className="flex flex-wrap gap-4 p-8 print:p-0 bg-background print:bg-white pb-20 print:pb-0 justify-center print:justify-start">
+      <div className="print-labels-container flex flex-wrap gap-4 p-8 print:p-0 bg-background print:bg-white pb-20 print:pb-0 justify-center print:justify-start">
         {labelsToPrint.map((_, index) => (
           <div 
             key={index} 
-            className="shadow-xl print:shadow-none bg-white border border-gray-200 print:border-none rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
+            className="print-label-item shadow-xl print:shadow-none bg-white border border-gray-200 print:border-none rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
           >
             <MRPLabel
               productName={product.name}
