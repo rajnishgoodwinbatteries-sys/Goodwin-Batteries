@@ -154,6 +154,8 @@ export default function Footer() {
               <ShieldCheck size={14} className="text-[#00843D]" /> Explore & Tools
             </h4>
             <ul className="flex flex-col gap-3 text-xs font-medium">
+              <li><Link href="/account/login" className="text-[#00843D] font-bold hover:underline transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-100 transition-all"/> Customer Login & Account</Link></li>
+              <li><Link href="/track-order" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Track My Order</Link></li>
               <li><Link href="/gallery" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Manufacturing Gallery</Link></li>
               <li><Link href="/blogs" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Battery Care & Blogs</Link></li>
               <li><Link href="/vision" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Vision & Mission 2030</Link></li>
@@ -197,7 +199,8 @@ export default function Footer() {
           <p className="text-xs text-slate-500">
             &copy; {new Date().getFullYear()} {settings?.company_name || "Goodwin Batteries"}. All rights reserved. Registered Trademark.
           </p>
-          <div className="flex items-center gap-6 text-xs font-medium">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-medium">
+            <Link href="/account/login" className="text-[#00843D] font-bold hover:underline transition-colors">Customer Login</Link>
             <Link href="/privacy" className="text-slate-600 hover:text-[#00843D] transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="text-slate-600 hover:text-[#00843D] transition-colors">Terms of Use</Link>
             <Link href="/admin/login" className="text-slate-600 hover:text-[#00843D] transition-colors">Admin Portal</Link>

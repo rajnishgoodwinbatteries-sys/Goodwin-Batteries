@@ -361,6 +361,22 @@ export default function CheckoutClient() {
             </div>
           )}
 
+          {/* Quick Sign-In Banner */}
+          <div className="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <User size={18} className="text-[#00843D] shrink-0" />
+              <span className="text-slate-700 font-medium">
+                Already registered with Goodwin? <strong className="text-slate-900">Sign in with OTP</strong> to view your past orders & invoices.
+              </span>
+            </div>
+            <Link
+              href="/account/login?redirect=/checkout"
+              className="bg-[#00843D] hover:bg-[#006830] text-white px-3.5 py-1.5 rounded-xl font-bold uppercase tracking-wider text-[11px] shrink-0 transition-colors shadow-xs"
+            >
+              Sign In &rarr;
+            </Link>
+          </div>
+
           <form onSubmit={handleSubmitOrder} className="space-y-8">
             
             {/* Step 1: Contact Information */}

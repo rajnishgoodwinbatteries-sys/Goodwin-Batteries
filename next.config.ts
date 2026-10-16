@@ -18,6 +18,41 @@ const nextConfig: NextConfig = {
         destination: '/support/warranty-registration',
         permanent: true,
       },
+      {
+        source: '/login',
+        destination: '/account/login',
+        permanent: false,
+      },
+      {
+        source: '/account',
+        destination: '/account/login',
+        permanent: false,
+      },
+      {
+        source: '/signin',
+        destination: '/account/login',
+        permanent: false,
+      },
+      {
+        source: '/sign-in',
+        destination: '/account/login',
+        permanent: false,
+      },
+      {
+        source: '/customer-login',
+        destination: '/account/login',
+        permanent: false,
+      },
+      {
+        source: '/customer/login',
+        destination: '/account/login',
+        permanent: false,
+      },
+      {
+        source: '/my-account',
+        destination: '/account/orders',
+        permanent: false,
+      },
     ];
   },
 };

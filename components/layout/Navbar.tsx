@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   Menu, X, Search, BatteryCharging, Briefcase, 
-  ShieldCheck, Phone, MapPin, Zap, ChevronDown, Sparkles, ShoppingBag, Truck 
+  ShieldCheck, Phone, MapPin, Zap, ChevronDown, Sparkles, ShoppingBag, Truck, User 
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
@@ -29,6 +29,21 @@ export default function Navbar() {
   const pathname = usePathname();
   const settings = useGlobalSettings();
   const { itemCount, openCart } = useCart();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [customerName, setCustomerName] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check if customer is authenticated
+    const phone = localStorage.getItem("goodwin_customer_phone");
+    const name = localStorage.getItem("goodwin_customer_name");
+    if (phone) {
+      setIsLoggedIn(true);
+      if (name) setCustomerName(name);
+    } else {
+      setIsLoggedIn(false);
+      setCustomerName(null);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,7 +81,15 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="flex items-center gap-6 font-medium">
+          <div className="flex items-center gap-4 sm:gap-6 font-medium">
+            <Link 
+              href={isLoggedIn ? "/account/orders" : "/account/login"} 
+              className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 px-2.5 py-0.5 rounded-full text-white font-bold transition-all border border-white/25 shadow-xs"
+            >
+              <User size={12} className="text-amber-300" />
+              <span>{isLoggedIn ? (customerName ? `Hi, ${customerName.split(" ")[0]}` : "My Account") : "Customer Login"}</span>
+            </Link>
+            <span className="text-white/40">•</span>
             <Link 
               href="/warranty" 
               className="flex items-center gap-1 hover:text-amber-200 transition-colors text-white"
@@ -330,6 +353,21 @@ export default function Navbar() {
 
           {/* Desktop Actions (Strictly xl:flex to match nav breakpoint) */}
           <div className="hidden xl:flex items-center gap-2.5 2xl:gap-3 shrink-0">
+            {/* Customer Login / My Account */}
+            <Link
+              href={isLoggedIn ? "/account/orders" : "/account/login"}
+              className={clsx(
+                "flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-full transition-all border shadow-xs shrink-0",
+                isLoggedIn 
+                  ? "bg-emerald-50 text-[#00843D] border-emerald-300 hover:bg-emerald-100" 
+                  : "bg-white text-slate-800 border-slate-300 hover:border-[#00843D] hover:text-[#00843D]"
+              )}
+              title={isLoggedIn ? "View My Orders & Account" : "Customer Login with Mobile OTP"}
+            >
+              <User size={14} className={isLoggedIn ? "text-[#00843D]" : "text-slate-600"} />
+              <span>{isLoggedIn ? (customerName ? `Hi, ${customerName.split(" ")[0]}` : "My Account") : "Login / Account"}</span>
+            </Link>
+
             {/* My Orders / Tracking */}
             <Link
               href="/account/orders"
@@ -337,7 +375,7 @@ export default function Navbar() {
               title="Track live orders & download GST invoice"
             >
               <Truck size={14} className="text-[#00843D]" />
-              <span>My Orders</span>
+              <span>Orders</span>
             </Link>
 
             {/* Cart Trigger */}
@@ -374,13 +412,19 @@ export default function Navbar() {
 
           {/* Mobile & Tablet Right Controls */}
           <div className="flex items-center gap-2 xl:hidden shrink-0">
-            {/* Quick My Orders button on tablets */}
+            {/* Customer Login direct icon/button on mobile header */}
             <Link
-              href="/account/orders"
-              className="hidden sm:flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-[#00843D] border border-gray-200 px-3 py-1.5 rounded-xl bg-slate-50 transition-colors"
+              href={isLoggedIn ? "/account/orders" : "/account/login"}
+              className={clsx(
+                "flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-xl border transition-colors",
+                isLoggedIn
+                  ? "bg-emerald-50 text-[#00843D] border-emerald-300"
+                  : "bg-slate-50 text-slate-800 hover:text-[#00843D] border-slate-200"
+              )}
+              title="Customer Login / Account"
             >
-              <Truck size={14} className="text-[#00843D]" />
-              <span>Orders</span>
+              <User size={14} className="text-[#00843D]" />
+              <span>{isLoggedIn ? "Account" : "Login"}</span>
             </Link>
 
             <button
@@ -416,8 +460,32 @@ export default function Navbar() {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="fixed inset-0 z-30 bg-white text-slate-900 xl:hidden flex flex-col pt-24 pb-8 px-6 overflow-y-auto"
           >
-            {/* Quick Helper Banner */}
-            <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-between">
+            {/* Customer Login & Order Banner in Mobile Drawer */}
+            <div className="mb-4 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 flex items-center justify-between shadow-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#00843D] text-white flex items-center justify-center">
+                  <User size={20} />
+                </div>
+                <div>
+                  <div className="text-xs font-black text-slate-900 uppercase">
+                    {isLoggedIn ? (customerName || "Customer Account") : "Customer Account"}
+                  </div>
+                  <div className="text-[11px] text-slate-500 font-medium">
+                    {isLoggedIn ? "View Orders & Invoices" : "OTP Login / Track Orders"}
+                  </div>
+                </div>
+              </div>
+              <Link 
+                href={isLoggedIn ? "/account/orders" : "/account/login"} 
+                onClick={() => setMobileMenuOpen(false)}
+                className="bg-[#00843D] text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm hover:bg-[#006830] transition-colors"
+              >
+                {isLoggedIn ? "Orders →" : "Login →"}
+              </Link>
+            </div>
+
+            {/* Quick Helpline Banner */}
+            <div className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
                 <div className="text-xs text-[#00843D] font-bold uppercase tracking-wider">Helpline</div>
                 <a href="tel:9220404411" className="text-lg font-black text-slate-900 hover:text-[#00843D]">9220404411</a>
@@ -434,6 +502,7 @@ export default function Navbar() {
             <nav className="flex flex-col gap-3 flex-1">
               {[
                 { name: "Home", href: "/" },
+                { name: "👤 Customer Login & Orders", href: "/account/login" },
                 { name: "Products & Catalogue", href: "/products" },
                 { name: "Upcoming Innovations", href: "/upcoming-products" },
                 { name: "Vehicle Battery Finder", href: "/battery-finder" },

@@ -320,6 +320,18 @@ export default function CartDrawer() {
               </button>
             </div>
 
+            <div className="text-center text-[11px] text-slate-500 pt-0.5">
+              Have an account?{" "}
+              <Link
+                href="/account/login"
+                onClick={closeCart}
+                className="text-[#00843D] font-bold hover:underline"
+              >
+                Login with OTP
+              </Link>{" "}
+              for fast checkout & saved orders
+            </div>
+
             {/* Trust badge */}
             <div className="flex items-center justify-center gap-4 text-[10px] text-slate-500 font-bold uppercase tracking-wider pt-1">
               <span className="flex items-center gap-1">
