@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Loader2, Search, CheckCircle, ShieldCheck, AlertCircle, Phone, ArrowRight, Award, Zap } from "lucide-react";
 import { publicWarrantyLookup } from "@/app/actions/public-actions";
 
@@ -99,8 +100,16 @@ export default function PublicWarrantyPage() {
                 <div className="font-mono font-black text-amber-900 bg-amber-100 py-2.5 px-5 rounded-xl border border-amber-300 inline-block mb-4 text-sm tracking-wider">
                   {result.battery.serial_number}
                 </div>
+                <div className="mt-3 mb-4">
+                  <Link
+                    href={`/support/warranty-registration?serial=${encodeURIComponent(result.battery.serial_number)}`}
+                    className="inline-flex items-center gap-2 bg-[#00843D] text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow hover:bg-[#006830] transition-colors"
+                  >
+                    Register Digital Warranty Now →
+                  </Link>
+                </div>
                 <p className="text-xs text-slate-500">
-                  Please ask your authorized dealer to scan the QR code to activate your digital warranty certificate.
+                  You can register online above or ask your authorized dealer to activate your digital warranty certificate.
                 </p>
               </div>
             )}

@@ -1,7 +1,25 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: '/warranty-registration',
+        destination: '/support/warranty-registration',
+        permanent: true,
+      },
+      {
+        source: '/warranty/registration',
+        destination: '/support/warranty-registration',
+        permanent: true,
+      },
+      {
+        source: '/register-warranty',
+        destination: '/support/warranty-registration',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

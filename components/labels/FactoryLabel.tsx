@@ -24,7 +24,9 @@ export default function FactoryLabel({
   serialFont = "'Consolas', 'Courier New', monospace",
   letterSpacing = "0px",
 }: FactoryLabelProps) {
-  const verifyUrl = `https://goodwinbatteries.in/warranty`;
+  const verifyUrl = serialNumber
+    ? `https://goodwinbatteries.in/support/warranty-registration?serial=${encodeURIComponent(serialNumber.trim())}`
+    : `https://goodwinbatteries.in/support/warranty-registration`;
 
   // Clean model name for display (e.g. "GW-XL2.5LC (12 Months)" -> "GW-XL2.5LC")
   const cleanModel = productModel.replace(/\s*\([^)]*\)/g, '').trim() || productModel;
@@ -128,7 +130,7 @@ export default function FactoryLabel({
             value={verifyUrl} 
             size={28}
             style={{ width: '6.8mm', height: '6.8mm', imageRendering: 'pixelated' }}
-            level="M" 
+            level="L" 
             includeMargin={false} 
             fgColor="#000000"
             bgColor="#FFFFFF"

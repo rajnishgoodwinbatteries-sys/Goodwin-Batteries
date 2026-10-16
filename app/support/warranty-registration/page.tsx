@@ -24,6 +24,28 @@ export default function WarrantyRegistrationPage() {
         setAllPlans(uniquePlans);
       }
     });
+
+    // Auto-detect serial number from QR code scan
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const scannedSerial = params.get("serial") || params.get("serial_number");
+      if (scannedSerial) {
+        const cleanSerial = scannedSerial.trim().toUpperCase();
+        setFormData(prev => ({ ...prev, serial_number: cleanSerial }));
+        
+        // Attempt to auto-select matching battery model
+        supabase
+          .from('battery_serials')
+          .select('product_id')
+          .eq('serial_number', cleanSerial)
+          .single()
+          .then(({ data }) => {
+            if (data?.product_id) {
+              setFormData(prev => ({ ...prev, battery_model_id: data.product_id }));
+            }
+          });
+      }
+    }
   }, []);
 
   const [formData, setFormData] = useState({

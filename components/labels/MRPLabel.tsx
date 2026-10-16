@@ -30,7 +30,9 @@ export default function MRPLabel({
   serialFont = "'Consolas', 'Courier New', monospace",
   letterSpacing = "0.4px",
 }: MRPLabelProps) {
-  const verifyUrl = `https://goodwinbatteries.in/warranty`;
+  const verifyUrl = serialNumber
+    ? `https://goodwinbatteries.in/support/warranty-registration?serial=${encodeURIComponent(serialNumber.trim())}`
+    : `https://goodwinbatteries.in/support/warranty-registration`;
 
   return (
     <div 
@@ -168,7 +170,7 @@ export default function MRPLabel({
             <QRCodeSVG 
               value={verifyUrl} 
               style={{ width: '100%', height: '100%', maxWidth: '10mm', maxHeight: '10mm' }}
-              level="M" 
+              level="L" 
               includeMargin={false} 
               fgColor="#000000"
               bgColor="#FFFFFF"
