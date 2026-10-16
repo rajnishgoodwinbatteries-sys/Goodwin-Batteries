@@ -181,7 +181,6 @@ export default function MRPLabel({
           >
             <div><strong className="font-black">CC:</strong> 9220404411</div>
             <div>Scan QR for Portal</div>
-            <div className="font-black tracking-wide">Made in India</div>
           </div>
         </div>
 
@@ -210,9 +209,9 @@ export default function MRPLabel({
 
       {/* Optional Full-width Serial Number (36mm wide - 100% visible for all serial lengths!) */}
       {serialNumber && (
-        <div className="w-full border-t-[0.35mm] border-black pt-[0.25mm] mt-[0.25mm] flex items-center justify-between shrink-0">
-          <span className="text-[2.6pt] font-black uppercase text-black tracking-wider leading-none">
-            S/N:
+        <div className="w-full border-t-[0.4mm] border-black pt-[0.6mm] mt-[0.4mm] flex items-center justify-between shrink-0 leading-none">
+          <span className="text-[2.8pt] font-black uppercase text-black tracking-wider shrink-0 pr-[0.8mm]">
+            SERIAL NO:
           </span>
           <span 
             className="font-mono font-black text-center flex-1 mx-[0.5mm] leading-none whitespace-nowrap overflow-hidden text-black"
@@ -225,7 +224,7 @@ export default function MRPLabel({
           >
             {serialNumber}
           </span>
-          <span className="text-[2.6pt] font-black text-black uppercase tracking-wider leading-none">
+          <span className="text-[2.6pt] font-black text-black uppercase tracking-wider shrink-0 pl-[0.8mm]">
             INDIA
           </span>
         </div>

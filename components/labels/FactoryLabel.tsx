@@ -74,7 +74,7 @@ export default function FactoryLabel({
           width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
           height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
           maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-          padding: '0.8mm 1.0mm 2.0mm 1.0mm', // 2.0mm bottom clearance protects from printer tear bar
+          padding: '1.0mm 1.2mm 1.8mm 1.2mm', // 1.8mm bottom clearance protects from printer tear bar
           overflow: 'hidden',
           fontFamily: bodyFont,
           boxSizing: 'border-box',
@@ -84,15 +84,15 @@ export default function FactoryLabel({
           textRendering: 'geometricPrecision'
         }}
       >
-        {/* TOP SECTION: MAX SCANNABLE QR CODE (LEFT) + ONLY GW LOGO & MODEL BOX (RIGHT) */}
-        <div className="flex flex-row items-stretch justify-between flex-1 min-h-0 pb-[0.35mm]">
+        {/* TOP SECTION: SCANNABLE QR CODE (LEFT) + BRAND, MODEL & SPECS (RIGHT) */}
+        <div className="flex flex-row items-stretch justify-between flex-1 min-h-0">
           {/* LEFT: THE GIANT SCANNABLE QR CODE */}
-          <div className="flex flex-col items-center justify-between w-[17.5mm] shrink-0 pr-[0.8mm] border-r-[0.35mm] border-black">
+          <div className="flex flex-col items-center justify-between w-[16.0mm] shrink-0 pr-[1.0mm] border-r-[0.35mm] border-black">
             <div className="w-full flex-1 flex items-center justify-center bg-white min-h-0">
               <QRCodeSVG 
                 value={verifyUrl} 
                 size={56}
-                style={{ width: '14.0mm', height: '14.0mm', imageRendering: 'pixelated' }}
+                style={{ width: '13.5mm', height: '13.5mm', imageRendering: 'pixelated' }}
                 level="L" 
                 includeMargin={false} 
                 fgColor="#000000"
@@ -101,20 +101,20 @@ export default function FactoryLabel({
             </div>
 
             <div 
-              className="w-full text-center font-black text-black tracking-tight uppercase leading-none pt-[0.25mm]"
-              style={{ fontSize: '3.0pt', letterSpacing: '0.1px', textShadow: '0 0 0.15px #000000' }}
+              className="w-full text-center font-black text-black tracking-tight uppercase leading-none pt-[0.4mm]"
+              style={{ fontSize: '2.8pt', letterSpacing: '0.1px', textShadow: '0 0 0.15px #000000' }}
             >
-              SCAN FOR E-WARRANTY
+              SCAN FOR WARRANTY
             </div>
           </div>
 
           {/* RIGHT: ONLY GW LOGO + AUTO-ADJUSTING MODEL + WARRANTY & METADATA */}
-          <div className="flex flex-col justify-between flex-1 min-w-0 pl-[0.8mm] h-full">
-            {/* Top: ONLY Authentic GW Circular Emblem (NO "Goodwin" text!) + Warranty Pill */}
-            <div className="flex items-center justify-between border-b-[0.35mm] border-black pb-[0.3mm]">
+          <div className="flex flex-col justify-between flex-1 min-w-0 pl-[1.2mm] h-full py-[0.1mm]">
+            {/* Top Row: ONLY Authentic GW Circular Emblem (NO "Goodwin" text!) + Horizontal Warranty Badge */}
+            <div className="flex items-center justify-between pb-[0.2mm]">
               <svg 
                 viewBox="0 0 100 100" 
-                className="w-[4.8mm] h-[4.8mm] shrink-0" 
+                className="w-[5.0mm] h-[5.0mm] shrink-0" 
                 fill="none" 
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -125,58 +125,50 @@ export default function FactoryLabel({
                 />
               </svg>
 
-              <div className="flex flex-col items-end leading-none">
-                <span 
-                  className="font-black text-black border-[0.35mm] border-black rounded-[0.35mm] px-[0.8mm] py-[0.25mm] bg-white uppercase text-center"
-                  style={{ fontSize: '4.2pt', lineHeight: 1, textShadow: '0 0 0.15px #000000' }}
-                >
+              {/* Self-contained horizontal Warranty badge: ZERO overlap */}
+              <div className="border-[0.35mm] border-black rounded-[0.35mm] px-[1.0mm] py-[0.4mm] bg-white text-center leading-none inline-flex items-center gap-[0.6mm]">
+                <span className="font-black text-[4.6pt] text-black tracking-tight" style={{ textShadow: '0 0 0.15px #000000' }}>
                   {cleanWarranty}
                 </span>
-                <span className="text-[2.6pt] font-black uppercase text-black tracking-widest mt-[0.2mm]">
+                <span className="text-[2.8pt] font-black uppercase text-black tracking-wider">
                   WARRANTY
                 </span>
               </div>
             </div>
 
-            {/* Model Box - AUTO-ADJUSTS DYNAMICALLY FOR ALL MODELS */}
-            <div className="border-[0.35mm] border-black rounded-[0.35mm] px-[0.6mm] py-[0.35mm] bg-white flex flex-col items-center justify-center text-center my-[0.2mm]">
-              <span className="text-[2.6pt] font-black text-black uppercase leading-none tracking-wider mb-[0.2mm]">
+            {/* Model Box - AUTO-ADJUSTS DYNAMICALLY WITH GENEROUS INNER PADDING */}
+            <div className="border-[0.35mm] border-black rounded-[0.35mm] px-[0.8mm] py-[0.7mm] bg-white flex flex-col items-center justify-center text-center my-[0.4mm]">
+              <div className="text-[2.6pt] font-black text-black uppercase leading-none tracking-wider mb-[0.4mm]">
                 BATTERY MODEL
-              </span>
-              <span 
+              </div>
+              <div 
                 className="font-black text-black uppercase tracking-tight truncate w-full leading-none"
                 style={{ 
                   fontFamily: bodyFont,
                   fontSize: modelStyle.fontSize,
                   letterSpacing: modelStyle.letterSpacing,
-                  lineHeight: 1,
                   textShadow: '0 0 0.15px #000000'
                 }}
               >
                 {cleanModel}
-              </span>
+              </div>
             </div>
 
-            {/* Metadata (NO "GENUINE"!) */}
-            <div className="flex items-center justify-between text-black font-bold pt-[0.2mm] border-t-[0.35mm] border-black leading-none" style={{ fontSize: '3.4pt' }}>
-              <span style={{ textShadow: '0 0 0.15px #000000' }}>
-                <strong>MFG:</strong> {mfgDate}
-              </span>
-              <span className="uppercase font-black tracking-wider" style={{ fontSize: '2.8pt' }}>
-                MADE IN INDIA
-              </span>
+            {/* MFG Date Row - Dedicated line with generous room, ZERO collision */}
+            <div className="flex items-center justify-start text-black font-black text-[3.6pt] leading-none pt-[0.2mm]">
+              <span className="mr-[0.6mm]">MFG:</span>
+              <span>{mfgDate}</span>
             </div>
           </div>
         </div>
 
         {/* BOTTOM SECTION: FULL-WIDTH SERIAL NUMBER (36mm WIDE - 100% VISIBLE FOR ALL SERIALS!) */}
-        <div className="w-full border-[0.35mm] border-black rounded-[0.35mm] px-[0.6mm] py-[0.3mm] bg-white flex flex-col items-center justify-center text-center shrink-0">
-          <div className="w-full flex items-center justify-between text-[2.5pt] font-black text-black uppercase leading-none px-[0.4mm] mb-[0.2mm]">
-            <span>SERIAL NUMBER</span>
-            <span>PORTAL VERIFIED</span>
-          </div>
-          <div 
-            className="font-black text-black uppercase whitespace-nowrap overflow-hidden w-full leading-none font-mono text-center"
+        <div className="w-full border-t-[0.4mm] border-black pt-[0.6mm] mt-[0.4mm] flex items-center justify-between shrink-0 leading-none">
+          <span className="text-[2.8pt] font-black uppercase text-black tracking-wider shrink-0 pr-[0.8mm]">
+            SERIAL NO:
+          </span>
+          <span 
+            className="font-black text-black uppercase whitespace-nowrap overflow-hidden font-mono text-center flex-1 mx-[0.5mm] leading-none"
             style={{ 
               fontFamily: serialFont,
               fontSize: serialStyle.fontSize,
@@ -186,7 +178,10 @@ export default function FactoryLabel({
             }}
           >
             {serialNumber}
-          </div>
+          </span>
+          <span className="text-[2.6pt] font-black text-black uppercase tracking-wider shrink-0 pl-[0.8mm]">
+            INDIA
+          </span>
         </div>
       </div>
     );
