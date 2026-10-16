@@ -25,35 +25,51 @@ export default function MRPLabel({
   mrp,
   mfgDate,
   serialNumber,
-  logoFont = "'Arial Black', 'Trebuchet MS', Impact, sans-serif",
   bodyFont = "Tahoma, Verdana, sans-serif",
   serialFont = "'Consolas', 'Courier New', monospace",
-  letterSpacing = "0.4px",
 }: MRPLabelProps) {
   const verifyUrl = serialNumber
     ? `https://goodwinbatteries.in/support/warranty-registration?serial=${encodeURIComponent(serialNumber.trim())}`
     : `https://goodwinbatteries.in/support/warranty-registration`;
 
+  // Clean model and product name for display (strip any "Goodwin" text to keep ONLY GW logo)
+  const cleanProductName = productName.replace(/goodwin\s*/gi, '').trim() || 'AUTOMOTIVE BATTERY';
+  const cleanModel = productModel.replace(/\s*\([^)]*\)/g, '').trim() || productModel;
+
+  // Auto-adjust font size for model based on length to guarantee 100% fit
+  const getModelStyle = (len: number) => {
+    if (len <= 7) return { fontSize: '5.6pt', letterSpacing: '0.1px' };
+    if (len <= 11) return { fontSize: '4.8pt', letterSpacing: '0px' };
+    if (len <= 15) return { fontSize: '4.2pt', letterSpacing: '-0.05px' };
+    return { fontSize: '3.6pt', letterSpacing: '-0.1px' };
+  };
+
+  const modelStyle = getModelStyle(cleanModel.length);
+
   return (
     <div 
-      className="label-container bg-white text-black box-border relative flex flex-col"
+      className="label-container bg-white text-black box-border relative flex flex-col justify-between"
       style={{
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '1mm 1.2mm',
+        padding: '0.8mm 1.0mm 2.0mm 1.0mm',
         overflow: 'hidden',
         fontFamily: bodyFont,
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        backgroundColor: '#ffffff',
+        color: '#000000',
+        WebkitFontSmoothing: 'none',
+        textRendering: 'geometricPrecision'
       }}
     >
-      {/* Top Header */}
-      <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.4mm]">
+      {/* Top Header: ONLY GW LOGO (No "Goodwin" text!) + Auto-adjusting Model Box + Voltage/Capacity */}
+      <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.3mm] shrink-0">
         <div className="flex items-center gap-[0.8mm] flex-1 min-w-0 pr-[1mm]">
-          {/* Authentic Goodwin G Circular Emblem */}
+          {/* Authentic GW Circular Emblem (Sharp 100% Black Vector) */}
           <svg 
             viewBox="0 0 100 100" 
-            className="w-[3.4mm] h-[3.4mm] shrink-0" 
+            className="w-[4.4mm] h-[4.4mm] shrink-0" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -63,50 +79,44 @@ export default function MRPLabel({
               fill="#000000" 
             />
           </svg>
+
           <div className="flex flex-col min-w-0">
-            <h1 
-              className="font-black m-0 text-black uppercase whitespace-nowrap leading-none" 
-              style={{ 
-                fontFamily: logoFont,
-                fontSize: '5.8pt', 
-                lineHeight: '1',
-                letterSpacing: letterSpacing,
-                fontWeight: 900
-              }}
-            >
-              GOODWIN BATTERIES
-            </h1>
+            <span className="text-[3.0pt] font-black uppercase text-black tracking-wider leading-none">
+              GENUINE PRODUCT
+            </span>
             <div 
               className="font-bold truncate text-black mt-[0.2mm] leading-none" 
               style={{ 
                 fontFamily: bodyFont,
-                fontSize: '4.2pt', 
+                fontSize: '4.0pt', 
                 lineHeight: '1',
-                letterSpacing: '0.15px'
+                letterSpacing: '0.1px'
               }}
             >
-              {productName}
+              {cleanProductName}
             </div>
           </div>
         </div>
 
-        <div className="text-right flex-shrink-0 ml-[0.5mm] max-w-[15mm]">
+        {/* Model Box on Header Right: Auto-adjusts for all models */}
+        <div className="text-right flex-shrink-0 ml-[0.5mm] max-w-[17mm]">
           <div 
-            className="font-extrabold border-[0.35mm] border-black bg-white text-black px-[0.8mm] py-[0.2mm] inline-block truncate w-full text-center rounded-[0.3mm]" 
+            className="font-black border-[0.35mm] border-black bg-white text-black px-[0.8mm] py-[0.25mm] inline-block truncate w-full text-center rounded-[0.35mm] leading-none" 
             style={{ 
               fontFamily: bodyFont,
-              fontSize: '5.2pt', 
+              fontSize: modelStyle.fontSize, 
               lineHeight: '1',
-              letterSpacing: '0.1px'
+              letterSpacing: modelStyle.letterSpacing,
+              textShadow: '0 0 0.15px #000000'
             }}
           >
-            {productModel}
+            {cleanModel}
           </div>
           <div 
-            className="font-extrabold text-black mt-[0.3mm]" 
+            className="font-extrabold text-black mt-[0.2mm] leading-none" 
             style={{ 
               fontFamily: bodyFont,
-              fontSize: '4.5pt', 
+              fontSize: '4.0pt', 
               lineHeight: '1' 
             }}
           >
@@ -115,26 +125,26 @@ export default function MRPLabel({
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-row flex-grow justify-between mt-[0.4mm] min-h-0">
+      {/* Main Content Area */}
+      <div className="flex flex-row flex-grow justify-between items-stretch mt-[0.2mm] min-h-0">
         
-        {/* Left Side: Specs, Price, and High-Clarity Bottom Details */}
+        {/* Left Side: Pricing & Metadata */}
         <div 
-          className="flex flex-col justify-between w-[54%] text-black h-full" 
+          className="flex flex-col justify-between w-[52%] text-black h-full pr-[0.8mm]" 
           style={{ fontFamily: bodyFont }}
         >
-          <div className="space-y-[0.5mm]">
+          <div className="space-y-[0.3mm]">
             <div>
-              <span className="font-extrabold" style={{ fontSize: '5pt' }}>MRP: </span> 
+              <span className="font-extrabold" style={{ fontSize: '4.8pt' }}>MRP: </span> 
               <span 
                 className="font-black text-black ml-[0.5mm]" 
-                style={{ fontSize: '7.5pt', letterSpacing: '0.2px' }}
+                style={{ fontSize: '7.5pt', letterSpacing: '0.2px', textShadow: '0 0 0.15px #000000' }}
               >
                 ₹{mrp}
               </span>
               <div 
                 className="font-bold text-black" 
-                style={{ fontSize: '4pt', lineHeight: '1', letterSpacing: '0.1px' }}
+                style={{ fontSize: '3.6pt', lineHeight: '1', letterSpacing: '0.1px' }}
               >
                 (Incl. of all taxes)
               </div>
@@ -142,63 +152,59 @@ export default function MRPLabel({
             
             <div 
               className="text-black" 
-              style={{ fontSize: '4.8pt', lineHeight: '1.1' }}
+              style={{ fontSize: '4.4pt', lineHeight: '1.1' }}
             >
               <strong className="font-black">MFG: </strong> 
               <span className="font-bold">{mfgDate}</span>
             </div>
           </div>
           
-          {/* Bottom text block - Enhanced contrast, clear line-height, no blur */}
+          {/* Bottom details */}
           <div 
-            className="pt-[0.5mm] text-black font-bold" 
+            className="pt-[0.3mm] text-black font-bold" 
             style={{ 
-              fontSize: '4.2pt', 
-              lineHeight: '1.25',
-              letterSpacing: '0.15px'
+              fontSize: '3.8pt', 
+              lineHeight: '1.2',
+              letterSpacing: '0.1px'
             }}
           >
             <div><strong className="font-black">CC:</strong> 9220404411</div>
-            <div>goodwinbatteries.in</div>
+            <div>Scan QR for Portal</div>
             <div className="font-black tracking-wide">Made in India</div>
           </div>
         </div>
 
-        {/* Right Side: QR & Barcode */}
-        <div className="flex flex-col justify-between items-end w-[46%] h-full">
-          <div className="flex-shrink-0">
+        {/* Right Side: MAX SCANNABLE QR CODE & OPTIONAL BARCODE */}
+        <div className="flex flex-col justify-between items-center w-[48%] h-full pl-[0.8mm] border-l-[0.35mm] border-black">
+          <div className="flex-1 flex flex-col items-center justify-center w-full">
             <QRCodeSVG 
               value={verifyUrl} 
-              style={{ width: '100%', height: '100%', maxWidth: '10mm', maxHeight: '10mm' }}
+              size={48}
+              style={{ 
+                width: serialNumber ? '11.5mm' : '14.0mm', 
+                height: serialNumber ? '11.5mm' : '14.0mm', 
+                imageRendering: 'pixelated' 
+              }}
               level="L" 
               includeMargin={false} 
               fgColor="#000000"
               bgColor="#FFFFFF"
             />
+            <div className="text-[2.8pt] font-black uppercase text-center mt-[0.3mm] tracking-tight">
+              SCAN TO REGISTER
+            </div>
           </div>
           
           {serialNumber && (
-            <div className="mt-[0.8mm] w-full flex-grow min-h-0 flex flex-col items-end justify-end overflow-hidden">
-              <div className="w-full flex-grow min-h-0 flex items-center justify-end [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[7.5mm] [&>svg]:max-w-max">
-                <Barcode 
-                  value={serialNumber} 
-                  format="CODE128"
-                  width={1}
-                  height={18}
-                  displayValue={false}
-                  margin={0}
-                  background="#ffffff"
-                  lineColor="#000000"
-                />
-              </div>
+            <div className="w-full shrink-0 flex flex-col items-center justify-end overflow-hidden pt-[0.2mm] border-t-[0.35mm] border-black mt-[0.2mm]">
               <div 
-                className="font-bold text-right shrink-0 w-full text-black mt-[0.3mm]" 
+                className="font-mono font-bold text-center w-full text-black leading-none truncate" 
                 style={{ 
                   fontFamily: serialFont,
-                  fontSize: '4.8pt', 
-                  lineHeight: '1', 
-                  wordBreak: 'break-all',
-                  letterSpacing: '0.4px'
+                  fontSize: '4.0pt', 
+                  lineHeight: '1',
+                  letterSpacing: '0.1px',
+                  textShadow: '0 0 0.15px #000000'
                 }}
               >
                 {serialNumber}

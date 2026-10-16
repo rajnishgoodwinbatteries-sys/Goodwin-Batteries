@@ -11,6 +11,7 @@ export interface PrintSettings {
   serialFont: string;
   letterSpacing: string;
   printerModel: string;
+  showBarcode?: boolean;
 }
 
 export const DEFAULT_PRINT_SETTINGS: PrintSettings = {
@@ -19,6 +20,7 @@ export const DEFAULT_PRINT_SETTINGS: PrintSettings = {
   serialFont: THERMAL_FONT_PRESETS.serialFonts[0].value,
   letterSpacing: THERMAL_FONT_PRESETS.trackingOptions[0].value,
   printerModel: PRINTER_CONFIG.PRINTER_MODEL,
+  showBarcode: false, // Default is Max QR Hero layout (requested by user)
 };
 
 interface PrintControlToolbarProps {
@@ -92,6 +94,20 @@ export default function PrintControlToolbar({
             <Info size={14} />
             <span>Profile:</span> <strong>{settings.printerModel}</strong> (38x25mm)
           </div>
+
+          <button
+            type="button"
+            onClick={() => updateSetting("showBarcode", !settings.showBarcode)}
+            className={`px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 border transition-all ${
+              !settings.showBarcode 
+                ? 'bg-emerald-50 text-[#00843D] border-emerald-300 shadow-2xs' 
+                : 'bg-background hover:bg-border text-foreground border-border'
+            }`}
+            title="Switch between Max QR Hero layout and QR + Barcode layout"
+          >
+            <span>Layout:</span>
+            <strong>{!settings.showBarcode ? "Max QR Hero" : "With Barcode"}</strong>
+          </button>
 
           <button
             type="button"

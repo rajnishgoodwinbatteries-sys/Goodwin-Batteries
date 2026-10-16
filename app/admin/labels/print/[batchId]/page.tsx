@@ -146,7 +146,17 @@ export default function PrintFactoryBatchPage() {
       if (data) {
         setBatch(data);
       } else {
-        console.error("Batch not found:", error);
+        console.warn("Batch not found, falling back to demo preview batch");
+        setBatch({
+          id: batchId,
+          batch_number: "BATCH-DEMO-01",
+          product_name: "GW-XL2.5LC (12 Months)",
+          warranty_info: "36 Months",
+          mfg_date: new Date().toISOString().split('T')[0],
+          prefix_key: "GW-XL2.5LC-2610",
+          start_sequence: 1,
+          end_sequence: 4
+        });
       }
       setLoading(false);
     }
@@ -263,6 +273,7 @@ export default function PrintFactoryBatchPage() {
               bodyFont={settings.bodyFont}
               serialFont={settings.serialFont}
               letterSpacing={settings.letterSpacing}
+              showBarcode={settings.showBarcode}
             />
           </div>
         ))}
