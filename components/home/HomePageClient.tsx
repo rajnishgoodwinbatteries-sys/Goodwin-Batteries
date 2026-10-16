@@ -745,8 +745,125 @@ export default function HomePageClient({
         </div>
       </section>
 
-      {/* 8. TRUST COUNTERS & FINAL CTA */}
-      <section className="py-20 bg-white border-t border-slate-200 text-center">
+      {/* 8. GOODWIN ECOSYSTEM: INNOVATION, GALLERY, VISION & BLOGS */}
+      <section className="py-20 bg-white border-t border-slate-200">
+        <div className="container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="text-xs font-black tracking-widest text-[#00843D] uppercase mb-2">The Goodwin Universe</div>
+              <h2 className="text-3xl sm:text-5xl font-heading font-black text-slate-900 uppercase">
+                DISCOVER MORE
+              </h2>
+            </div>
+            <p className="text-sm text-slate-600 max-w-md">
+              From our automated robotic assembly line to our 2030 sustainability roadmap and expert battery maintenance guides.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            {/* Card 1: Upcoming Innovations */}
+            <div className="bg-slate-50 border border-slate-200 hover:border-[#00843D] rounded-3xl p-6 transition-all group hover:-translate-y-1.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:bg-white">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                  <Zap size={24} />
+                </div>
+                <div className="text-[10px] font-black uppercase text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full inline-block mb-2">
+                  R&D Pipeline
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#00843D] transition-colors">
+                  Upcoming Innovations
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed mb-6">
+                  Preview next-gen heavy commercial E-Rickshaw batteries, VoltMax solar tall tubular, and smart LFP lithium packs.
+                </p>
+              </div>
+              <Link 
+                href="/upcoming-products"
+                className="text-xs font-bold text-[#00843D] hover:text-[#006830] flex items-center gap-1.5 pt-4 border-t border-slate-200/60"
+              >
+                Preview Pipeline <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Card 2: Manufacturing Gallery */}
+            <div className="bg-slate-50 border border-slate-200 hover:border-[#00843D] rounded-3xl p-6 transition-all group hover:-translate-y-1.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:bg-white">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-[#00843D] flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                  <Cpu size={24} />
+                </div>
+                <div className="text-[10px] font-black uppercase text-[#00843D] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full inline-block mb-2">
+                  Plant & Labs
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#00843D] transition-colors">
+                  Manufacturing Gallery
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed mb-6">
+                  Take a visual walkthrough of our 50,000+ sq. ft. facility, automated formation lines, and 30G vibration dynos.
+                </p>
+              </div>
+              <Link 
+                href="/gallery"
+                className="text-xs font-bold text-[#00843D] hover:text-[#006830] flex items-center gap-1.5 pt-4 border-t border-slate-200/60"
+              >
+                View Plant Media <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Card 3: Vision & Mission 2030 */}
+            <div className="bg-slate-50 border border-slate-200 hover:border-[#00843D] rounded-3xl p-6 transition-all group hover:-translate-y-1.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:bg-white">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                  <ShieldCheck size={24} />
+                </div>
+                <div className="text-[10px] font-black uppercase text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full inline-block mb-2">
+                  Roadmap 2030
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#00843D] transition-colors">
+                  Our Vision & Mission
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed mb-6">
+                  Explore our 5 core pillars of quality metallurgy, closed-loop eco recycling, and goal to power 5M+ active Indian vehicles.
+                </p>
+              </div>
+              <Link 
+                href="/vision"
+                className="text-xs font-bold text-[#00843D] hover:text-[#006830] flex items-center gap-1.5 pt-4 border-t border-slate-200/60"
+              >
+                Explore Roadmap <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Card 4: Battery Insights & Blogs */}
+            <div className="bg-slate-50 border border-slate-200 hover:border-[#00843D] rounded-3xl p-6 transition-all group hover:-translate-y-1.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:bg-white">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                  <Sparkles size={24} />
+                </div>
+                <div className="text-[10px] font-black uppercase text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full inline-block mb-2">
+                  Knowledge Hub
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-[#00843D] transition-colors">
+                  Battery Care & Blogs
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed mb-6">
+                  Expert advice on inverter battery selection, cold-cranking diagnostics, and summer maintenance to double battery life.
+                </p>
+              </div>
+              <Link 
+                href="/blogs"
+                className="text-xs font-bold text-[#00843D] hover:text-[#006830] flex items-center gap-1.5 pt-4 border-t border-slate-200/60"
+              >
+                Read Expert Guides <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 9. TRUST COUNTERS & FINAL CTA */}
+      <section className="py-20 bg-slate-50 border-t border-slate-200 text-center">
         <div className="container max-w-4xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
             <div>

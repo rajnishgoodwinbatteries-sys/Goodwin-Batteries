@@ -139,21 +139,28 @@ export default function Footer() {
                   Electric Vehicle & E-Rickshaw
                 </Link>
               </li>
+              <li>
+                <Link href="/upcoming-products" className="text-amber-700 font-bold hover:text-amber-800 transition-colors flex items-center gap-2 group pt-1">
+                  <ArrowRight size={12} className="text-amber-600 opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/>
+                  Upcoming R&D Pipeline <span className="text-[9px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.2 rounded-full">New</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Quick Tools & Support */}
           <div className="lg:col-span-2">
             <h4 className="text-slate-900 font-heading font-black mb-5 text-sm uppercase tracking-wider flex items-center gap-2">
-              <ShieldCheck size={14} className="text-[#00843D]" /> Quick Tools
+              <ShieldCheck size={14} className="text-[#00843D]" /> Explore & Tools
             </h4>
             <ul className="flex flex-col gap-3 text-xs font-medium">
-              <li><Link href="/battery-finder" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Vehicle Finder</Link></li>
-              <li><Link href="/warranty" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Warranty Lookup</Link></li>
+              <li><Link href="/gallery" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Manufacturing Gallery</Link></li>
+              <li><Link href="/blogs" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Battery Care & Blogs</Link></li>
+              <li><Link href="/vision" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Vision & Mission 2030</Link></li>
+              <li><Link href="/battery-finder" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Vehicle Battery Finder</Link></li>
+              <li><Link href="/warranty" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Instant Warranty Lookup</Link></li>
               <li><Link href="/dealer-distributor" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Become a Dealer</Link></li>
               <li><Link href="/dealers" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Dealer Locator</Link></li>
-              <li><Link href="/battery-care" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Maintenance Tips</Link></li>
-              <li><Link href="/dealer/login" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group"><ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/> Dealer Login</Link></li>
             </ul>
           </div>
 

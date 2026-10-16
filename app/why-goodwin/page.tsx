@@ -20,7 +20,7 @@ export default function WhyGoodwinPage() {
               WHY <span className="text-brand">GOODWIN?</span>
             </h1>
             <p className="text-muted-foreground text-lg md:text-xl leading-relaxed">
-              Here&apos;s why thousands of customers and businesses across the country choose Goodwin Batteries as their trusted power partner.g forward with confidence.
+              Here&apos;s why thousands of customers, drivers, and commercial fleet owners across India choose Goodwin Batteries as their trusted power partner to keep moving forward with complete confidence.
             </p>
           </div>
         </div>

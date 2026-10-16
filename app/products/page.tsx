@@ -48,7 +48,33 @@ export default async function ProductsPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-12 bg-white flex-1">
+      <section className="py-10 bg-white flex-1">
+        {/* Next-Gen Innovation Teaser Banner */}
+        <div className="container mb-10">
+          <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-50 via-white to-amber-50/50 border border-emerald-200 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#00843D] text-white flex items-center justify-center shrink-0 shadow-md">
+                <Zap size={24} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black uppercase tracking-widest text-[#00843D]">R&D Pipeline</span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-400 text-slate-900">Arriving Soon</span>
+                </div>
+                <h3 className="text-base sm:text-lg font-heading font-black text-slate-900 mt-0.5">
+                  Explore Upcoming Lines: Heavy E-Rickshaw, Solar Tall Tubular & Smart LFP
+                </h3>
+              </div>
+            </div>
+            <a
+              href="/upcoming-products"
+              className="bg-[#00843D] hover:bg-[#006830] text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shrink-0 transition-all shadow-md flex items-center gap-1.5"
+            >
+              Preview Pipeline &rarr;
+            </a>
+          </div>
+        </div>
+
         <div className="container">
           <ProductsClient initialProducts={publishedProducts} categories={categories} />
         </div>

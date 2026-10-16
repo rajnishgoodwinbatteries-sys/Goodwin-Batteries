@@ -110,6 +110,15 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
+
+          <div className="mt-8 text-center">
+            <Link
+              href="/vision"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand/10 text-brand font-bold text-xs uppercase tracking-wider hover:bg-brand hover:text-white transition-all shadow-xs"
+            >
+              Explore Our Complete Vision 2030 Roadmap & 5 Core Pillars →
+            </Link>
+          </div>
         </div>
       </section>
 

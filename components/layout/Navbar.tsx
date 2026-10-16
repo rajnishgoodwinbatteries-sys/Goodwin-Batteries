@@ -187,13 +187,20 @@ export default function Navbar() {
                             </div>
                           </Link>
                         ))}
-                        <div className="mt-2 pt-2 border-t border-gray-100 px-3 py-1 flex justify-between items-center">
+                        <div className="mt-2 pt-2 border-t border-gray-100 px-3 py-1 flex justify-between items-center text-xs">
                           <Link 
                             href="/products" 
-                            className="text-xs font-bold text-[#00843D] hover:underline"
+                            className="font-bold text-[#00843D] hover:underline"
                             onClick={() => setProductsDropdownOpen(false)}
                           >
-                            Explore All Batteries &rarr;
+                            All Batteries &rarr;
+                          </Link>
+                          <Link 
+                            href="/upcoming-products" 
+                            className="font-black text-amber-600 hover:text-amber-700 hover:underline flex items-center gap-1"
+                            onClick={() => setProductsDropdownOpen(false)}
+                          >
+                            <Sparkles size={11} /> Upcoming R&D &rarr;
                           </Link>
                         </div>
                       </div>
@@ -217,25 +224,37 @@ export default function Navbar() {
 
               <li>
                 <Link
-                  href="/why-goodwin"
+                  href="/gallery"
                   className={clsx(
                     "text-sm font-semibold tracking-wide transition-colors py-1",
-                    pathname === "/why-goodwin" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
+                    pathname === "/gallery" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
                   )}
                 >
-                  Why Goodwin
+                  Gallery
                 </Link>
               </li>
 
               <li>
                 <Link
-                  href="/warranty"
+                  href="/blogs"
                   className={clsx(
                     "text-sm font-semibold tracking-wide transition-colors py-1",
-                    pathname === "/warranty" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
+                    pathname.startsWith("/blogs") ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
                   )}
                 >
-                  Warranty
+                  Blogs & Care
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/vision"
+                  className={clsx(
+                    "text-sm font-semibold tracking-wide transition-colors py-1",
+                    pathname === "/vision" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
+                  )}
+                >
+                  Vision
                 </Link>
               </li>
 
@@ -324,8 +343,12 @@ export default function Navbar() {
               {[
                 { name: "Home", href: "/" },
                 { name: "Products & Catalogue", href: "/products" },
+                { name: "Upcoming Innovations", href: "/upcoming-products" },
                 { name: "Vehicle Battery Finder", href: "/battery-finder" },
-                { name: "Why Goodwin (Engineering)", href: "/why-goodwin" },
+                { name: "Manufacturing Gallery", href: "/gallery" },
+                { name: "Blogs & Technical Care", href: "/blogs" },
+                { name: "Our Vision & Mission", href: "/vision" },
+                { name: "Why Goodwin", href: "/why-goodwin" },
                 { name: "Locate Dealer", href: "/dealers" },
                 { name: "Check Warranty Status", href: "/warranty" },
                 { name: "About Goodwin", href: "/about" },
