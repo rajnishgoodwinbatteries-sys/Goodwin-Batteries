@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import MRPLabel from "@/components/labels/MRPLabel";
-import { Printer, ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { getPrintCss } from "@/lib/printer-config";
+import PrintControlToolbar, { DEFAULT_PRINT_SETTINGS, PrintSettings } from "@/components/labels/PrintControlToolbar";
 
 export default function PrintMRPPage() {
   const searchParams = useSearchParams();
@@ -16,12 +16,20 @@ export default function PrintMRPPage() {
   
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
-  // Default dimensions
-  const [width, setWidth] = useState(75);
-  const [height, setHeight] = useState(50);
+  const [settings, setSettings] = useState<PrintSettings>(DEFAULT_PRINT_SETTINGS);
+  const [testOnlyOne, setTestOnlyOne] = useState(false);
 
   useEffect(() => {
+    // Load stored settings if available
+    try {
+      const stored = localStorage.getItem("goodwin_thermal_print_settings");
+      if (stored) {
+        setSettings(prev => ({ ...prev, ...JSON.parse(stored) }));
+      }
+    } catch (e) {
+      // ignore
+    }
+
     async function loadProduct() {
       if (!productId) return;
       const { data, error } = await supabase
@@ -41,82 +49,62 @@ export default function PrintMRPPage() {
   }, [productId]);
 
   if (loading) {
-    return <div className="p-8 text-center">Loading product data...</div>;
+    return <div className="p-8 text-center text-muted-foreground font-medium">Loading product data...</div>;
   }
 
   if (!product) {
-    return <div className="p-8 text-center text-red-500">Product not found.</div>;
+    return <div className="p-8 text-center text-red-500 font-bold">Product not found.</div>;
   }
 
-  const labelsToPrint = Array.from({ length: qty }).map((_, i) => i);
+  const effectiveCount = testOnlyOne ? 1 : qty;
+  const labelsToPrint = Array.from({ length: effectiveCount }).map((_, i) => i);
 
-  const handlePrint = () => {
-    window.print();
+  const handlePrintAll = () => {
+    setTestOnlyOne(false);
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  };
+
+  const handleTestPrint = () => {
+    setTestOnlyOne(true);
+    setTimeout(() => {
+      window.print();
+      // Revert back after dialog opens
+      setTimeout(() => setTestOnlyOne(false), 1000);
+    }, 100);
   };
 
   return (
-    <div className="print-page-wrapper">
-      {/* Non-printable controls */}
-      <div className="print:hidden p-4 bg-gray-100 border-b flex justify-between items-center mb-8 sticky top-0 z-50 shadow-sm">
-        <div className="flex items-center gap-4">
-          <Link href="/admin/mrp-generator" className="text-gray-600 hover:text-black flex items-center gap-2">
-            <ArrowLeft size={16} /> Back
-          </Link>
-          <h1 className="text-xl font-bold">Print MRP: {product.name}</h1>
-          <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded font-bold">
-            {qty} Labels
-          </span>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-sm">
-            <label className="font-bold">Size:</label>
-            <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className="w-16 p-1 border rounded" /> mm W
-            <span className="text-gray-400">x</span>
-            <input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} className="w-16 p-1 border rounded" /> mm H
-          </div>
-          <button 
-            onClick={handlePrint}
-            className="bg-black text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-gray-800"
-          >
-            <Printer size={18} /> Print (Ctrl+P)
-          </button>
-        </div>
-      </div>
+    <div className="print-page-wrapper min-h-screen bg-background">
+      {/* Live Thermal Fine-Tuning Toolbar */}
+      <PrintControlToolbar
+        backHref="/admin/mrp-generator"
+        title={`Print MRP: ${product.name}`}
+        labelCount={qty}
+        settings={settings}
+        onSettingsChange={setSettings}
+        onPrintAll={handlePrintAll}
+        onPrintTest={handleTestPrint}
+      />
 
-      {/* Printable area */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @page {
-          size: ${width}mm ${height}mm;
-          margin: 0;
-        }
-        @media print {
-          body {
-            margin: 0;
-            padding: 0;
-            background: white;
-          }
-          /* Hide non-printable controls inside this page */
-          .print\\:hidden {
-            display: none !important;
-          }
-          .print-page-wrapper {
-            margin: 0;
-            padding: 0;
-          }
-          /* Remove gaps between pages/labels */
-          .mrp-label-container {
-            page-break-after: always;
-            page-break-inside: avoid;
-            margin: 0;
-            border: none !important;
-          }
-        }
-      `}} />
+      {/* Printable area stylesheet */}
+      <style dangerouslySetInnerHTML={{ __html: getPrintCss() }} />
 
-      <div className="flex flex-col items-center gap-8 print:gap-0 print:items-start bg-gray-50 print:bg-white pb-20">
+      {/* Visual notice if test mode is active */}
+      {testOnlyOne && (
+        <div className="print:hidden bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-center text-xs font-bold text-amber-600">
+          Printing 1 Test Sticker to check thermal clarity on DC Code printer...
+        </div>
+      )}
+
+      {/* Preview container (styled for screen, reset for 38x25mm thermal print) */}
+      <div className="flex flex-wrap gap-4 p-8 print:p-0 bg-background print:bg-white pb-20 print:pb-0 justify-center print:justify-start">
         {labelsToPrint.map((_, index) => (
-          <div key={index} className="shadow-lg print:shadow-none">
+          <div 
+            key={index} 
+            className="shadow-xl print:shadow-none bg-white border border-gray-200 print:border-none rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
+          >
             <MRPLabel
               productName={product.name}
               productModel={product.slug}
@@ -124,8 +112,10 @@ export default function PrintMRPPage() {
               capacity={product.ah || 'N/A'}
               mrp={mrp}
               mfgDate={mfgDate}
-              widthMm={width}
-              heightMm={height}
+              logoFont={settings.logoFont}
+              bodyFont={settings.bodyFont}
+              serialFont={settings.serialFont}
+              letterSpacing={settings.letterSpacing}
             />
           </div>
         ))}

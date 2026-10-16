@@ -3,85 +3,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import FactoryLabel from "@/components/labels/FactoryLabel";
-import { Printer, ArrowLeft, Download } from "lucide-react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
+import { getPrintCss } from "@/lib/printer-config";
+import PrintControlToolbar, { DEFAULT_PRINT_SETTINGS, PrintSettings } from "@/components/labels/PrintControlToolbar";
 
-export default function PrintFactoryBatchPage() {
-  const params = useParams();
-  const batchId = params.batchId as string;
-  
-  const [batch, setBatch] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Default dimensions from user screenshot
-  const [width, setWidth] = useState(38);
-  const [height, setHeight] = useState(25);
-
-  useEffect(() => {
-    async function loadBatch() {
-      if (!batchId) return;
-      const { data, error } = await supabase
-        .from("sticker_batches")
-        .select("*")
-        .eq("id", batchId)
-        .single();
-      
-      if (data) {
-        setBatch(data);
-      } else {
-        console.error("Batch not found:", error);
-      }
-      setLoading(false);
-    }
-    loadBatch();
-  }, [batchId]);
-
-  if (loading) {
-    return <div className="p-8 text-center">Loading batch data...</div>;
-  }
-
-  if (!batch) {
-    return <div className="p-8 text-center text-red-500">Batch not found.</div>;
-  }
-
-  // Reconstruct serial numbers from batch
-  const labelsToPrint: string[] = [];
-  for (let i = batch.start_sequence; i <= batch.end_sequence; i++) {
-    const seqStr = String(i).padStart(5, '0');
-    labelsToPrint.push(`\${batch.prefix_key}-\${seqStr}`);
-  }
-
-  const handlePrint = () => {
-    window.print();
-  };
-
-  return (
-    <div className="print-page-wrapper">
-      {/* Non-printable controls */}
-      <div className="print:hidden p-4 bg-gray-100 border-b flex justify-between items-center mb-8 sticky top-0 z-50 shadow-sm">
-        <div className="flex items-center gap-4">
-          <Link href="/admin/serial-generator" className="text-gray-600 hover:text-black flex items-center gap-2">
-            <ArrowLeft size={16} /> Back
-          </Link>
-          <h1 className="text-xl font-bold">Print Preview: {batch.product_name}</h1>
-          <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded font-bold">
-            {labelsToPrint.length} Labels
-          </span>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-sm">
-            <label className="font-bold">Size:</label>
-            <input type="number" value={width} onChange={(e) => setWidth(Number(e.target.value))} className="w-16 p-1 border rounded" /> mm W
-            <span className="text-gray-400">x</span>
-            <input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} className="w-16 p-1 border rounded" /> mm H
-          </div>
-          
-          <button 
-            onClick={() => {
-              // We encode the exact LSDX structure they provided, injecting the batch details.
-              const lsdxTemplate = `<?xml version="1.0" encoding="utf-8"?>
+const lsdxTemplate = `<?xml version="1.0" encoding="utf-8"?>
 <labelshopdocument version="1.2" tag="for Zenpart" date="2026-09-17 12:13:50">
 	<labelform version="1.1">
 		<paper name="Untitled" code="0" brand="0" cate="0" syslabel="0" otype="0" type="0" maxid="37">
@@ -119,7 +45,7 @@ export default function PrintFactoryBatchPage() {
 					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
 					<font facename="Arial" style="1" charset="1" height="150" width="0" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
 				</drawobj>
-								<!-- Barcode -->
+				<!-- Barcode -->
 				<drawobj type="drawbarcode" id="6" name="" left="100" top="900" right="3700" bottom="1700" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
 					<color type="0" mode="1" table="0" change="0" varname="" index="123" colors="#000000" col="2" row="2"/>
 					<barcode type="1" />
@@ -162,10 +88,6 @@ export default function PrintFactoryBatchPage() {
 				<limit filled="left" fillchar="0" cutout="right"/>
 				<cut/>
 			</variable>
-			<variable type="constant" id="105" name="" shareid="" data="\${qrData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
-				<limit filled="left" fillchar="0" cutout="right"/>
-				<cut/>
-			</variable>
 			<variable type="constant" id="106" name="" shareid="" data="\${serialData}" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealforder="0" serealsrc="0" databasefield="" databasegrindex="0" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="">
 				<limit filled="left" fillchar="0" cutout="right"/>
 				<cut/>
@@ -192,84 +114,143 @@ export default function PrintFactoryBatchPage() {
 	<pictures/>
 </labelshopdocument>
 `;
-              const base64Encode = (str: string) => typeof btoa !== 'undefined' ? btoa(str) : Buffer.from(str).toString('base64');
-              
-              const modelData = base64Encode(batch.product_name);
-              const mfgDataText = base64Encode(`Mfg: ${batch.manufacturing_date}`);
-              const warrantyDataText = base64Encode(`Warranty: ${batch.warranty_duration}`);
-              const serialData = base64Encode(labelsToPrint[0] || 'SAMPLE-123');
-              const qrData = base64Encode(`https://goodwinbatteries.in/warranty?serial=${labelsToPrint[0] || 'SAMPLE-123'}`);
-              
-              const finalLsdx = lsdxTemplate
-                .replace('\${modelData}', modelData)
-                .replace('\${qrData}', qrData)
-                .replace('\${serialData}', serialData) // replaces first occurrence (barcode)
-                .replace('\${serialData}', serialData) // replaces second occurrence (text)
-                .replace('\${mfgData}', mfgDataText)
-                .replace('\${warrantyData}', warrantyDataText);
-                
-              const blob = new Blob([finalLsdx], { type: 'application/xml' });
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = `Batch_\${batchId}.lsdx`;
-              a.click();
-              window.URL.revokeObjectURL(url);
-            }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-blue-700 ml-2"
-          >
-            <Download size={18} /> Export .lsdx
-          </button>
-          
-          <button 
-            onClick={handlePrint}
-            className="bg-black text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-gray-800"
-          >
-            <Printer size={18} /> Print (Ctrl+P)
-          </button>
+
+export default function PrintFactoryBatchPage() {
+  const params = useParams();
+  const batchId = params.batchId as string;
+  
+  const [batch, setBatch] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<PrintSettings>(DEFAULT_PRINT_SETTINGS);
+  const [testOnlyOne, setTestOnlyOne] = useState(false);
+
+  useEffect(() => {
+    // Load stored settings if available
+    try {
+      const stored = localStorage.getItem("goodwin_thermal_print_settings");
+      if (stored) {
+        setSettings(prev => ({ ...prev, ...JSON.parse(stored) }));
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    async function loadBatch() {
+      if (!batchId) return;
+      const { data, error } = await supabase
+        .from("sticker_batches")
+        .select("*")
+        .eq("id", batchId)
+        .single();
+      
+      if (data) {
+        setBatch(data);
+      } else {
+        console.error("Batch not found:", error);
+      }
+      setLoading(false);
+    }
+    loadBatch();
+  }, [batchId]);
+
+  if (loading) {
+    return <div className="p-8 text-center text-muted-foreground font-medium">Loading batch data...</div>;
+  }
+
+  if (!batch) {
+    return <div className="p-8 text-center text-red-500 font-bold">Batch not found.</div>;
+  }
+
+  // Reconstruct serial numbers from batch
+  const allLabels: string[] = [];
+  for (let i = batch.start_sequence; i <= batch.end_sequence; i++) {
+    const seqStr = String(i).padStart(5, '0');
+    allLabels.push(`${batch.prefix_key}-${seqStr}`);
+  }
+
+  const labelsToPrint = testOnlyOne ? allLabels.slice(0, 1) : allLabels;
+
+  const handlePrintAll = () => {
+    setTestOnlyOne(false);
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  };
+
+  const handleTestPrint = () => {
+    setTestOnlyOne(true);
+    setTimeout(() => {
+      window.print();
+      // Reset back after dialog opens
+      setTimeout(() => setTestOnlyOne(false), 1000);
+    }, 100);
+  };
+
+  const handleExportLsdx = () => {
+    if (!batch || allLabels.length === 0) return;
+    const base64Encode = (str: string) => typeof btoa !== 'undefined' ? btoa(str) : Buffer.from(str).toString('base64');
+    
+    const modelData = base64Encode(batch.product_name);
+    const mfgDataText = base64Encode(`Mfg: ${batch.manufacturing_date}`);
+    const warrantyDataText = base64Encode(`Warranty: ${batch.warranty_duration}`);
+    const serialData = base64Encode(allLabels[0] || 'SAMPLE-123');
+    
+    const finalLsdx = lsdxTemplate
+      .replace('${modelData}', modelData)
+      .replace('${serialData}', serialData) // replaces first occurrence (barcode)
+      .replace('${serialData}', serialData) // replaces second occurrence (text)
+      .replace('${mfgData}', mfgDataText)
+      .replace('${warrantyData}', warrantyDataText);
+      
+    const blob = new Blob([finalLsdx], { type: 'application/xml' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Batch_${batchId}.lsdx`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="print-page-wrapper min-h-screen bg-background">
+      {/* Live Thermal Fine-Tuning Toolbar */}
+      <PrintControlToolbar
+        backHref="/admin/serial-generator"
+        title={`Print Preview: ${batch.product_name}`}
+        labelCount={allLabels.length}
+        settings={settings}
+        onSettingsChange={setSettings}
+        onPrintAll={handlePrintAll}
+        onPrintTest={handleTestPrint}
+        onExportLsdx={handleExportLsdx}
+      />
+
+      {/* Printable area styling */}
+      <style dangerouslySetInnerHTML={{ __html: getPrintCss() }} />
+
+      {/* Visual notice if test mode is active */}
+      {testOnlyOne && (
+        <div className="print:hidden bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-center text-xs font-bold text-amber-600">
+          Printing 1 Test Sticker to check thermal clarity on DC Code printer...
         </div>
-      </div>
+      )}
 
-      {/* Printable area */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @page {
-          size: \${width}mm \${height}mm;
-          margin: 0;
-        }
-        @media print {
-          body {
-            margin: 0;
-            padding: 0;
-            background: white;
-          }
-          /* Hide non-printable controls inside this page */
-          .print\\:hidden {
-            display: none !important;
-          }
-          .print-page-wrapper {
-            margin: 0;
-            padding: 0;
-          }
-          /* Remove gaps between pages/labels */
-          .factory-label-container {
-            page-break-after: always;
-            page-break-inside: avoid;
-            margin: 0;
-            border: none !important;
-          }
-        }
-      `}} />
-
-      <div className="flex flex-col items-center gap-8 print:gap-0 print:items-start bg-gray-50 print:bg-white pb-20">
+      {/* Preview container (styled for screen, reset for 38x25mm thermal print) */}
+      <div className="flex flex-wrap gap-4 p-8 print:p-0 bg-background print:bg-white pb-20 print:pb-0 justify-center print:justify-start">
         {labelsToPrint.map((serial) => (
-          <div key={serial} className="shadow-lg print:shadow-none">
+          <div 
+            key={serial} 
+            className="shadow-xl print:shadow-none bg-white border border-gray-200 print:border-none rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
+          >
             <FactoryLabel
               serialNumber={serial}
               productModel={batch.product_name}
               warranty={batch.warranty_duration}
               mfgDate={batch.manufacturing_date}
-              widthMm={width}
-              heightMm={height}
+              logoFont={settings.logoFont}
+              bodyFont={settings.bodyFont}
+              serialFont={settings.serialFont}
+              letterSpacing={settings.letterSpacing}
             />
           </div>
         ))}

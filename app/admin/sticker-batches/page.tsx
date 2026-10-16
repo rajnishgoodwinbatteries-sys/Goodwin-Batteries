@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { FileText, Search, RefreshCw, BarChart2, Trash2 } from "lucide-react";
+import { FileText, Search, RefreshCw, BarChart2, Trash2, Printer } from "lucide-react";
+import Link from "next/link";
 
 export default function StickerBatchesPage() {
   const [batches, setBatches] = useState<any[]>([]);
@@ -291,12 +292,13 @@ export default function StickerBatchesPage() {
                 <th className="p-4 font-bold text-foreground text-center">Generated Qty</th>
                 <th className="p-4 font-bold text-foreground text-center">Sold (Registered)</th>
                 <th className="p-4 font-bold text-foreground text-center">Remaining</th>
+                <th className="p-4 font-bold text-foreground text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="p-8 text-center text-muted-foreground">
+                  <td colSpan={11} className="p-8 text-center text-muted-foreground">
                     <div className="flex justify-center mb-2">
                       <RefreshCw className="animate-spin text-brand" size={24} />
                     </div>
@@ -305,7 +307,7 @@ export default function StickerBatchesPage() {
                 </tr>
               ) : filteredBatches.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="p-8 text-center text-muted-foreground">
+                  <td colSpan={11} className="p-8 text-center text-muted-foreground">
                     <FileText size={48} className="mx-auto mb-4 opacity-20" />
                     <p>No sticker batches found.</p>
                   </td>
@@ -374,6 +376,15 @@ export default function StickerBatchesPage() {
                       </td>
                       <td className="p-4 text-center font-medium">
                         {remaining}
+                      </td>
+                      <td className="p-4 text-right">
+                        <Link
+                          href={`/admin/labels/print/${batch.id}`}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand/10 hover:bg-brand/20 text-brand font-bold text-xs rounded-lg transition-colors border border-brand/20"
+                        >
+                          <Printer size={13} />
+                          Print
+                        </Link>
                       </td>
                     </tr>
                   );

@@ -1,14 +1,17 @@
 import React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import Barcode from 'react-barcode';
+import { PRINTER_CONFIG } from '@/lib/printer-config';
 
 export interface FactoryLabelProps {
   serialNumber: string;
   productModel: string;
   warranty: string;
   mfgDate: string;
-  widthMm?: number;
-  heightMm?: number;
+  logoFont?: string;
+  bodyFont?: string;
+  serialFont?: string;
+  letterSpacing?: string;
 }
 
 export default function FactoryLabel({
@@ -16,62 +19,107 @@ export default function FactoryLabel({
   productModel,
   warranty,
   mfgDate,
-  widthMm = 38,
-  heightMm = 25
+  logoFont = "'Arial Black', 'Trebuchet MS', Impact, sans-serif",
+  bodyFont = "Tahoma, Verdana, sans-serif",
+  serialFont = "'Consolas', 'Courier New', monospace",
+  letterSpacing = "0.4px",
 }: FactoryLabelProps) {
   const verifyUrl = `https://goodwinbatteries.in/warranty`;
 
   return (
     <div 
-      className="factory-label-container bg-white text-black font-sans box-border relative"
+      className="label-container bg-white text-black box-border relative flex flex-col"
       style={{
-        width: `${widthMm}mm`,
-        height: `${heightMm}mm`,
-        pageBreakInside: 'avoid',
+        width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
+        height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         padding: '1.5mm',
         overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column'
+        fontFamily: bodyFont,
+        boxSizing: 'border-box'
       }}
     >
-      {/* Header */}
-      <div className="flex justify-between items-start border-b border-black pb-[0.5mm] mb-[1mm]">
-        <div className="flex flex-col">
-          <div className="font-extrabold tracking-tighter" style={{ fontSize: '2.5mm', lineHeight: '1' }}>GOODWIN BATTERIES</div>
-          <div className="font-normal tracking-tight" style={{ fontSize: '1.2mm' }}>Your Trusted Power Source</div>
+      {/* Header with high-clarity logo typography and anti-bleed tracking */}
+      <div className="flex justify-between items-start border-b-[0.5mm] border-black pb-[0.5mm] mb-[0.8mm]">
+        <div className="flex flex-col flex-1 min-w-0 pr-[1mm]">
+          <div 
+            className="font-black tracking-normal text-black uppercase" 
+            style={{ 
+              fontFamily: logoFont,
+              fontSize: '8pt', 
+              lineHeight: '1.05',
+              letterSpacing: letterSpacing,
+              fontWeight: 900
+            }}
+          >
+            GOODWIN BATTERIES
+          </div>
+          <div 
+            className="font-bold text-black" 
+            style={{ 
+              fontFamily: bodyFont,
+              fontSize: '4.5pt',
+              lineHeight: '1.1',
+              letterSpacing: '0.2px'
+            }}
+          >
+            Your Trusted Power Source
+          </div>
         </div>
-        <div className="font-bold text-right truncate" style={{ fontSize: '1.8mm', lineHeight: '1.1', maxWidth: '50%' }}>
+        <div 
+          className="font-extrabold text-right truncate text-black ml-[1mm]" 
+          style={{ 
+            fontFamily: bodyFont,
+            fontSize: '6.5pt', 
+            lineHeight: '1.1', 
+            maxWidth: '48%',
+            letterSpacing: '0.15px'
+          }}
+        >
           {productModel}
         </div>
       </div>
 
       {/* Main Body */}
       <div className="flex flex-row justify-between flex-grow min-h-0">
-        {/* Left Side: QR & Text */}
-        <div className="flex flex-col h-full w-[35%]">
-          <div className="flex-1 min-h-0 flex items-center">
+        {/* Left Side: QR & Clear High-Contrast Bottom Text */}
+        <div className="flex flex-col justify-between h-full w-[36%]">
+          <div className="flex-1 min-h-0 flex items-center justify-start">
             <QRCodeSVG 
               value={verifyUrl} 
-              style={{ width: '100%', height: '100%', maxWidth: '10mm', maxHeight: '10mm' }}
+              style={{ width: '100%', height: '100%', maxWidth: '11.5mm', maxHeight: '11.5mm' }}
               level="M" 
               includeMargin={false} 
+              fgColor="#000000"
+              bgColor="#FFFFFF"
             />
           </div>
-          <div className="mt-[0.5mm] shrink-0" style={{ fontSize: '1.4mm', lineHeight: '1.2' }}>
-            <div className="font-bold truncate text-ellipsis">MFG: {mfgDate}</div>
-            <div className="font-bold truncate text-ellipsis">WTY: {warranty}</div>
+          <div 
+            className="mt-[0.5mm] shrink-0 text-black font-bold" 
+            style={{ 
+              fontFamily: bodyFont,
+              fontSize: '5.2pt', 
+              lineHeight: '1.25',
+              letterSpacing: '0.15px'
+            }}
+          >
+            <div className="truncate text-ellipsis">
+              <strong className="font-black">MFG:</strong> {mfgDate}
+            </div>
+            <div className="truncate text-ellipsis">
+              <strong className="font-black">WTY:</strong> {warranty}
+            </div>
           </div>
         </div>
 
-        {/* Right Side: Barcode */}
-        <div className="flex flex-col h-full w-[60%] justify-center items-end ml-[1mm]">
+        {/* Right Side: Barcode & Crisp Serial Number */}
+        <div className="flex flex-col h-full w-[62%] justify-between items-end ml-[1mm]">
           <div className="w-full flex-grow min-h-0 flex items-center justify-end overflow-hidden">
-            <div className="w-full h-full flex items-center justify-end [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[12mm] [&>svg]:max-w-max">
+            <div className="w-full h-full flex items-center justify-end [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[11.5mm] [&>svg]:max-w-[21mm]">
               <Barcode 
                 value={serialNumber} 
                 format="CODE128"
-                width={1}
-                height={50}
+                width={1.2}
+                height={35}
                 displayValue={false}
                 margin={0}
                 background="#ffffff"
@@ -79,7 +127,17 @@ export default function FactoryLabel({
               />
             </div>
           </div>
-          <div className="font-bold text-right mt-[0.5mm] tracking-tighter shrink-0 w-full" style={{ fontSize: '1.1mm', lineHeight: '1.1', wordBreak: 'break-all' }}>
+          <div 
+            className="font-bold text-right mt-[0.5mm] shrink-0 w-full text-black" 
+            style={{ 
+              fontFamily: serialFont,
+              fontSize: '5.2pt', 
+              lineHeight: '1.1', 
+              wordBreak: 'break-all',
+              letterSpacing: '0.4px',
+              fontWeight: 800
+            }}
+          >
             {serialNumber}
           </div>
         </div>

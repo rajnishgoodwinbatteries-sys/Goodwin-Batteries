@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Download, Tag, FileText, Printer } from "lucide-react";
+import { Download, Tag, FileText, Printer, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
+import MRPLabel from "@/components/labels/MRPLabel";
 
 interface Product {
   id: string;
@@ -177,6 +178,42 @@ export default function MRPGeneratorPage() {
             />
             <p className="text-xs text-muted-foreground mt-2">Maximum 50,000 per export.</p>
           </div>
+
+          {/* Live Thermal Sticker Preview */}
+          {products.find(p => p.id === selectedProduct) && (
+            <div className="mt-6 pt-6 border-t border-border">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                  <Eye size={14} className="text-brand" /> Live Sticker Preview (38x25mm)
+                </span>
+                <span className="text-[11px] text-muted-foreground font-medium">DC Code High-Clarity Preset</span>
+              </div>
+              <div className="p-4 bg-muted/40 rounded-xl border border-dashed border-border flex justify-center items-center">
+                <div className="shadow-lg rounded overflow-hidden bg-white border border-gray-200">
+                  {(() => {
+                    const sel = products.find(p => p.id === selectedProduct)!;
+                    let displayDate = "";
+                    if (mfgDate) {
+                      const [yearStr, monthStr] = mfgDate.split("-");
+                      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                      const monthName = monthNames[parseInt(monthStr) - 1] || "";
+                      displayDate = `${monthName} ${yearStr}`;
+                    }
+                    return (
+                      <MRPLabel
+                        productName={sel.name}
+                        productModel={sel.slug}
+                        voltage={sel.voltage || "12V"}
+                        capacity={sel.ah || "N/A"}
+                        mrp={mrp || "0.00"}
+                        mfgDate={displayDate || "Oct 2026"}
+                      />
+                    );
+                  })()}
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="flex gap-4 mt-8">
             <button 
