@@ -44,7 +44,19 @@ export default function MRPLabel({
     return { fontSize: '3.6pt', letterSpacing: '-0.1px' };
   };
 
+  // Auto-adjust font size for serial number based on length across full width
+  const getSerialStyle = (len: number) => {
+    if (len <= 14) return { fontSize: '5.2pt', letterSpacing: '0.2px' };
+    if (len <= 20) return { fontSize: '4.6pt', letterSpacing: '0.15px' };
+    if (len <= 26) return { fontSize: '4.2pt', letterSpacing: '0.1px' };
+    if (len <= 32) return { fontSize: '3.9pt', letterSpacing: '0.05px' };
+    if (len <= 38) return { fontSize: '3.6pt', letterSpacing: '0px' };
+    if (len <= 44) return { fontSize: '3.2pt', letterSpacing: '-0.05px' };
+    return { fontSize: '2.8pt', letterSpacing: '-0.1px' };
+  };
+
   const modelStyle = getModelStyle(cleanModel.length);
+  const serialStyle = getSerialStyle(serialNumber?.length || 0);
 
   return (
     <div 
@@ -63,8 +75,8 @@ export default function MRPLabel({
         textRendering: 'geometricPrecision'
       }}
     >
-      {/* Top Header: ONLY GW LOGO (No "Goodwin" text!) + Auto-adjusting Model Box + Voltage/Capacity */}
-      <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.3mm] shrink-0">
+      {/* Top Header: ONLY GW LOGO (No "Goodwin" text, No "GENUINE") + Auto-adjusting Model Box + Voltage/Capacity */}
+      <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.25mm] shrink-0">
         <div className="flex items-center gap-[0.8mm] flex-1 min-w-0 pr-[1mm]">
           {/* Authentic GW Circular Emblem (Sharp 100% Black Vector) */}
           <svg 
@@ -81,20 +93,19 @@ export default function MRPLabel({
           </svg>
 
           <div className="flex flex-col min-w-0">
-            <span className="text-[3.0pt] font-black uppercase text-black tracking-wider leading-none">
-              GENUINE PRODUCT
-            </span>
             <div 
-              className="font-bold truncate text-black mt-[0.2mm] leading-none" 
+              className="font-black truncate text-black leading-tight uppercase" 
               style={{ 
                 fontFamily: bodyFont,
-                fontSize: '4.0pt', 
-                lineHeight: '1',
+                fontSize: '4.4pt', 
                 letterSpacing: '0.1px'
               }}
             >
               {cleanProductName}
             </div>
+            <span className="text-[2.8pt] font-extrabold uppercase text-black tracking-wider leading-none mt-[0.2mm]">
+              AUTOMOTIVE BATTERY
+            </span>
           </div>
         </div>
 
@@ -126,7 +137,7 @@ export default function MRPLabel({
       </div>
 
       {/* Main Content Area */}
-      <div className="flex flex-row flex-grow justify-between items-stretch mt-[0.2mm] min-h-0">
+      <div className="flex flex-row flex-grow justify-between items-stretch min-h-0">
         
         {/* Left Side: Pricing & Metadata */}
         <div 
@@ -174,15 +185,15 @@ export default function MRPLabel({
           </div>
         </div>
 
-        {/* Right Side: MAX SCANNABLE QR CODE & OPTIONAL BARCODE */}
-        <div className="flex flex-col justify-between items-center w-[48%] h-full pl-[0.8mm] border-l-[0.35mm] border-black">
-          <div className="flex-1 flex flex-col items-center justify-center w-full">
+        {/* Right Side: MAX SCANNABLE QR CODE */}
+        <div className="flex flex-col justify-center items-center w-[48%] h-full pl-[0.8mm] border-l-[0.35mm] border-black">
+          <div className="flex flex-col items-center justify-center">
             <QRCodeSVG 
               value={verifyUrl} 
-              size={48}
+              size={52}
               style={{ 
-                width: serialNumber ? '11.5mm' : '14.0mm', 
-                height: serialNumber ? '11.5mm' : '14.0mm', 
+                width: '13.5mm', 
+                height: '13.5mm', 
                 imageRendering: 'pixelated' 
               }}
               level="L" 
@@ -190,29 +201,35 @@ export default function MRPLabel({
               fgColor="#000000"
               bgColor="#FFFFFF"
             />
-            <div className="text-[2.8pt] font-black uppercase text-center mt-[0.3mm] tracking-tight">
+            <div className="text-[2.8pt] font-black uppercase text-center mt-[0.35mm] tracking-tight">
               SCAN TO REGISTER
             </div>
           </div>
-          
-          {serialNumber && (
-            <div className="w-full shrink-0 flex flex-col items-center justify-end overflow-hidden pt-[0.2mm] border-t-[0.35mm] border-black mt-[0.2mm]">
-              <div 
-                className="font-mono font-bold text-center w-full text-black leading-none truncate" 
-                style={{ 
-                  fontFamily: serialFont,
-                  fontSize: '4.0pt', 
-                  lineHeight: '1',
-                  letterSpacing: '0.1px',
-                  textShadow: '0 0 0.15px #000000'
-                }}
-              >
-                {serialNumber}
-              </div>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Optional Full-width Serial Number (36mm wide - 100% visible for all serial lengths!) */}
+      {serialNumber && (
+        <div className="w-full border-t-[0.35mm] border-black pt-[0.25mm] mt-[0.25mm] flex items-center justify-between shrink-0">
+          <span className="text-[2.6pt] font-black uppercase text-black tracking-wider leading-none">
+            S/N:
+          </span>
+          <span 
+            className="font-mono font-black text-center flex-1 mx-[0.5mm] leading-none whitespace-nowrap overflow-hidden text-black"
+            style={{ 
+              fontFamily: serialFont,
+              fontSize: serialStyle.fontSize,
+              letterSpacing: serialStyle.letterSpacing,
+              textShadow: '0 0 0.15px #000000'
+            }}
+          >
+            {serialNumber}
+          </span>
+          <span className="text-[2.6pt] font-black text-black uppercase tracking-wider leading-none">
+            INDIA
+          </span>
+        </div>
+      )}
     </div>
   );
 }
