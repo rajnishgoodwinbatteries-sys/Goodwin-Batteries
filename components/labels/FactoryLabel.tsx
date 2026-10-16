@@ -47,24 +47,24 @@ export default function FactoryLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '0.8mm 1.2mm 2.2mm 1.2mm', // 2.2mm bottom clearance guarantees serial is safe from printer tear bar
+        padding: '0.8mm 1.2mm 2.2mm 1.2mm', // 2.2mm bottom clearance protects serial from printer tear bar
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box',
         backgroundColor: '#ffffff',
         color: '#000000',
         WebkitFontSmoothing: 'none',
-        textRendering: 'optimizeSpeed'
+        textRendering: 'geometricPrecision'
       }}
     >
-      {/* 1. Header: Single Clean Row - (G) GOODWIN BATTERIES on Left + MODEL on Right */}
+      {/* 1. Header: (G) GOODWIN BATTERIES on Left + MODEL: GW-6V5AH on Right (Fit Guaranteed, No Truncation) */}
       <div className="flex items-center justify-between leading-none shrink-0 border-b-[0.35mm] border-black pb-[0.35mm]">
         {/* Left: Authentic Goodwin G Circular Emblem + GOODWIN BATTERIES */}
-        <div className="flex items-center gap-[0.7mm] min-w-0 pr-[1mm]">
+        <div className="flex items-center gap-[0.6mm] shrink-0">
           {/* Authentic Goodwin G Circular Emblem (Sharp 100% Black Vector) */}
           <svg 
             viewBox="0 0 100 100" 
-            className="w-[3.4mm] h-[3.4mm] shrink-0" 
+            className="w-[3.2mm] h-[3.2mm] shrink-0" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -79,10 +79,11 @@ export default function FactoryLabel({
             className="font-bold text-black uppercase tracking-tight whitespace-nowrap"
             style={{ 
               fontFamily: logoFont,
-              fontSize: '6.4pt', 
+              fontSize: '5.5pt', 
               lineHeight: 1,
               letterSpacing: letterSpacing,
-              fontWeight: 800
+              fontWeight: 800,
+              textShadow: '0 0 0.15px #000000' // Forces full-alpha rasterization (non-hazy)
             }}
           >
             GOODWIN BATTERIES
@@ -91,7 +92,7 @@ export default function FactoryLabel({
 
         {/* Right: Model Box (1px Black Border, Clean White Background - Zero Reverse Ink Flood) */}
         <div 
-          className="shrink-0 border-[0.35mm] border-black rounded-[0.35mm] px-[1.2mm] py-[0.3mm] bg-white text-center inline-flex items-center gap-[0.5mm]"
+          className="shrink-0 border-[0.35mm] border-black rounded-[0.35mm] px-[1mm] py-[0.25mm] bg-white text-center inline-flex items-center gap-[0.4mm]"
           style={{ backgroundColor: '#ffffff' }}
         >
           <span className="text-[3.2pt] font-black text-black uppercase leading-none">MODEL:</span>
@@ -99,8 +100,9 @@ export default function FactoryLabel({
             className="font-black text-black uppercase tracking-tight whitespace-nowrap leading-none"
             style={{ 
               fontFamily: bodyFont,
-              fontSize: cleanModel.length > 13 ? '4.2pt' : '5.2pt',
-              lineHeight: 1
+              fontSize: cleanModel.length > 12 ? '4.0pt' : '4.8pt',
+              lineHeight: 1,
+              textShadow: '0 0 0.15px #000000'
             }}
           >
             {cleanModel}
@@ -115,7 +117,7 @@ export default function FactoryLabel({
           <QRCodeSVG 
             value={verifyUrl} 
             size={28}
-            style={{ width: '7.0mm', height: '7.0mm' }}
+            style={{ width: '7.0mm', height: '7.0mm', imageRendering: 'pixelated' }}
             level="M" 
             includeMargin={false} 
             fgColor="#000000"
@@ -143,10 +145,10 @@ export default function FactoryLabel({
       {/* 3. Bottom Section: Clear Metadata + PROTECTED CRITICAL SERIAL NUMBER */}
       <div className="border-t-[0.35mm] border-black pt-[0.35mm] shrink-0">
         <div className="flex justify-between items-center text-black font-bold" style={{ fontSize: '4.8pt', lineHeight: 1 }}>
-          <div className="whitespace-nowrap">
+          <div className="whitespace-nowrap" style={{ textShadow: '0 0 0.15px #000000' }}>
             <span className="font-extrabold">MFG:</span> {mfgDate}
           </div>
-          <div className="whitespace-nowrap">
+          <div className="whitespace-nowrap" style={{ textShadow: '0 0 0.15px #000000' }}>
             <span className="font-extrabold">WTY:</span> {warranty}
           </div>
         </div>
@@ -159,7 +161,8 @@ export default function FactoryLabel({
             fontSize: serialStyle.fontSize, 
             letterSpacing: serialStyle.letterSpacing,
             lineHeight: 1,
-            fontWeight: 800
+            fontWeight: 800,
+            textShadow: '0 0 0.15px #000000'
           }}
         >
           {serialNumber}

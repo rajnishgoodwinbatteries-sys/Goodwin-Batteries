@@ -228,6 +228,18 @@ export default function PrintFactoryBatchPage() {
       {/* Printable area styling */}
       <style dangerouslySetInnerHTML={{ __html: getPrintCss() }} />
 
+      {/* Setup Guide for TSC TE244 Non-Hazy Quality */}
+      <div className="print:hidden bg-slate-900 text-white border-b border-slate-800 px-6 py-2.5 text-xs flex flex-wrap items-center justify-between gap-3 shadow-inner">
+        <div className="flex items-center gap-2">
+          <span className="font-bold bg-green-500 text-black px-2 py-0.5 rounded text-[10px] tracking-wide uppercase">
+            Thermal Pro Tip
+          </span>
+          <span className="text-slate-300">
+            For crystal-clear, non-hazy print: In Chrome Print (<kbd className="bg-slate-800 px-1.5 py-0.5 rounded text-white border border-slate-700">Ctrl+P</kbd>) &rarr; More settings &rarr; set <strong>Margins: None</strong> &amp; <strong>Scale: 100%</strong>. (Default margins cause blurry scaling).
+          </span>
+        </div>
+      </div>
+
       {/* Visual notice if test mode is active */}
       {testOnlyOne && (
         <div className="print:hidden bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-center text-xs font-bold text-amber-600">
