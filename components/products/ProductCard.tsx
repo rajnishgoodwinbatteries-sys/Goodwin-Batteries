@@ -64,9 +64,9 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
         )}
 
-        {/* Free Installation Tag */}
+        {/* Safe Doorstep Delivery Tag */}
         <span className="absolute top-2.5 right-2.5 z-20 bg-white/90 backdrop-blur-xs text-slate-700 border border-slate-200 font-bold text-[9px] uppercase px-1.5 py-0.5 rounded-md flex items-center gap-1 shadow-2xs">
-          <Truck size={10} className="text-[#00843D]" /> Free Fitment
+          <Truck size={10} className="text-[#00843D]" /> Doorstep Delivery
         </span>
 
         <Link 

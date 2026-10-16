@@ -70,7 +70,7 @@ function OrderSuccessContent() {
       `*Vehicle:* ${order.vehicleDetails || "Standard"}\n` +
       `*Slot:* ${order.deliverySlot}\n` +
       `*Total Amount:* ${formatINR(order.totalAmount)} (Paid Online - Prepaid)\n\n` +
-      `Kindly assign a technician for my installation. Thank you!`;
+      `Kindly confirm delivery dispatch status for my order. Thank you!`;
 
     const targetNumber = (order.adminWhatsappNumber || adminWhatsApp).replace(/\D/g, "");
     window.open(`https://wa.me/91${targetNumber}?text=${encodeURIComponent(msg)}`, "_blank");
@@ -88,7 +88,7 @@ function OrderSuccessContent() {
         </div>
 
         <span className="text-xs font-black uppercase tracking-widest text-[#00843D] bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full inline-block mb-3">
-          Order Confirmed & Technicians Notified
+          Order Confirmed & Scheduled for Delivery
         </span>
 
         <h1 className="text-3xl sm:text-4xl font-heading font-black text-slate-900 tracking-tight mb-2">
@@ -96,7 +96,7 @@ function OrderSuccessContent() {
         </h1>
         
         <p className="text-slate-600 text-sm max-w-lg mx-auto leading-relaxed">
-          Your order <strong className="text-slate-900">{orderId || order?.id || "GW-ORD-CONFIRMED"}</strong> has been received. Our certified installation team is preparing your battery and will reach out prior to arrival.
+          Your order <strong className="text-slate-900">{orderId || order?.id || "GW-ORD-CONFIRMED"}</strong> has been received. Our dispatch team is packing your factory-sealed battery for safe doorstep delivery.
         </p>
 
         {/* Dispatch notice */}
@@ -157,7 +157,7 @@ function OrderSuccessContent() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pb-6 border-b border-slate-200">
             <div>
               <h4 className="text-xs font-black uppercase tracking-wider text-slate-900 mb-2 flex items-center gap-1.5">
-                <MapPin size={15} className="text-[#00843D]" /> Delivery & Installation At
+                <MapPin size={15} className="text-[#00843D]" /> Delivery Address
               </h4>
               <p className="text-xs text-slate-700 leading-relaxed font-medium">
                 <strong className="text-slate-900">{order.customerName}</strong><br />
@@ -192,8 +192,11 @@ function OrderSuccessContent() {
                   </span>
                 </div>
                 <div>
-                  <span className="text-slate-500">Installation: </span>
-                  <span className="font-black text-[#00843D]">FREE Doorstep Fitment</span>
+                  <span className="text-slate-500">Delivery: </span>
+                  <span className="font-black text-[#00843D]">FREE Doorstep Delivery</span>
+                </div>
+                <div className="text-[10px] text-amber-700 bg-amber-50 p-1.5 rounded font-medium mt-1 border border-amber-200/50">
+                  *Battery fitment is customer responsibility.
                 </div>
               </div>
             </div>
@@ -247,7 +250,7 @@ function OrderSuccessContent() {
               </div>
             )}
             <div className="flex justify-between text-slate-600">
-              <span>Technician Doorstep Fitment</span>
+              <span>Doorstep Delivery</span>
               <span className="text-[#00843D] font-bold uppercase">FREE</span>
             </div>
             {order.transactionId && (
@@ -268,10 +271,10 @@ function OrderSuccessContent() {
               <ShieldCheck size={16} className="text-[#00843D]" /> What Happens Next?
             </h5>
             <ol className="list-decimal list-inside space-y-1 text-slate-700 text-[11px] leading-relaxed">
-              <li>Our dispatch hub confirms the optimal battery batch for your vehicle.</li>
-              <li>A certified technician calls you 30 minutes prior to delivery.</li>
-              <li>Old battery is safely disconnected and your brand-new Goodwin battery is installed and voltage-tested.</li>
-              <li>You receive your official GST invoice & digital warranty SMS.</li>
+              <li>Our dispatch hub confirms your order and packs a fresh, factory-charged battery.</li>
+              <li>The delivery logistics partner contacts you before doorstep delivery.</li>
+              <li>Sealed Goodwin battery package is handed over with official GST invoice.</li>
+              <li>Fitment is handled by customer or local technician; digital warranty can be activated online anytime.</li>
             </ol>
           </div>
         </div>

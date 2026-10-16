@@ -32,12 +32,12 @@ const SERVICES = [
     slug: "doorstep-battery-delivery",
     title: "Doorstep Battery Delivery",
     icon: Truck,
-    description: "Order your battery online or via WhatsApp and we will deliver and install it right at your doorstep.",
+    description: "Order your battery online or via WhatsApp and we will deliver it right to your doorstep safely.",
     details: [
       "Free delivery within service zones",
-      "Professional installation by trained technicians",
-      "Convenient time slot booking",
-      "Cash or digital payment on delivery"
+      "Factory-sealed authentic packaging (Fitment is customer responsibility)",
+      "Convenient delivery slot booking",
+      "Prepaid online or verified invoice"
     ]
   },
   {

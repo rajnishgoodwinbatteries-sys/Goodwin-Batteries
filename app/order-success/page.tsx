@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Order Placed Successfully | Goodwin",
-  description: "Your Goodwin battery order has been confirmed. Free doorstep delivery and certified installation scheduled.",
+  description: "Your Goodwin battery order has been confirmed. Factory-sealed battery scheduled for safe doorstep delivery.",
 };
 
 export default function OrderSuccessPage() {

@@ -66,7 +66,7 @@ export default function ProductBuyWidget({ product }: { product: Product }) {
             </span>
           )}
           <span className="text-[11px] text-emerald-700 font-bold ml-auto flex items-center gap-1">
-            <Truck size={13} /> Free Doorstep Fitment
+            <Truck size={13} /> Safe Doorstep Delivery
           </span>
         </div>
 
@@ -83,13 +83,15 @@ export default function ProductBuyWidget({ product }: { product: Product }) {
             </span>
           )}
         </div>
-        <p className="text-[11px] text-slate-500 mt-1">Inclusive of all taxes, GST and technician installation.</p>
+        <p className="text-[11px] text-slate-500 mt-1">
+          Inclusive of all taxes and GST. Factory-sealed battery delivered to your address. <span className="text-slate-700 font-semibold">(Battery fitment is customer responsibility)</span>
+        </p>
       </div>
 
       {/* Delivery Pincode SLA Checker */}
       <div className="bg-white border border-slate-200 rounded-2xl p-3.5">
         <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1.5 flex items-center gap-1.5">
-          <Truck size={14} className="text-[#00843D]" /> Delivery & Free Installation Check
+          <Truck size={14} className="text-[#00843D]" /> Check Doorstep Delivery Pincode
         </label>
         <div className="flex gap-2">
           <input
@@ -192,7 +194,7 @@ export default function ProductBuyWidget({ product }: { product: Product }) {
         </div>
         <div className="flex flex-col items-center gap-1">
           <Truck size={16} className="text-[#00843D]" />
-          <span>Free Installation</span>
+          <span>Doorstep Delivery</span>
         </div>
         <div className="flex flex-col items-center gap-1">
           <CheckCircle2 size={16} className="text-[#00843D]" />

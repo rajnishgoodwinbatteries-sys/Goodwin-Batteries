@@ -63,7 +63,7 @@ export default function CheckoutClient() {
     state: "Delhi",
     pincode: savedPincode || "",
     vehicleDetails: "",
-    deliverySlot: "express-2-4-hours",
+    deliverySlot: "same-day-delivery",
     paymentMethod: "online", // Strictly pre-paid online payment
   });
 
@@ -347,10 +347,10 @@ export default function CheckoutClient() {
           
           <div>
             <h1 className="text-2xl sm:text-3xl font-heading font-black text-slate-900 uppercase tracking-tight">
-              Express Checkout & Installation
+              Express Checkout & Doorstep Delivery
             </h1>
             <p className="text-slate-600 text-xs sm:text-sm mt-1">
-              Enter your address below. An authorized Goodwin technician will deliver and install your battery.
+              Enter your address below. Factory-sealed genuine Goodwin battery will be delivered to your doorstep. (Note: Battery fitment/installation is customer responsibility)
             </p>
           </div>
 
@@ -433,9 +433,9 @@ export default function CheckoutClient() {
                 </div>
                 <div>
                   <h3 className="font-heading font-black text-base text-slate-900 uppercase tracking-tight">
-                    2. Doorstep Installation Address
+                    2. Doorstep Delivery Address
                   </h3>
-                  <p className="text-[11px] text-slate-500">Where our installation van should arrive</p>
+                  <p className="text-[11px] text-slate-500">Where your sealed battery package will be delivered</p>
                 </div>
               </div>
 
@@ -527,7 +527,7 @@ export default function CheckoutClient() {
                   <h3 className="font-heading font-black text-base text-slate-900 uppercase tracking-tight">
                     3. Vehicle Details & Delivery Slot
                   </h3>
-                  <p className="text-[11px] text-slate-500">Helps the technician bring the right terminal brackets</p>
+                  <p className="text-[11px] text-slate-500">Helps verify battery compatibility for your vehicle</p>
                 </div>
               </div>
 
@@ -548,13 +548,13 @@ export default function CheckoutClient() {
 
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    Select Delivery & Installation Slot
+                    Select Delivery Slot
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
-                      { id: "express-2-4-hours", title: "Express Slot", time: "2 to 4 Hours", tag: "Fastest" },
-                      { id: "tomorrow-morning", title: "Tomorrow Morning", time: "9:00 AM - 1:00 PM", tag: "Flexible" },
-                      { id: "tomorrow-evening", title: "Tomorrow Evening", time: "3:00 PM - 7:00 PM", tag: "After Work" },
+                      { id: "same-day-delivery", title: "Same-Day Delivery", time: "Delhi-NCR Express Dispatch", tag: "Fastest" },
+                      { id: "tomorrow-morning", title: "Next-Day Morning", time: "9:00 AM - 1:00 PM", tag: "Scheduled" },
+                      { id: "standard-dispatch", title: "Standard Dispatch", time: "1 to 2 Business Days", tag: "Standard" },
                     ].map((slot) => (
                       <div
                         key={slot.id}
@@ -625,7 +625,7 @@ export default function CheckoutClient() {
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Orders are dispatched and assigned to certified technicians immediately upon successful online payment confirmation.
+                  Orders are processed and dispatched for safe doorstep delivery immediately upon successful online payment confirmation.
                 </p>
                 <div className="mt-3 pt-3 border-t border-emerald-200/60 flex flex-wrap items-center gap-3 text-[11px] font-bold text-slate-700">
                   <span className="flex items-center gap-1 text-[#00843D]">
@@ -725,8 +725,11 @@ export default function CheckoutClient() {
                 </div>
               )}
               <div className="flex justify-between text-slate-600">
-                <span>Doorstep Fitment & Testing</span>
+                <span>Doorstep Delivery</span>
                 <span className="text-[#00843D] font-bold uppercase">FREE (₹0)</span>
+              </div>
+              <div className="text-[10px] text-amber-700 bg-amber-50 rounded-lg p-2 font-medium border border-amber-200/60">
+                ⚠️ Notice: Battery fitment/installation is customer responsibility. Sealed authentic battery delivered safely to your door.
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>GST (18% / 28% Included)</span>

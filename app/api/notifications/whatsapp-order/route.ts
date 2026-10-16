@@ -69,7 +69,7 @@ export async function POST(req: Request) {
       `⏰ *Delivery Slot:* ${order.deliverySlot?.replace(/-/g, " ")}\n` +
       `🚗 *Vehicle / Model:* ${order.vehicleDetails || "Standard"}\n\n` +
       `🛒 *Batteries Ordered:*\n${itemsSummary}\n\n` +
-      `🔧 *Next Steps:* Assign technician for doorstep delivery & testing.\n` +
+      `📦 *Next Steps:* Dispatch sealed battery for doorstep delivery (Fitment by customer).\n` +
       `🕒 *Order Time:* ${new Date(order.createdAt || Date.now()).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`;
 
     const whatsappUrl = `https://wa.me/${fullRecipient}?text=${encodeURIComponent(orderMsg)}`;

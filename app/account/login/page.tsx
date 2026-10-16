@@ -1,10 +1,20 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Phone, ArrowRight, ShieldCheck, CheckCircle2, Lock, Sparkles, Loader2 } from "lucide-react";
+import { 
+  Phone, 
+  ArrowRight, 
+  ShieldCheck, 
+  CheckCircle2, 
+  Lock, 
+  Sparkles, 
+  Loader2, 
+  RotateCcw,
+  MessageSquare
+} from "lucide-react";
 
 function CustomerLoginForm() {
   const router = useRouter();
@@ -14,51 +24,191 @@ function CustomerLoginForm() {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [step, setStep] = useState<"phone" | "otp">("phone");
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [resendTimer, setResendTimer] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+  const [receivedOtpNotice, setReceivedOtpNotice] = useState<string | null>(null);
 
-  const handleSendOtp = (e: React.FormEvent) => {
+  const otpInputsRef = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Countdown timer for Resend OTP
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (step === "otp" && resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [step, resendTimer]);
+
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccessMsg(null);
 
-    const clean = phone.replace(/\D/g, "");
+    const clean = phone.replace(/\D/g, "").slice(-10);
     if (clean.length < 10) {
       setError("Please enter a valid 10-digit mobile number.");
       return;
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: clean }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setError(data.error || "Failed to send verification code. Please try again.");
+        setLoading(false);
+        return;
+      }
+
       setStep("otp");
-    }, 600);
+      setResendTimer(30);
+      setCanResend(false);
+      setSuccessMsg(`OTP sent to +91 ${clean}`);
+
+      // Display the received OTP alert on screen
+      if (data.deliveredOtp) {
+        setReceivedOtpNotice(data.deliveredOtp);
+      }
+
+      setTimeout(() => {
+        otpInputsRef.current[0]?.focus();
+      }, 150);
+    } catch (err: any) {
+      setError("Network error. Please check your internet connection.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleVerifyOtp = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleResendOtp = async () => {
+    if (!canResend) return;
     setError(null);
     setLoading(true);
 
-    setTimeout(() => {
-      const cleanPhone = phone.replace(/\D/g, "");
+    try {
+      const clean = phone.replace(/\D/g, "").slice(-10);
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: clean }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setResendTimer(30);
+        setCanResend(false);
+        setOtp(["", "", "", "", "", ""]);
+        setSuccessMsg(`New OTP sent to +91 ${clean}`);
+        if (data.deliveredOtp) {
+          setReceivedOtpNotice(data.deliveredOtp);
+        }
+        otpInputsRef.current[0]?.focus();
+      } else {
+        setError(data.error || "Failed to resend code.");
+      }
+    } catch {
+      setError("Failed to resend OTP.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    const enteredOtp = otp.join("").trim();
+    if (enteredOtp.length !== 6) {
+      setError("Please enter the complete 6-digit verification code.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const cleanPhone = phone.replace(/\D/g, "").slice(-10);
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: cleanPhone,
+          otp: enteredOtp,
+          name: name.trim(),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setError(data.error || "Invalid OTP code. Please enter the correct code.");
+        setLoading(false);
+        return;
+      }
+
+      // Successful verification! Set customer storage
       localStorage.setItem("goodwin_customer_phone", cleanPhone);
       if (name.trim()) {
         localStorage.setItem("goodwin_customer_name", name.trim());
       }
+
+      setSuccessMsg("Verification successful! Redirecting...");
+      setTimeout(() => {
+        router.push(redirectTo);
+      }, 500);
+    } catch {
+      setError("Failed to verify OTP. Please try again.");
       setLoading(false);
-      router.push(redirectTo);
-    }, 700);
+    }
   };
 
-  const handleQuickDemoLogin = (demoPhone: string, demoName: string) => {
-    setLoading(true);
-    localStorage.setItem("goodwin_customer_phone", demoPhone);
-    localStorage.setItem("goodwin_customer_name", demoName);
-    setTimeout(() => {
-      setLoading(false);
-      router.push(redirectTo);
-    }, 400);
+  const handleOtpChange = (index: number, value: string) => {
+    const val = value.replace(/\D/g, "");
+    const nextOtp = [...otp];
+
+    if (val.length > 1) {
+      // User pasted full 6 digit code
+      const digits = val.slice(0, 6).split("");
+      for (let i = 0; i < 6; i++) {
+        nextOtp[i] = digits[i] || "";
+      }
+      setOtp(nextOtp);
+      const nextFocus = Math.min(digits.length, 5);
+      otpInputsRef.current[nextFocus]?.focus();
+      return;
+    }
+
+    nextOtp[index] = val;
+    setOtp(nextOtp);
+
+    if (val && index < 5) {
+      otpInputsRef.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      otpInputsRef.current[index - 1]?.focus();
+    }
   };
 
   return (
@@ -80,15 +230,43 @@ function CustomerLoginForm() {
             Customer Account
           </h1>
           <p className="text-emerald-100 text-xs mt-1 font-medium">
-            Login to track live orders, download GST invoices & manage warranty
+            Enter your mobile number to verify and access your Goodwin account
           </p>
         </div>
 
         {/* Content Body */}
         <div className="p-6 sm:p-8">
+          
+          {/* Error notice */}
           {error && (
-            <div className="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs font-bold">
+            <div className="mb-5 p-3.5 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs font-bold animate-in fade-in duration-200">
               {error}
+            </div>
+          )}
+
+          {/* Success notice */}
+          {successMsg && !error && (
+            <div className="mb-5 p-3.5 bg-emerald-50 border border-emerald-200 text-[#00843D] rounded-xl text-xs font-bold flex items-center gap-1.5 animate-in fade-in duration-200">
+              <CheckCircle2 size={15} />
+              <span>{successMsg}</span>
+            </div>
+          )}
+
+          {/* Live SMS Verification Alert */}
+          {step === "otp" && receivedOtpNotice && (
+            <div className="mb-6 p-4 bg-emerald-50/90 border-2 border-emerald-500 rounded-2xl shadow-sm text-center animate-in slide-in-from-top-3 duration-300">
+              <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#00843D] mb-1">
+                <MessageSquare size={14} /> SMS Verification Code Sent
+              </div>
+              <p className="text-xs text-slate-600 mb-2">
+                Your one-time password for Goodwin Batteries:
+              </p>
+              <div className="inline-block px-4 py-2 bg-white border border-emerald-300 rounded-xl text-2xl font-black tracking-[0.25em] text-slate-900 shadow-inner">
+                {receivedOtpNotice}
+              </div>
+              <p className="text-[11px] text-slate-500 mt-2 font-medium">
+                (Valid for 5 minutes. Enter this 6-digit code below to log in)
+              </p>
             </div>
           )}
 
@@ -127,16 +305,16 @@ function CustomerLoginForm() {
                   />
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1.5">
-                  We will identify all orders associated with this mobile number.
+                  We will send a 6-digit OTP to verify your account and order history.
                 </p>
               </div>
 
               <button
                 type="submit"
-                disabled={loading || phone.length < 10}
+                disabled={loading || phone.replace(/\D/g, "").length < 10}
                 className="w-full py-3.5 bg-[#00843D] hover:bg-[#006830] text-white rounded-xl font-heading font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md disabled:opacity-60"
               >
-                {loading ? <Loader2 size={16} className="animate-spin" /> : <>Continue &rarr;</>}
+                {loading ? <Loader2 size={16} className="animate-spin" /> : <>Get Verification OTP &rarr;</>}
               </button>
             </form>
           ) : (
@@ -146,8 +324,13 @@ function CustomerLoginForm() {
                 <strong className="text-xs text-slate-900">+91 {phone}</strong>
                 <button
                   type="button"
-                  onClick={() => setStep("phone")}
-                  className="text-[11px] text-[#00843D] font-bold ml-2 hover:underline"
+                  onClick={() => {
+                    setStep("phone");
+                    setError(null);
+                    setSuccessMsg(null);
+                    setReceivedOtpNotice(null);
+                  }}
+                  className="text-[11px] text-[#00843D] font-bold ml-2 hover:underline cursor-pointer"
                 >
                   Change
                 </button>
@@ -155,75 +338,63 @@ function CustomerLoginForm() {
 
               <div>
                 <label className="block text-xs font-black uppercase tracking-wider text-slate-700 text-center mb-3">
-                  Enter 4-Digit Verification Code
+                  Enter 6-Digit OTP Code
                 </label>
-                <div className="flex justify-center gap-3">
-                  {[0, 1, 2, 3].map((idx) => (
+                
+                {/* 6 Digit Inputs */}
+                <div className="flex justify-center gap-2 sm:gap-2.5">
+                  {[0, 1, 2, 3, 4, 5].map((idx) => (
                     <input
                       key={idx}
-                      id={`otp-input-${idx}`}
+                      ref={(el) => {
+                        otpInputsRef.current[idx] = el;
+                      }}
                       type="text"
                       maxLength={1}
+                      inputMode="numeric"
                       value={otp[idx]}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/\D/g, "");
-                        const next = [...otp];
-                        next[idx] = val;
-                        setOtp(next);
-                        if (val && idx < 3) {
-                          document.getElementById(`otp-input-${idx + 1}`)?.focus();
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Backspace" && !otp[idx] && idx > 0) {
-                          document.getElementById(`otp-input-${idx - 1}`)?.focus();
-                        }
-                      }}
-                      className="w-12 h-14 bg-slate-50 border-2 border-slate-200 focus:border-[#00843D] rounded-xl text-center text-xl font-black text-slate-900 focus:outline-none"
+                      onChange={(e) => handleOtpChange(idx, e.target.value)}
+                      onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                      className="w-11 h-13 sm:w-12 sm:h-14 bg-slate-50 border-2 border-slate-200 focus:border-[#00843D] rounded-xl text-center text-xl font-black text-slate-900 focus:outline-none transition-colors"
                     />
                   ))}
                 </div>
-                <p className="text-center text-[11px] text-slate-500 mt-2">
-                  (Test Mode: You can enter any 4 numbers, e.g. 1 2 3 4)
-                </p>
+
+                <div className="flex items-center justify-between mt-4 px-1">
+                  <span className="text-xs text-slate-500 font-medium">
+                    Didn&apos;t receive code?
+                  </span>
+                  {canResend ? (
+                    <button
+                      type="button"
+                      onClick={handleResendOtp}
+                      disabled={loading}
+                      className="text-xs text-[#00843D] font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <RotateCcw size={12} /> Resend OTP
+                    </button>
+                  ) : (
+                    <span className="text-xs text-slate-400 font-bold">
+                      Resend in {resendTimer}s
+                    </span>
+                  )}
+                </div>
               </div>
 
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full py-3.5 bg-[#00843D] hover:bg-[#006830] text-white rounded-xl font-heading font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md disabled:opacity-60"
+                disabled={loading || otp.join("").length !== 6}
+                className="w-full py-3.5 bg-[#00843D] hover:bg-[#006830] text-white rounded-xl font-heading font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md disabled:opacity-60 cursor-pointer"
               >
-                {loading ? <Loader2 size={16} className="animate-spin" /> : <>Verify & View My Orders &rarr;</>}
+                {loading ? <Loader2 size={16} className="animate-spin" /> : <>Verify OTP & Access Orders &rarr;</>}
               </button>
             </form>
           )}
 
-          {/* Quick Demo Logins for Testing */}
-          <div className="mt-8 pt-6 border-t border-slate-100">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block text-center mb-3">
-              Fast Test Access (Click to Login Instantly)
-            </span>
-            <div className="space-y-2">
-              <button
-                type="button"
-                onClick={() => handleQuickDemoLogin("8097728851", "Goodwin Grow")}
-                className="w-full p-2.5 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl text-left text-xs flex items-center justify-between transition-colors"
-              >
-                <div>
-                  <span className="font-bold text-slate-900 block">Goodwin Grow</span>
-                  <span className="text-[11px] text-slate-500">+91 8097728851 (2 Live Orders)</span>
-                </div>
-                <span className="text-[10px] font-black text-[#00843D] bg-emerald-100 px-2 py-0.5 rounded">
-                  Login &rarr;
-                </span>
-              </button>
-            </div>
-          </div>
-
-          {/* Goodwin Trust Note */}
-          <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-slate-500 font-medium">
-            <ShieldCheck size={14} className="text-[#00843D]" />
-            <span>100% Safe & Secure Goodwin Customer Portal</span>
+          {/* Security & Authenticity Trust Badge */}
+          <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] text-slate-500 font-medium">
+            <Lock size={14} className="text-[#00843D]" />
+            <span>Secure OTP-Verified Goodwin Customer Account</span>
           </div>
         </div>
 

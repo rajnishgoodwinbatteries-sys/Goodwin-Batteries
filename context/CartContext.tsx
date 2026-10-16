@@ -148,16 +148,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         checked: true,
         available: true,
         city: "Delhi NCR",
-        deliveryTime: "Express (2 to 4 Hours)",
-        message: "Express 2-4 Hours Delivery & Free Doorstep Installation available!",
+        deliveryTime: "Same-Day / Next-Day",
+        message: "Doorstep delivery available across Delhi NCR (Fitment is customer responsibility).",
       });
     } else if (firstTwo === "45" || firstTwo === "46") {
       setPincodeStatus({
         checked: true,
         available: true,
         city: "Indore / MP",
-        deliveryTime: "Same Day (Within 4 Hours)",
-        message: "Same-Day Delivery & Free Installation by authorized technician!",
+        deliveryTime: "Same-Day / Next-Day",
+        message: "Doorstep delivery available across Madhya Pradesh (Fitment is customer responsibility).",
       });
     } else {
       setPincodeStatus({
@@ -165,7 +165,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         available: true,
         city: "National Delivery Hub",
         deliveryTime: "24-48 Hours",
-        message: "Standard Delivery & Authorized Fitment available within 24-48 hours.",
+        message: "Safe doorstep delivery dispatched within 24-48 hours (Fitment is customer responsibility).",
       });
     }
   };
@@ -187,7 +187,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       subtotal: total,
       discount: Math.max(0, mrpSum - total),
       totalAmount: total,
-      deliveryFee: 0, // Free doorstep delivery & fitment
+      deliveryFee: 0, // Free doorstep delivery across India (fitment is customer responsibility)
     };
   }, [items]);
 

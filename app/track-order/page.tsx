@@ -49,7 +49,7 @@ export default function PublicTrackOrderPage() {
             Track Your Battery Order
           </h1>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            Check real-time live status, packing progress, and assigned technician details.
+            Check real-time live status, packing progress, and delivery dispatch details.
           </p>
         </div>
 

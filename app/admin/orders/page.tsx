@@ -128,7 +128,7 @@ export default function AdminOrdersPage() {
           state: row.state || "",
           pincode: row.pincode || "",
           vehicleDetails: row.vehicle_details,
-          deliverySlot: row.delivery_slot || "Express (2-4 Hours)",
+          deliverySlot: row.delivery_slot || "Same-Day Delivery",
           paymentMethod: row.payment_method || "online",
           paymentStatus: row.payment_status || "Paid",
           status: row.status || "Confirmed",
@@ -723,7 +723,7 @@ export default function AdminOrdersPage() {
               className="bg-background border border-border rounded-xl px-3 py-2 text-foreground font-medium text-xs focus:outline-none focus:border-brand cursor-pointer"
             >
               <option value="all">⚡ All Delivery Slots</option>
-              <option value="express">Express (2-4 Hours)</option>
+              <option value="same-day">Same-Day Delivery</option>
               <option value="morning">Morning (9 AM - 1 PM)</option>
               <option value="afternoon">Afternoon (1 PM - 5 PM)</option>
               <option value="evening">Evening (5 PM - 9 PM)</option>

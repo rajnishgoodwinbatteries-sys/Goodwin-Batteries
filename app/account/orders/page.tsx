@@ -153,7 +153,7 @@ export default function CustomerOrdersPage() {
               All Orders ({filteredOrders.length})
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
-              Track live delivery, technician assignment & download GST invoices
+              Track live delivery status & download GST invoices
             </p>
           </div>
 
@@ -260,7 +260,7 @@ export default function CustomerOrdersPage() {
                         {formatINR(ord.totalAmount)}
                       </span>
                       <span className="text-[10px] font-bold text-[#00843D] block mt-0.5">
-                        Free Installation Included
+                        Doorstep Delivery Included
                       </span>
                     </div>
 
@@ -283,12 +283,12 @@ export default function CustomerOrdersPage() {
 
                       <p className="text-[11px] text-slate-500 leading-tight">
                         {isDelivered
-                          ? "Battery installed & tested with multimeter"
+                          ? "Package delivered safely to doorstep"
                           : isOutForDelivery
-                          ? `Technician ${ord.technicianName || "Assigned"} on the way`
+                          ? `Out for doorstep delivery via logistics`
                           : isPacked
                           ? "Packed at factory warehouse"
-                          : "Order received, assigning technician"}
+                          : "Order received, dispatch pending"}
                       </p>
                     </div>
                   </div>

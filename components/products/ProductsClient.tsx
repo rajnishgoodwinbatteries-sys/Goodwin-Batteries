@@ -124,8 +124,8 @@ export default function ProductsClient({
             <Truck size={18} />
           </div>
           <div>
-            <span className="text-xs font-black uppercase text-slate-900 block">Free Doorstep Fitment</span>
-            <span className="text-[11px] text-slate-500 font-medium">Technician arrives in 2-4 hrs</span>
+            <span className="text-xs font-black uppercase text-slate-900 block">Doorstep Battery Delivery</span>
+            <span className="text-[11px] text-slate-500 font-medium">Safe dispatch (Fitment by customer)</span>
           </div>
         </div>
 

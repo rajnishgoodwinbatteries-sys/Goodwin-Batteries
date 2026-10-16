@@ -291,7 +291,7 @@ export default function CartDrawer() {
                 </div>
               )}
               <div className="flex justify-between text-slate-500">
-                <span>Doorstep Fitment & Delivery</span>
+                <span>Doorstep Delivery</span>
                 <span className="text-[#00843D] font-bold uppercase">FREE</span>
               </div>
               <div className="pt-2 border-t border-slate-200 flex justify-between items-baseline font-heading">
@@ -327,11 +327,14 @@ export default function CartDrawer() {
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Zap size={12} className="text-amber-500" /> Free Installation
+                <Truck size={12} className="text-[#00843D]" /> Doorstep Delivery
               </span>
               <span>•</span>
               <span>Secure Payment</span>
             </div>
+            <p className="text-[10px] text-center text-slate-400 mt-1 font-medium">
+              *Battery fitment is customer responsibility.
+            </p>
           </div>
         )}
       </div>

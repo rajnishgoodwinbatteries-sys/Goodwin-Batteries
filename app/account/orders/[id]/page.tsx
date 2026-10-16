@@ -183,27 +183,17 @@ export default function OrderTrackingDetailPage() {
               </div>
               <div>
                 <h3 className="font-heading font-black text-sm text-slate-900">
-                  Out for Doorstep Delivery & Installation
+                  Out for Doorstep Delivery
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
                   {isOutForDelivery ? (
                     <span className="text-emerald-700 font-semibold">
-                      Assigned to Technician: <strong>{order.technicianName || "Certified Expert"}</strong> ({order.technicianPhone || "+91 9667724411"}) &bull; Vehicle: {order.technicianVehicle || "Goodwin Service Van"}
+                      Out for delivery via Goodwin dispatch logistics partner.
                     </span>
                   ) : (
-                    "Certified installation technician will be assigned upon dispatch."
+                    "Delivery dispatch details will be sent via SMS/WhatsApp upon shipment."
                   )}
                 </p>
-                {isOutForDelivery && order.technicianPhone && (
-                  <div className="mt-2.5">
-                    <a
-                      href={`tel:${order.technicianPhone}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-[#00843D] border border-emerald-300 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-colors"
-                    >
-                      <Phone size={12} /> Call Technician ({order.technicianPhone})
-                    </a>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -216,12 +206,12 @@ export default function OrderTrackingDetailPage() {
               </div>
               <div>
                 <h3 className="font-heading font-black text-sm text-slate-900">
-                  Delivered & Installed
+                  Delivered
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
                   {isDelivered 
-                    ? "Doorstep fitment completed, alternator tested, and digital warranty activated."
-                    : "Technician will fit the battery, test the car starter, and issue the digital warranty card on site."}
+                    ? "Battery package delivered safely to your address."
+                    : "Factory-sealed battery delivered to doorstep. (Fitment is customer responsibility)."}
                 </p>
               </div>
             </div>
@@ -273,7 +263,7 @@ export default function OrderTrackingDetailPage() {
           {/* Delivery Details */}
           <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-3">
             <h3 className="font-heading font-black text-xs uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              <MapPin size={15} className="text-[#00843D]" /> Installation Address
+              <MapPin size={15} className="text-[#00843D]" /> Delivery Address
             </h3>
             <p className="font-heading font-black text-base text-slate-900">
               {order.customerName}
@@ -304,7 +294,7 @@ export default function OrderTrackingDetailPage() {
                 <span>-{formatINR((order.totalMrp || order.totalAmount * 1.25) - order.totalAmount)}</span>
               </div>
               <div className="flex justify-between text-slate-600">
-                <span>Delivery & Doorstep Installation:</span>
+                <span>Safe Doorstep Delivery:</span>
                 <span className="text-[#00843D] font-bold">FREE</span>
               </div>
               <div className="pt-3 border-t border-slate-200 flex justify-between items-center text-sm font-black text-slate-900">
