@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import ProductCard from "@/components/products/ProductCard";
-import { Filter, Search } from "lucide-react";
+import { Filter, Search, RotateCcw } from "lucide-react";
 import { Product, Category } from "@/types";
 
 export default function ProductsClient({
@@ -62,111 +62,156 @@ export default function ProductsClient({
     });
   }, [initialProducts, searchQuery, selectedCategory, selectedWarranty, selectedVoltage]);
 
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("All");
+    setSelectedWarranty("All");
+    setSelectedVoltage("All");
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
-      {/* Sidebar / Filters */}
-      <aside className="w-full lg:w-64 shrink-0">
-        <div className="sticky top-28 bg-surface border border-border rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-6 pb-4 border-b border-border">
-            <Filter size={20} className="text-brand" />
-            <h3 className="font-bold text-lg text-foreground">Filters</h3>
+    <div className="flex flex-col lg:flex-row gap-8 text-white">
+      {/* Sidebar / Filters (Livguard & Exide Benchmark) */}
+      <aside className="w-full lg:w-72 shrink-0">
+        <div className="sticky top-28 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+            <div className="flex items-center gap-2">
+              <Filter size={18} className="text-brand" />
+              <h3 className="font-bold text-base text-white uppercase tracking-wider">Catalogue Filters</h3>
+            </div>
+            {(selectedCategory !== "All" || selectedWarranty !== "All" || selectedVoltage !== "All" || searchQuery) && (
+              <button
+                onClick={handleResetFilters}
+                className="text-[11px] font-bold text-slate-400 hover:text-white flex items-center gap-1 transition-colors"
+              >
+                <RotateCcw size={12} /> Reset
+              </button>
+            )}
           </div>
 
-          <div className="mb-6">
-            <div className="relative mb-4">
-              <Search
-                size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              />
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-background border border-border rounded-lg pl-10 pr-4 py-2 text-sm text-foreground focus:outline-none focus:border-brand"
-              />
+          <div className="space-y-6">
+            {/* Search Input */}
+            <div>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                Keyword Search
+              </label>
+              <div className="relative">
+                <Search
+                  size={15}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                />
+                <input
+                  type="text"
+                  placeholder="e.g. TZ4LB, 12V 35AH..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand shadow-inner"
+                />
+              </div>
             </div>
 
-            <h4 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wider">
-              Categories
-            </h4>
-            <ul className="flex flex-col gap-2 mb-6">
-              <li>
-                <button
-                  onClick={() => setSelectedCategory("All")}
-                  className={`text-sm transition-colors text-left w-full font-semibold ${
-                    selectedCategory === "All"
-                      ? "text-brand hover:underline"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  All Categories
-                </button>
-              </li>
-              {categories.map((cat) => (
-                <li key={cat.id}>
+            {/* Categories */}
+            <div>
+              <h4 className="font-bold text-xs text-white mb-2.5 uppercase tracking-wider">
+                Application Categories
+              </h4>
+              <ul className="flex flex-col gap-1">
+                <li>
                   <button
-                    onClick={() => setSelectedCategory(cat.id)}
-                    className={`text-sm transition-colors text-left w-full font-semibold ${
-                      selectedCategory === cat.id
-                        ? "text-brand hover:underline"
-                        : "text-muted-foreground hover:text-foreground"
+                    onClick={() => setSelectedCategory("All")}
+                    className={`text-xs transition-colors text-left w-full px-3 py-2 rounded-lg font-semibold flex items-center justify-between ${
+                      selectedCategory === "All"
+                        ? "bg-brand text-white shadow-md font-bold"
+                        : "text-slate-300 hover:bg-slate-800"
                     }`}
                   >
-                    {cat.name}
+                    <span>All Applications</span>
+                    <span className="text-[10px] opacity-70">({initialProducts.length})</span>
                   </button>
                 </li>
-              ))}
-            </ul>
-
-            <h4 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wider">
-              Voltage
-            </h4>
-            <div className="flex flex-wrap gap-2 mb-6">
-              <button
-                onClick={() => setSelectedVoltage("All")}
-                className={`text-xs px-3 py-1 rounded-full border transition-all ${
-                  selectedVoltage === "All" ? "bg-brand text-white border-brand" : "bg-transparent text-muted-foreground border-border hover:border-foreground"
-                }`}
-              >
-                All
-              </button>
-              {voltageOptions.map(volt => (
-                <button
-                  key={volt}
-                  onClick={() => setSelectedVoltage(volt)}
-                  className={`text-xs px-3 py-1 rounded-full border transition-all ${
-                    selectedVoltage === volt ? "bg-brand text-white border-brand" : "bg-transparent text-muted-foreground border-border hover:border-foreground"
-                  }`}
-                >
-                  {volt}
-                </button>
-              ))}
+                {categories.map((cat) => {
+                  const count = initialProducts.filter(p => p.category === cat.id).length;
+                  return (
+                    <li key={cat.id}>
+                      <button
+                        onClick={() => setSelectedCategory(cat.id)}
+                        className={`text-xs transition-colors text-left w-full px-3 py-2 rounded-lg font-semibold flex items-center justify-between ${
+                          selectedCategory === cat.id
+                            ? "bg-brand text-white shadow-md font-bold"
+                            : "text-slate-300 hover:bg-slate-800"
+                        }`}
+                      >
+                        <span className="truncate">{cat.name}</span>
+                        <span className="text-[10px] opacity-70">({count})</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
 
-            <h4 className="font-bold text-sm text-foreground mb-3 uppercase tracking-wider">
-              Warranty
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedWarranty("All")}
-                className={`text-xs px-3 py-1 rounded-full border transition-all ${
-                  selectedWarranty === "All" ? "bg-brand text-white border-brand" : "bg-transparent text-muted-foreground border-border hover:border-foreground"
-                }`}
-              >
-                All
-              </button>
-              {warrantyOptions.map(warr => (
+            {/* Voltage */}
+            <div>
+              <h4 className="font-bold text-xs text-white mb-2.5 uppercase tracking-wider">
+                Voltage
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
                 <button
-                  key={warr}
-                  onClick={() => setSelectedWarranty(warr)}
-                  className={`text-xs px-3 py-1 rounded-full border transition-all ${
-                    selectedWarranty === warr ? "bg-brand text-white border-brand" : "bg-transparent text-muted-foreground border-border hover:border-foreground"
+                  onClick={() => setSelectedVoltage("All")}
+                  className={`text-xs px-3 py-1.5 rounded-lg border font-bold transition-all ${
+                    selectedVoltage === "All" 
+                      ? "bg-brand text-white border-brand shadow-sm" 
+                      : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-600"
                   }`}
                 >
-                  {warr}
+                  All
                 </button>
-              ))}
+                {voltageOptions.map(volt => (
+                  <button
+                    key={volt}
+                    onClick={() => setSelectedVoltage(volt)}
+                    className={`text-xs px-3 py-1.5 rounded-lg border font-bold transition-all ${
+                      selectedVoltage === volt 
+                        ? "bg-brand text-white border-brand shadow-sm" 
+                        : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-600"
+                    }`}
+                  >
+                    {volt}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Warranty */}
+            <div>
+              <h4 className="font-bold text-xs text-white mb-2.5 uppercase tracking-wider">
+                Warranty Coverage
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  onClick={() => setSelectedWarranty("All")}
+                  className={`text-xs px-3 py-1.5 rounded-lg border font-bold transition-all ${
+                    selectedWarranty === "All" 
+                      ? "bg-brand text-white border-brand shadow-sm" 
+                      : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-600"
+                  }`}
+                >
+                  All
+                </button>
+                {warrantyOptions.map(warr => (
+                  <button
+                    key={warr}
+                    onClick={() => setSelectedWarranty(warr)}
+                    className={`text-xs px-3 py-1.5 rounded-lg border font-bold transition-all ${
+                      selectedWarranty === warr 
+                        ? "bg-brand text-white border-brand shadow-sm" 
+                        : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-600"
+                    }`}
+                  >
+                    {warr}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -174,10 +219,13 @@ export default function ProductsClient({
 
       {/* Product Grid */}
       <div className="flex-1">
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-sm text-muted-foreground font-semibold">
-            Showing {filteredProducts.length} products
+        <div className="flex items-center justify-between mb-6 bg-slate-900 border border-slate-800 px-4 py-3 rounded-xl">
+          <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">
+            Showing <strong className="text-white">{filteredProducts.length}</strong> Batteries
           </p>
+          <span className="text-xs text-emerald-400 font-bold flex items-center gap-1">
+            • Ready for Dispatch
+          </span>
         </div>
 
         {filteredProducts.length > 0 ? (
@@ -187,23 +235,18 @@ export default function ProductsClient({
             ))}
           </div>
         ) : (
-          <div className="bg-surface border border-border rounded-xl p-12 text-center flex flex-col items-center justify-center">
-            <h3 className="text-xl font-bold text-foreground mb-2">
-              No products found
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center flex flex-col items-center justify-center">
+            <h3 className="text-xl font-bold text-white mb-2">
+              No matching batteries found
             </h3>
-            <p className="text-muted-foreground">
-              Try adjusting your search query or filters to find what you're looking for.
+            <p className="text-slate-400 text-sm max-w-sm mb-6">
+              Try adjusting your search criteria or resetting filters to view our standard lineup.
             </p>
             <button
-              onClick={() => {
-                setSearchQuery("");
-                setSelectedCategory("All");
-                setSelectedWarranty("All");
-                setSelectedVoltage("All");
-              }}
-              className="mt-4 text-brand font-semibold hover:underline"
+              onClick={handleResetFilters}
+              className="px-6 py-2.5 bg-brand hover:bg-brand-dark text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shadow-md"
             >
-              Clear all filters
+              Reset All Filters
             </button>
           </div>
         )}

@@ -17,17 +17,24 @@ export default function ProductGallery({ product }: { product: Product }) {
   });
 
   return (
-    <div className="sticky top-24 flex flex-col gap-4">
+    <div className="sticky top-28 flex flex-col gap-4">
       {/* Main Viewer */}
-      <div className="bg-surface rounded-2xl border border-border aspect-square flex items-center justify-center p-8 md:p-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tr from-brand/5 to-transparent pointer-events-none" />
-        <div className="w-full h-full bg-white rounded-xl shadow-2xl flex items-center justify-center relative z-10 border border-gray-100 p-4 md:p-8">
+      <div className="bg-[#0D1525] rounded-3xl border border-white/10 aspect-square flex items-center justify-center p-6 md:p-10 relative overflow-hidden shadow-2xl group">
+        <div className="absolute inset-0 bg-radial-hero pointer-events-none" />
+        <div className="absolute top-4 right-4 z-20">
+          <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            OEM Specification
+          </span>
+        </div>
+        
+        <div className="w-full h-full bg-[#131D31]/70 backdrop-blur-md rounded-2xl flex items-center justify-center relative z-10 border border-white/10 p-6 md:p-8 transition-all group-hover:border-emerald-500/30">
           {activeMedia.type === "image" ? (
             <Image
               src={activeMedia.url}
               alt={product.name}
               fill
-              className="object-contain hover:scale-105 transition-transform duration-500"
+              priority
+              className="object-contain p-4 transition-transform duration-700 ease-out group-hover:scale-105 drop-shadow-[0_15px_30px_rgba(0,0,0,0.6)]"
             />
           ) : (
             <video
@@ -46,11 +53,13 @@ export default function ProductGallery({ product }: { product: Product }) {
           {/* Main Image Thumbnail */}
           <button
             onClick={() => setActiveMedia({ type: "image", url: mainImage })}
-            className={`shrink-0 w-20 h-20 bg-white rounded-lg border-2 overflow-hidden flex items-center justify-center p-1 transition-all relative ${
-              activeMedia.url === mainImage ? "border-brand shadow-md" : "border-border hover:border-brand/50 opacity-70 hover:opacity-100"
+            className={`shrink-0 w-20 h-20 bg-[#0D1525] rounded-xl border-2 overflow-hidden flex items-center justify-center p-1 transition-all relative ${
+              activeMedia.url === mainImage 
+                ? "border-emerald-500 shadow-lg shadow-emerald-500/20 scale-105" 
+                : "border-white/10 hover:border-emerald-500/50 opacity-70 hover:opacity-100"
             }`}
           >
-            <Image src={mainImage} alt="Main view" fill className="object-contain p-1" />
+            <Image src={mainImage} alt="Main view" fill className="object-contain p-2" />
           </button>
 
           {/* Gallery Thumbnails */}
@@ -58,11 +67,13 @@ export default function ProductGallery({ product }: { product: Product }) {
             <button
               key={i}
               onClick={() => setActiveMedia({ type: "image", url: img })}
-              className={`shrink-0 w-20 h-20 bg-white rounded-lg border-2 overflow-hidden flex items-center justify-center p-1 transition-all relative ${
-                activeMedia.url === img ? "border-brand shadow-md" : "border-border hover:border-brand/50 opacity-70 hover:opacity-100"
+              className={`shrink-0 w-20 h-20 bg-[#0D1525] rounded-xl border-2 overflow-hidden flex items-center justify-center p-1 transition-all relative ${
+                activeMedia.url === img 
+                  ? "border-emerald-500 shadow-lg shadow-emerald-500/20 scale-105" 
+                  : "border-white/10 hover:border-emerald-500/50 opacity-70 hover:opacity-100"
               }`}
             >
-              <Image src={img} alt={`Gallery view ${i + 1}`} fill className="object-contain p-1" />
+              <Image src={img} alt={`Gallery view ${i + 1}`} fill className="object-contain p-2" />
             </button>
           ))}
 
@@ -71,12 +82,14 @@ export default function ProductGallery({ product }: { product: Product }) {
             <button
               key={`vid-${i}`}
               onClick={() => setActiveMedia({ type: "video", url: vid })}
-              className={`shrink-0 w-20 h-20 bg-slate-900 rounded-lg border-2 overflow-hidden flex items-center justify-center relative transition-all group ${
-                activeMedia.url === vid ? "border-brand shadow-md" : "border-border hover:border-brand/50 opacity-80 hover:opacity-100"
+              className={`shrink-0 w-20 h-20 bg-slate-900 rounded-xl border-2 overflow-hidden flex items-center justify-center relative transition-all group ${
+                activeMedia.url === vid 
+                  ? "border-emerald-500 shadow-lg shadow-emerald-500/20 scale-105" 
+                  : "border-white/10 hover:border-emerald-500/50 opacity-80 hover:opacity-100"
               }`}
             >
-              <Play className="text-white w-8 h-8 opacity-70 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+              <Play className="text-emerald-400 w-8 h-8 opacity-80 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors" />
             </button>
           ))}
         </div>
