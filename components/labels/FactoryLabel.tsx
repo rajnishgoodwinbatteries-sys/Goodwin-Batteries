@@ -57,14 +57,14 @@ export default function FactoryLabel({
         textRendering: 'geometricPrecision'
       }}
     >
-      {/* 1. Header: (G) GOODWIN BATTERIES on Left + MODEL: GW-6V5AH on Right (Fit Guaranteed, No Truncation) */}
-      <div className="flex items-center justify-between leading-none shrink-0 border-b-[0.35mm] border-black pb-[0.35mm]">
-        {/* Left: Authentic Goodwin G Circular Emblem + GOODWIN BATTERIES */}
-        <div className="flex items-center gap-[0.6mm] shrink-0">
+      {/* 1. Header: 2 Clean Rows (Brand across Row 1, Model Box on Row 2 - 100% In-Bounds, Zero Clipping) */}
+      <div className="flex flex-col shrink-0 border-b-[0.35mm] border-black pb-[0.35mm]">
+        {/* Row 1: Authentic Goodwin G Circular Emblem + GOODWIN BATTERIES */}
+        <div className="flex items-center gap-[0.7mm] leading-none">
           {/* Authentic Goodwin G Circular Emblem (Sharp 100% Black Vector) */}
           <svg 
             viewBox="0 0 100 100" 
-            className="w-[3.2mm] h-[3.2mm] shrink-0" 
+            className="w-[3.4mm] h-[3.4mm] shrink-0" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -79,34 +79,44 @@ export default function FactoryLabel({
             className="font-bold text-black uppercase tracking-tight whitespace-nowrap"
             style={{ 
               fontFamily: logoFont,
-              fontSize: '5.5pt', 
+              fontSize: '6.4pt', 
               lineHeight: 1,
               letterSpacing: letterSpacing,
               fontWeight: 800,
-              textShadow: '0 0 0.15px #000000' // Forces full-alpha rasterization (non-hazy)
+              textShadow: '0 0 0.15px #000000' // Full-alpha crispness
             }}
           >
             GOODWIN BATTERIES
           </span>
         </div>
 
-        {/* Right: Model Box (1px Black Border, Clean White Background - Zero Reverse Ink Flood) */}
-        <div 
-          className="shrink-0 border-[0.35mm] border-black rounded-[0.35mm] px-[1mm] py-[0.25mm] bg-white text-center inline-flex items-center gap-[0.4mm]"
-          style={{ backgroundColor: '#ffffff' }}
-        >
-          <span className="text-[3.2pt] font-black text-black uppercase leading-none">MODEL:</span>
+        {/* Row 2: Genuine Product Label on Left, Model Box on Right (Comfortable Width, Zero Cutoff) */}
+        <div className="flex items-center justify-between leading-none mt-[0.35mm]">
           <span 
-            className="font-black text-black uppercase tracking-tight whitespace-nowrap leading-none"
-            style={{ 
-              fontFamily: bodyFont,
-              fontSize: cleanModel.length > 12 ? '4.0pt' : '4.8pt',
-              lineHeight: 1,
-              textShadow: '0 0 0.15px #000000'
-            }}
+            className="font-bold text-black uppercase tracking-wider text-[3.8pt] whitespace-nowrap"
+            style={{ textShadow: '0 0 0.15px #000000' }}
           >
-            {cleanModel}
+            GENUINE PRODUCT
           </span>
+
+          {/* Model Box */}
+          <div 
+            className="shrink-0 border-[0.35mm] border-black rounded-[0.35mm] px-[1.2mm] py-[0.25mm] bg-white text-center inline-flex items-center gap-[0.4mm]"
+            style={{ backgroundColor: '#ffffff' }}
+          >
+            <span className="text-[3.2pt] font-black text-black uppercase leading-none">MODEL:</span>
+            <span 
+              className="font-black text-black uppercase tracking-tight whitespace-nowrap leading-none"
+              style={{ 
+                fontFamily: bodyFont,
+                fontSize: cleanModel.length > 12 ? '4.2pt' : '5.0pt',
+                lineHeight: 1,
+                textShadow: '0 0 0.15px #000000'
+              }}
+            >
+              {cleanModel}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -117,7 +127,7 @@ export default function FactoryLabel({
           <QRCodeSVG 
             value={verifyUrl} 
             size={28}
-            style={{ width: '7.0mm', height: '7.0mm', imageRendering: 'pixelated' }}
+            style={{ width: '6.8mm', height: '6.8mm', imageRendering: 'pixelated' }}
             level="M" 
             includeMargin={false} 
             fgColor="#000000"
@@ -126,8 +136,8 @@ export default function FactoryLabel({
         </div>
 
         {/* Barcode */}
-        <div className="flex-1 min-w-0 flex items-center justify-center overflow-hidden h-[7.0mm]">
-          <div className="w-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[7.0mm]">
+        <div className="flex-1 min-w-0 flex items-center justify-center overflow-hidden h-[6.8mm]">
+          <div className="w-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[6.8mm]">
             <Barcode 
               value={serialNumber} 
               format="CODE128"
