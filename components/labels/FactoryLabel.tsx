@@ -19,10 +19,10 @@ export default function FactoryLabel({
   productModel,
   warranty,
   mfgDate,
-  logoFont = "'Arial Black', Impact, sans-serif",
-  bodyFont = "Tahoma, Arial, sans-serif",
+  logoFont = "Arial, Helvetica, sans-serif",
+  bodyFont = "Arial, Helvetica, sans-serif",
   serialFont = "'Consolas', 'Courier New', monospace",
-  letterSpacing = "0.2px",
+  letterSpacing = "0px",
 }: FactoryLabelProps) {
   const verifyUrl = `https://goodwinbatteries.in/warranty`;
 
@@ -32,10 +32,10 @@ export default function FactoryLabel({
   // Dynamically calculate font-size and spacing based on serial number length
   // to ensure 100% fit on 36mm printable width without right-edge clipping
   const getSerialStyle = (len: number) => {
-    if (len <= 22) return { fontSize: '5.0pt', letterSpacing: '0.3px' };
-    if (len <= 28) return { fontSize: '4.5pt', letterSpacing: '0.15px' };
-    if (len <= 34) return { fontSize: '4.0pt', letterSpacing: '0.05px' };
-    return { fontSize: '3.5pt', letterSpacing: '0px' };
+    if (len <= 22) return { fontSize: '5.2pt', letterSpacing: '0.3px' };
+    if (len <= 28) return { fontSize: '4.6pt', letterSpacing: '0.15px' };
+    if (len <= 34) return { fontSize: '4.1pt', letterSpacing: '0.05px' };
+    return { fontSize: '3.6pt', letterSpacing: '0px' };
   };
 
   const serialStyle = getSerialStyle(serialNumber.length);
@@ -47,22 +47,24 @@ export default function FactoryLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '0.9mm 1.2mm 1.2mm 1.2mm',
+        padding: '0.8mm 1.2mm 2.2mm 1.2mm', // 2.2mm bottom clearance guarantees serial is safe from printer tear bar
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box',
         backgroundColor: '#ffffff',
-        color: '#000000'
+        color: '#000000',
+        WebkitFontSmoothing: 'none',
+        textRendering: 'optimizeSpeed'
       }}
     >
-      {/* 1. Header: 2 Clean Rows (Brand on Top, Tagline + Model on Bottom) - Zero Collision Guaranteed */}
-      <div className="flex flex-col shrink-0 border-b-[0.35mm] border-black pb-[0.35mm]">
-        {/* Row 1: Authentic Goodwin G Emblem + Brand Name across the full width */}
-        <div className="flex items-center gap-[0.8mm] leading-none">
+      {/* 1. Header: Single Clean Row - (G) GOODWIN BATTERIES on Left + MODEL on Right */}
+      <div className="flex items-center justify-between leading-none shrink-0 border-b-[0.35mm] border-black pb-[0.35mm]">
+        {/* Left: Authentic Goodwin G Circular Emblem + GOODWIN BATTERIES */}
+        <div className="flex items-center gap-[0.7mm] min-w-0 pr-[1mm]">
           {/* Authentic Goodwin G Circular Emblem (Sharp 100% Black Vector) */}
           <svg 
             viewBox="0 0 100 100" 
-            className="w-[3.2mm] h-[3.2mm] shrink-0" 
+            className="w-[3.4mm] h-[3.4mm] shrink-0" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -74,60 +76,46 @@ export default function FactoryLabel({
           </svg>
 
           <span 
-            className="font-black text-black uppercase tracking-tight whitespace-nowrap"
+            className="font-bold text-black uppercase tracking-tight whitespace-nowrap"
             style={{ 
               fontFamily: logoFont,
               fontSize: '6.4pt', 
               lineHeight: 1,
               letterSpacing: letterSpacing,
-              fontWeight: 900
+              fontWeight: 800
             }}
           >
             GOODWIN BATTERIES
           </span>
         </div>
 
-        {/* Row 2: Tagline on Left, Model Badge on Right (Plenty of Space, Never Collides) */}
-        <div className="flex items-center justify-between leading-none mt-[0.35mm]">
+        {/* Right: Model Box (1px Black Border, Clean White Background - Zero Reverse Ink Flood) */}
+        <div 
+          className="shrink-0 border-[0.35mm] border-black rounded-[0.35mm] px-[1.2mm] py-[0.3mm] bg-white text-center inline-flex items-center gap-[0.5mm]"
+          style={{ backgroundColor: '#ffffff' }}
+        >
+          <span className="text-[3.2pt] font-black text-black uppercase leading-none">MODEL:</span>
           <span 
-            className="font-bold text-black uppercase tracking-tight whitespace-nowrap truncate pr-[1mm]"
+            className="font-black text-black uppercase tracking-tight whitespace-nowrap leading-none"
             style={{ 
               fontFamily: bodyFont,
-              fontSize: '3.4pt', 
+              fontSize: cleanModel.length > 13 ? '4.2pt' : '5.2pt',
               lineHeight: 1
             }}
           >
-            Your Trusted Power Source
+            {cleanModel}
           </span>
-
-          {/* Model Box */}
-          <div 
-            className="shrink-0 border-[0.3mm] border-black rounded-[0.35mm] px-[1.2mm] py-[0.25mm] bg-white text-center inline-flex items-center gap-[0.6mm]"
-            style={{ backgroundColor: '#ffffff' }}
-          >
-            <span className="text-[3.2pt] font-black text-black uppercase leading-none">MODEL:</span>
-            <span 
-              className="font-black text-black uppercase tracking-tight whitespace-nowrap leading-none"
-              style={{ 
-                fontFamily: bodyFont,
-                fontSize: cleanModel.length > 12 ? '4.2pt' : '5.0pt',
-                lineHeight: 1
-              }}
-            >
-              {cleanModel}
-            </span>
-          </div>
         </div>
       </div>
 
       {/* 2. Middle Row: QR Code + Barcode */}
-      <div className="flex flex-row items-center justify-between gap-[1mm] my-[0.4mm] shrink-0">
+      <div className="flex flex-row items-center justify-between gap-[1mm] my-[0.3mm] shrink-0">
         {/* QR Code */}
         <div className="shrink-0 flex items-center justify-center p-[0.2mm] bg-white border border-black/50 rounded-[0.3mm]">
           <QRCodeSVG 
             value={verifyUrl} 
             size={28}
-            style={{ width: '7.2mm', height: '7.2mm' }}
+            style={{ width: '7.0mm', height: '7.0mm' }}
             level="M" 
             includeMargin={false} 
             fgColor="#000000"
@@ -136,8 +124,8 @@ export default function FactoryLabel({
         </div>
 
         {/* Barcode */}
-        <div className="flex-1 min-w-0 flex items-center justify-center overflow-hidden h-[7.2mm]">
-          <div className="w-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[7.2mm]">
+        <div className="flex-1 min-w-0 flex items-center justify-center overflow-hidden h-[7.0mm]">
+          <div className="w-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[7.0mm]">
             <Barcode 
               value={serialNumber} 
               format="CODE128"
@@ -152,18 +140,18 @@ export default function FactoryLabel({
         </div>
       </div>
 
-      {/* 3. Bottom Section: Clear Full-Width Metadata (Zero Truncation, Zero Clipping, Safe Tear Margin) */}
+      {/* 3. Bottom Section: Clear Metadata + PROTECTED CRITICAL SERIAL NUMBER */}
       <div className="border-t-[0.35mm] border-black pt-[0.35mm] shrink-0">
-        <div className="flex justify-between items-center text-black font-extrabold" style={{ fontSize: '4.6pt', lineHeight: 1 }}>
+        <div className="flex justify-between items-center text-black font-bold" style={{ fontSize: '4.8pt', lineHeight: 1 }}>
           <div className="whitespace-nowrap">
-            <span className="font-black">MFG:</span> {mfgDate}
+            <span className="font-extrabold">MFG:</span> {mfgDate}
           </div>
           <div className="whitespace-nowrap">
-            <span className="font-black">WTY:</span> {warranty}
+            <span className="font-extrabold">WTY:</span> {warranty}
           </div>
         </div>
 
-        {/* Full Serial Number (Safe from tear bar, scaled to 100% fit on 1 line) */}
+        {/* CRITICAL SERIAL NUMBER: 100% visible, elevated with 2.2mm bottom safety clearance from tear bar */}
         <div 
           className="font-black text-center text-black mt-[0.35mm] whitespace-nowrap overflow-hidden" 
           style={{ 

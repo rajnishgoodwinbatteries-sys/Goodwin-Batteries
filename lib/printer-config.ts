@@ -3,36 +3,32 @@ export const PRINTER_CONFIG = {
   LABEL_HEIGHT_MM: 25,
   PRINTER_MODEL: "DCode DC 421 / 423 & TSC TE244",
   SUPPORTED_PRINTERS: [
-    { id: "dcode", name: "DCode DC 421 / 423 (203 DPI)", model: "DCode DC 421 / 423" },
     { id: "tsc", name: "TSC TE244 (203 DPI)", model: "TSC TE244" },
+    { id: "dcode", name: "DCode DC 421 / 423 (203 DPI)", model: "DCode DC 421 / 423" },
     { id: "zebra", name: "Zebra ZD / ZT Series (203 DPI)", model: "Zebra ZD / ZT" },
   ]
 };
 
 export const THERMAL_FONT_PRESETS = {
   logoFonts: [
-    { id: "arial-black", name: "Arial Black (Boldest & Sharpest - Recommended)", value: "'Arial Black', 'Trebuchet MS', Impact, sans-serif" },
-    { id: "trebuchet", name: "Trebuchet MS Bold (High Legibility)", value: "'Trebuchet MS', 'Lucida Grande', sans-serif" },
-    { id: "tahoma-bold", name: "Tahoma Bold (Ultra Crisp)", value: "Tahoma, Verdana, sans-serif" },
-    { id: "impact", name: "Impact (Dense Industrial)", value: "Impact, Charcoal, sans-serif" },
-    { id: "arial-heavy", name: "Arial Heavy (800 Weight)", value: "Arial, Helvetica, sans-serif" },
+    { id: "arial", name: "Arial Bold (Highest Thermal Sharpness - Recommended)", value: "Arial, Helvetica, sans-serif" },
+    { id: "tahoma", name: "Tahoma Bold (Ultra Clean)", value: "Tahoma, Verdana, sans-serif" },
+    { id: "trebuchet", name: "Trebuchet MS Bold", value: "'Trebuchet MS', sans-serif" },
   ],
   bodyFonts: [
-    { id: "tahoma", name: "Tahoma (High Clarity for Small Text - Recommended)", value: "Tahoma, Verdana, sans-serif" },
-    { id: "trebuchet", name: "Trebuchet MS (High Contrast)", value: "'Trebuchet MS', 'Lucida Grande', sans-serif" },
-    { id: "verdana", name: "Verdana (Spacious & Clean)", value: "Verdana, Geneva, sans-serif" },
-    { id: "consolas", name: "Consolas / Mono (Crisp Grid)", value: "Consolas, 'Courier New', monospace" },
-    { id: "arial-bold", name: "Arial Bold", value: "Arial, Helvetica, sans-serif" },
+    { id: "arial", name: "Arial Bold (Crisp & High Contrast - Recommended)", value: "Arial, Helvetica, sans-serif" },
+    { id: "tahoma", name: "Tahoma (Spacious)", value: "Tahoma, Verdana, sans-serif" },
+    { id: "consolas", name: "Consolas Monospace", value: "Consolas, 'Courier New', monospace" },
   ],
   serialFonts: [
     { id: "consolas", name: "Consolas Monospace (Crisp Digits - Recommended)", value: "Consolas, 'Courier New', monospace" },
-    { id: "tahoma-bold", name: "Tahoma Bold (Tabular)", value: "Tahoma, Verdana, sans-serif" },
-    { id: "courier", name: "Courier New (Monospaced)", value: "'Courier New', Courier, monospace" },
+    { id: "arial", name: "Arial Bold", value: "Arial, Helvetica, sans-serif" },
+    { id: "courier", name: "Courier New", value: "'Courier New', Courier, monospace" },
   ],
   trackingOptions: [
-    { id: "anti-bleed", name: "Anti-Bleed (+0.2px - Recommended)", value: "0.2px" },
-    { id: "standard", name: "Standard (0px)", value: "0px" },
-    { id: "wide", name: "Wide (+0.4px)", value: "0.4px" },
+    { id: "standard", name: "Standard (0px - Crisp Non-Bleeding)", value: "0px" },
+    { id: "anti-bleed", name: "Anti-Bleed (+0.1px)", value: "0.1px" },
+    { id: "wide", name: "Wide (+0.3px)", value: "0.3px" },
   ]
 };
 
@@ -55,9 +51,10 @@ export const getPrintCss = () => `
       padding: 0 !important;
       background: #ffffff !important;
       color: #000000 !important;
-      -webkit-font-smoothing: antialiased !important;
-      -moz-osx-font-smoothing: grayscale !important;
-      text-rendering: geometricPrecision !important;
+      -webkit-font-smoothing: none !important;
+      -moz-osx-font-smoothing: unset !important;
+      text-rendering: optimizeSpeed !important;
+      image-rendering: pixelated !important;
     }
     .print\\:hidden, nav, header, footer, .sidebar, aside {
       display: none !important;
@@ -101,7 +98,7 @@ export const getPrintCss = () => `
       height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       max-height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       margin: 0 !important;
-      padding: 0.9mm 1.2mm 1.2mm 1.2mm !important;
+      padding: 0.8mm 1.2mm 2.2mm 1.2mm !important;
       box-sizing: border-box !important;
       overflow: hidden !important;
       background: #ffffff !important;
@@ -111,17 +108,13 @@ export const getPrintCss = () => `
       box-shadow: none !important;
       page-break-inside: avoid !important;
       break-inside: avoid !important;
-      -webkit-font-smoothing: antialiased !important;
-      text-rendering: geometricPrecision !important;
+      -webkit-font-smoothing: none !important;
+      text-rendering: optimizeSpeed !important;
     }
     .label-container * {
       color: #000000 !important;
-    }
-    .label-container .text-white {
-      color: #ffffff !important;
-    }
-    .label-container .bg-black {
-      background-color: #000000 !important;
+      -webkit-font-smoothing: none !important;
+      text-rendering: optimizeSpeed !important;
     }
   }
 `;
