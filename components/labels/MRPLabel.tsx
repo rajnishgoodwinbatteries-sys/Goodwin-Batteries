@@ -46,18 +46,20 @@ export default function MRPLabel({
       }}
     >
       {/* Top Header */}
-      <div className="flex justify-between items-center border-b-[0.4mm] border-black pb-[0.35mm] mb-[0.4mm]">
+      <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.4mm]">
         <div className="flex items-center gap-[0.8mm] flex-1 min-w-0 pr-[1mm]">
-          {/* Authentic Goodwin Tilak Vector Logo */}
+          {/* Authentic Goodwin G Circular Emblem */}
           <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 100 120" 
-            className="w-[2.8mm] h-[3.4mm] shrink-0" 
-            fill="black"
+            viewBox="0 0 100 100" 
+            className="w-[3.4mm] h-[3.4mm] shrink-0" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M 20 10 C 20 60, 20 80, 50 100 C 80 80, 80 60, 80 10 C 70 10, 65 30, 65 60 C 65 75, 55 85, 50 85 C 45 85, 35 75, 35 60 C 35 30, 30 10, 20 10 Z" fill="#000000" />
-            <path d="M 40 100 C 45 115, 55 115, 60 100 Z" fill="#000000" />
-            <path d="M 46 20 C 46 50, 48 70, 50 80 C 52 70, 54 50, 54 20 C 54 10, 46 10, 46 20 Z" fill="#000000" />
+            <circle cx="50" cy="50" r="46" stroke="#000000" strokeWidth="8" fill="#ffffff" />
+            <path 
+              d="M 68 32 C 60 22 45 20 34 28 C 20 39 20 61 34 72 C 45 80 62 76 68 66 C 70 62 70 54 70 50 L 50 50 L 50 42 L 76 42 C 78 42 78 52 76 62 C 68 76 48 84 32 74 C 14 60 14 36 32 22 C 46 12 66 14 74 26 Z" 
+              fill="#000000" 
+            />
           </svg>
           <div className="flex flex-col min-w-0">
             <h1 
@@ -88,12 +90,12 @@ export default function MRPLabel({
 
         <div className="text-right flex-shrink-0 ml-[0.5mm] max-w-[15mm]">
           <div 
-            className="font-extrabold bg-black text-white px-[0.8mm] py-[0.2mm] inline-block truncate w-full text-center" 
+            className="font-extrabold border-[0.35mm] border-black bg-white text-black px-[0.8mm] py-[0.2mm] inline-block truncate w-full text-center rounded-[0.3mm]" 
             style={{ 
               fontFamily: bodyFont,
-              fontSize: '5.5pt', 
-              lineHeight: '1.1',
-              letterSpacing: '0.2px'
+              fontSize: '5.2pt', 
+              lineHeight: '1',
+              letterSpacing: '0.1px'
             }}
           >
             {productModel}
