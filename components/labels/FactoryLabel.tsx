@@ -29,6 +29,17 @@ export default function FactoryLabel({
   // Clean model name for display (e.g. "GW-XL2.5LC (12 Months)" -> "GW-XL2.5LC")
   const cleanModel = productModel.replace(/\s*\([^)]*\)/g, '').trim() || productModel;
 
+  // Dynamically calculate font-size and spacing based on serial number length
+  // to ensure 100% fit on 36mm printable width without right-edge clipping
+  const getSerialStyle = (len: number) => {
+    if (len <= 22) return { fontSize: '5.2pt', letterSpacing: '0.35px' };
+    if (len <= 28) return { fontSize: '4.6pt', letterSpacing: '0.2px' };
+    if (len <= 34) return { fontSize: '4.0pt', letterSpacing: '0.08px' };
+    return { fontSize: '3.4pt', letterSpacing: '0px' };
+  };
+
+  const serialStyle = getSerialStyle(serialNumber.length);
+
   return (
     <div 
       className="label-container bg-white text-black box-border relative flex flex-col justify-between"
@@ -36,28 +47,29 @@ export default function FactoryLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '1mm 1.2mm',
+        padding: '0.8mm 1.2mm',
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box'
       }}
     >
-      {/* 1. Header: Authentic Goodwin Vector Logo + Brand Name + Model Pill */}
-      <div className="flex items-center justify-between border-b-[0.4mm] border-black pb-[0.35mm] leading-none shrink-0">
-        <div className="flex items-center gap-[0.8mm] min-w-0">
-          {/* Authentic Goodwin Tilak Vector Logo */}
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 100 120" 
-            className="w-[2.8mm] h-[3.4mm] shrink-0" 
-            fill="black"
-          >
-            <path d="M 20 10 C 20 60, 20 80, 50 100 C 80 80, 80 60, 80 10 C 70 10, 65 30, 65 60 C 65 75, 55 85, 50 85 C 45 85, 35 75, 35 60 C 35 30, 30 10, 20 10 Z" fill="#000000" />
-            <path d="M 40 100 C 45 115, 55 115, 60 100 Z" fill="#000000" />
-            <path d="M 46 20 C 46 50, 48 70, 50 80 C 52 70, 54 50, 54 20 C 54 10, 46 10, 46 20 Z" fill="#000000" />
-          </svg>
+      {/* 1. Header Section: Brand Row + Dedicated Model Row (Prevents Any Collision) */}
+      <div className="shrink-0 flex flex-col">
+        {/* Brand Row: Tilak Logo + GOODWIN BATTERIES + Tagline */}
+        <div className="flex items-center justify-between leading-none">
+          <div className="flex items-center gap-[0.7mm]">
+            {/* Authentic Goodwin Tilak Vector Logo */}
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 100 120" 
+              className="w-[2.6mm] h-[3.2mm] shrink-0" 
+              fill="black"
+            >
+              <path d="M 20 10 C 20 60, 20 80, 50 100 C 80 80, 80 60, 80 10 C 70 10, 65 30, 65 60 C 65 75, 55 85, 50 85 C 45 85, 35 75, 35 60 C 35 30, 30 10, 20 10 Z" fill="#000000" />
+              <path d="M 40 100 C 45 115, 55 115, 60 100 Z" fill="#000000" />
+              <path d="M 46 20 C 46 50, 48 70, 50 80 C 52 70, 54 50, 54 20 C 54 10, 46 10, 46 20 Z" fill="#000000" />
+            </svg>
 
-          <div className="flex flex-col">
             <span 
               className="font-black text-black tracking-tight uppercase whitespace-nowrap"
               style={{ 
@@ -70,32 +82,41 @@ export default function FactoryLabel({
             >
               GOODWIN BATTERIES
             </span>
-            <span 
-              className="font-bold text-black tracking-tight uppercase"
-              style={{ 
-                fontFamily: bodyFont,
-                fontSize: '3.6pt', 
-                lineHeight: 1,
-                marginTop: '0.2mm'
-              }}
-            >
-              Your Trusted Power Source
-            </span>
           </div>
-        </div>
 
-        {/* Product Model Pill */}
-        <div className="shrink-0 ml-[0.8mm]">
           <span 
-            className="bg-black text-white font-black px-[1mm] py-[0.3mm] rounded-[0.4mm] uppercase inline-block whitespace-nowrap"
+            className="font-bold text-black uppercase tracking-tight whitespace-nowrap shrink-0 ml-[0.5mm]"
             style={{ 
               fontFamily: bodyFont,
-              fontSize: '5.6pt',
+              fontSize: '3.4pt', 
+              lineHeight: 1
+            }}
+          >
+            Your Trusted Power Source
+          </span>
+        </div>
+
+        {/* Dedicated Model Name Bar (Full 36mm width utilization: Zero Collision Guaranteed) */}
+        <div className="flex items-center justify-between bg-black text-white px-[1.2mm] py-[0.35mm] rounded-[0.35mm] mt-[0.35mm] leading-none">
+          <span 
+            className="font-black uppercase tracking-wider truncate"
+            style={{ 
+              fontFamily: bodyFont,
+              fontSize: '5.0pt', 
               lineHeight: 1,
               letterSpacing: '0.2px'
             }}
           >
-            {cleanModel}
+            MODEL: {cleanModel}
+          </span>
+          <span 
+            className="font-bold text-white/90 uppercase whitespace-nowrap shrink-0 ml-[1mm]"
+            style={{ 
+              fontSize: '3.6pt', 
+              lineHeight: 1 
+            }}
+          >
+            GENUINE OEM
           </span>
         </div>
       </div>
@@ -103,11 +124,11 @@ export default function FactoryLabel({
       {/* 2. Middle Row: QR Code + Barcode */}
       <div className="flex flex-row items-center justify-between gap-[1mm] my-[0.3mm] shrink-0">
         {/* QR Code */}
-        <div className="shrink-0 flex items-center justify-center p-[0.2mm] bg-white border border-black/40 rounded-[0.3mm]">
+        <div className="shrink-0 flex items-center justify-center p-[0.2mm] bg-white border border-black/50 rounded-[0.3mm]">
           <QRCodeSVG 
             value={verifyUrl} 
             size={28}
-            style={{ width: '7.6mm', height: '7.6mm' }}
+            style={{ width: '7.2mm', height: '7.2mm' }}
             level="M" 
             includeMargin={false} 
             fgColor="#000000"
@@ -116,13 +137,13 @@ export default function FactoryLabel({
         </div>
 
         {/* Barcode */}
-        <div className="flex-1 min-w-0 flex items-center justify-end overflow-hidden">
-          <div className="w-full flex items-center justify-end [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[7.6mm]">
+        <div className="flex-1 min-w-0 flex items-center justify-center overflow-hidden h-[7.2mm]">
+          <div className="w-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[7.2mm]">
             <Barcode 
               value={serialNumber} 
               format="CODE128"
               width={1}
-              height={28}
+              height={26}
               displayValue={false}
               margin={0}
               background="#ffffff"
@@ -132,9 +153,9 @@ export default function FactoryLabel({
         </div>
       </div>
 
-      {/* 3. Bottom Section: Clear Full-Width Metadata (NO Ellipses, NO Cutoff) */}
-      <div className="border-t-[0.3mm] border-black/70 pt-[0.35mm] shrink-0">
-        <div className="flex justify-between items-center text-black font-extrabold" style={{ fontSize: '4.8pt', lineHeight: 1 }}>
+      {/* 3. Bottom Section: Clear Full-Width Metadata (Zero Truncation, Zero Clipping) */}
+      <div className="border-t-[0.35mm] border-black pt-[0.35mm] shrink-0">
+        <div className="flex justify-between items-center text-black font-extrabold" style={{ fontSize: '4.6pt', lineHeight: 1 }}>
           <div className="whitespace-nowrap">
             <span className="font-black">MFG:</span> {mfgDate}
           </div>
@@ -143,14 +164,14 @@ export default function FactoryLabel({
           </div>
         </div>
 
-        {/* Full Serial Number */}
+        {/* Full Serial Number (Scaled to 100% fit on 1 line without right-edge cut-off) */}
         <div 
-          className="font-black text-center text-black tracking-wider mt-[0.3mm] whitespace-nowrap" 
+          className="font-black text-center text-black mt-[0.3mm] whitespace-nowrap overflow-hidden" 
           style={{ 
             fontFamily: serialFont,
-            fontSize: '5.2pt', 
+            fontSize: serialStyle.fontSize, 
+            letterSpacing: serialStyle.letterSpacing,
             lineHeight: 1,
-            letterSpacing: '0.3px',
             fontWeight: 800
           }}
         >
