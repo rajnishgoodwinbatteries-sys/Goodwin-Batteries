@@ -98,7 +98,7 @@ export const getPrintCss = () => `
       height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       max-height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       margin: 0 !important;
-      padding: 0.8mm 1.2mm 2.2mm 1.2mm !important;
+      padding: 0.8mm 1.2mm 1.8mm 1.2mm !important;
       box-sizing: border-box !important;
       overflow: hidden !important;
       background: #ffffff !important;

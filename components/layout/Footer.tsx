@@ -58,10 +58,10 @@ export default function Footer() {
           <div className="lg:col-span-4 flex flex-col gap-4">
             <Link href="/" className="inline-flex items-center gap-3 self-start">
               <Image 
-                src="/assets/logo/tilak.svg" 
-                alt="Tirupati Tilak" 
-                width={36} 
-                height={42} 
+                src="/assets/logo/g-logo.png" 
+                alt="Goodwin" 
+                width={38} 
+                height={38} 
                 className="object-contain"
               />
               <Image 

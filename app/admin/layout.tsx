@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import { LayoutDashboard, Package, MapPin, MessageSquare, ShieldCheck, Settings, LogOut, Car, HelpCircle, Loader2, Printer, FileText, Tag } from "lucide-react";
+import Image from "next/image";
+import { LayoutDashboard, Package, MapPin, MessageSquare, ShieldCheck, Settings, LogOut, Car, HelpCircle, Loader2, Printer, FileText, Tag, ShoppingBag } from "lucide-react";
 import clsx from "clsx";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -85,6 +86,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const navItems = [
     { label: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} />, roles: ["super_admin", "admin", "dealer"] },
+    { label: "Online Orders", href: "/admin/orders", icon: <ShoppingBag size={20} />, roles: ["super_admin", "admin", "dealer", "warehouse"] },
     { label: "Products", href: "/admin/products", icon: <Package size={20} />, roles: ["super_admin", "admin", "dealer"] },
     { label: "Battery Finder", href: "/admin/battery-finder", icon: <Car size={20} />, roles: ["super_admin", "admin", "dealer"] },
     { label: "Dealers", href: "/admin/dealers", icon: <MapPin size={20} />, roles: ["super_admin", "admin", "dealer"] },
@@ -103,7 +105,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-64 bg-surface border-r border-border flex flex-col fixed h-full z-20 print:hidden">
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-brand text-white font-bold flex items-center justify-center rounded">G</div>
+            <Image 
+              src="/assets/logo/g-logo.png" 
+              alt="Goodwin" 
+              width={32} 
+              height={32} 
+              className="object-contain"
+            />
             <span className="font-bold text-foreground tracking-widest text-lg">ADMIN</span>
           </div>
         </div>

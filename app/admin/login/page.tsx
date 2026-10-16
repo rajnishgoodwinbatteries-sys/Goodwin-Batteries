@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { ShieldAlert, Loader2 } from "lucide-react";
 
 export default function AdminLoginPage() {
@@ -37,9 +38,13 @@ export default function AdminLoginPage() {
       
       <div className="w-full max-w-md p-8 bg-background border border-border rounded-2xl shadow-2xl relative z-10 mx-4">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-brand text-white font-bold flex items-center justify-center rounded-xl text-3xl mb-4 shadow-lg shadow-brand/20">
-            G
-          </div>
+          <Image 
+            src="/assets/logo/g-logo.png" 
+            alt="Goodwin" 
+            width={72} 
+            height={72} 
+            className="object-contain mb-4 drop-shadow-md"
+          />
           <h1 className="text-3xl font-heading font-bold text-foreground mb-2">Admin Login</h1>
           <p className="text-muted-foreground text-sm">Secure access to Goodwin ERP</p>
         </div>

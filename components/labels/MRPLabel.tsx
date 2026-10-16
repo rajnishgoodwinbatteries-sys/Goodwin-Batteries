@@ -46,13 +46,15 @@ export default function MRPLabel({
 
   // Auto-adjust font size for serial number based on length across full width
   const getSerialStyle = (len: number) => {
-    if (len <= 14) return { fontSize: '5.2pt', letterSpacing: '0.2px' };
-    if (len <= 20) return { fontSize: '4.6pt', letterSpacing: '0.15px' };
-    if (len <= 26) return { fontSize: '4.2pt', letterSpacing: '0.1px' };
-    if (len <= 32) return { fontSize: '3.9pt', letterSpacing: '0.05px' };
-    if (len <= 38) return { fontSize: '3.6pt', letterSpacing: '0px' };
-    if (len <= 44) return { fontSize: '3.2pt', letterSpacing: '-0.05px' };
-    return { fontSize: '2.8pt', letterSpacing: '-0.1px' };
+    if (len <= 12) return { fontSize: '6.0pt', letterSpacing: '0.35px' };
+    if (len <= 16) return { fontSize: '5.4pt', letterSpacing: '0.25px' };
+    if (len <= 20) return { fontSize: '4.9pt', letterSpacing: '0.18px' };
+    if (len <= 25) return { fontSize: '4.5pt', letterSpacing: '0.12px' };
+    if (len <= 30) return { fontSize: '4.2pt', letterSpacing: '0.08px' };
+    if (len <= 36) return { fontSize: '3.9pt', letterSpacing: '0.04px' };
+    if (len <= 42) return { fontSize: '3.5pt', letterSpacing: '0px' };
+    if (len <= 48) return { fontSize: '3.1pt', letterSpacing: '-0.05px' };
+    return { fontSize: '2.7pt', letterSpacing: '-0.1px' };
   };
 
   const modelStyle = getModelStyle(cleanModel.length);
@@ -189,14 +191,17 @@ export default function MRPLabel({
           <div className="flex flex-col items-center justify-center">
             <QRCodeSVG 
               value={verifyUrl} 
-              size={52}
+              size={160}
               style={{ 
-                width: '13.5mm', 
-                height: '13.5mm', 
-                imageRendering: 'pixelated' 
+                width: '13.8mm', 
+                height: '13.8mm', 
+                maxWidth: '100%', 
+                maxHeight: '100%',
+                shapeRendering: 'crispEdges' 
               }}
               level="L" 
-              includeMargin={false} 
+              boostLevel={false}
+              marginSize={1}
               fgColor="#000000"
               bgColor="#FFFFFF"
             />
@@ -207,14 +212,11 @@ export default function MRPLabel({
         </div>
       </div>
 
-      {/* Optional Full-width Serial Number (36mm wide - 100% visible for all serial lengths!) */}
+      {/* Optional Full-width Serial Number (36mm wide - 100% visible for all serial lengths, zero overlap, no INDIA) */}
       {serialNumber && (
-        <div className="w-full border-t-[0.4mm] border-black pt-[0.6mm] mt-[0.4mm] flex items-center justify-between shrink-0 leading-none">
-          <span className="text-[2.8pt] font-black uppercase text-black tracking-wider shrink-0 pr-[0.8mm]">
-            SERIAL NO:
-          </span>
+        <div className="w-full border-t-[0.4mm] border-black pt-[0.6mm] mt-[0.4mm] flex items-center justify-center shrink-0 leading-none overflow-hidden">
           <span 
-            className="font-mono font-black text-center flex-1 mx-[0.5mm] leading-none whitespace-nowrap overflow-hidden text-black"
+            className="font-mono font-black text-center w-full leading-none whitespace-nowrap overflow-hidden text-black tracking-tight"
             style={{ 
               fontFamily: serialFont,
               fontSize: serialStyle.fontSize,
@@ -223,9 +225,6 @@ export default function MRPLabel({
             }}
           >
             {serialNumber}
-          </span>
-          <span className="text-[2.6pt] font-black text-black uppercase tracking-wider shrink-0 pl-[0.8mm]">
-            INDIA
           </span>
         </div>
       )}

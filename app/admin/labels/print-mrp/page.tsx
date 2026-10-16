@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import MRPLabel from "@/components/labels/MRPLabel";
 import { useSearchParams } from "next/navigation";
 import { getPrintCss } from "@/lib/printer-config";
 import PrintControlToolbar, { DEFAULT_PRINT_SETTINGS, PrintSettings } from "@/components/labels/PrintControlToolbar";
+import { Loader2 } from "lucide-react";
 
-export default function PrintMRPPage() {
+function PrintMRPContent() {
   const searchParams = useSearchParams();
   const productId = searchParams.get("productId");
   const qty = parseInt(searchParams.get("qty") || "1", 10);
@@ -123,3 +124,17 @@ export default function PrintMRPPage() {
     </div>
   );
 }
+
+export default function PrintMRPPage() {
+  return (
+    <Suspense fallback={
+      <div className="p-8 text-center flex items-center justify-center gap-2 text-muted-foreground font-medium">
+        <Loader2 className="animate-spin text-[#00843D]" size={24} />
+        <span>Loading MRP print layout...</span>
+      </div>
+    }>
+      <PrintMRPContent />
+    </Suspense>
+  );
+}
+

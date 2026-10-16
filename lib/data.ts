@@ -3,6 +3,7 @@ import { Product, Category, VehicleType, VehicleBrand, VehicleModel, VehicleVari
 import { unstable_cache } from "next/cache";
 import goodwinProducts from "@/data/goodwinProducts.json";
 import goodwinCategories from "@/data/goodwinCategories.json";
+import { getProductPricing } from "./pricing";
 
 // ==========================================
 // GLOBAL SETTINGS
@@ -28,8 +29,18 @@ export const getCategories = async (): Promise<Category[]> => {
 };
 
 export const getProducts = async (): Promise<Product[]> => {
-  // Return typed products from the unified JSON catalog
-  return (goodwinProducts as any[]).map(row => ({
+  // Return typed products from the unified JSON catalog with e-commerce pricing
+  return (goodwinProducts as any[]).map(row => {
+    const pricing = getProductPricing({
+      id: row.id,
+      ah: row.ah,
+      voltage: row.voltage,
+      category: row.category,
+      mrp: row.mrp,
+      price: row.price,
+    });
+
+    return {
       id: row.id,
       name: row.name,
       slug: row.slug,
@@ -52,7 +63,11 @@ export const getProducts = async (): Promise<Product[]> => {
       terminalLayout: row.terminalLayout,
       dimensions: row.dimensions,
       weight: row.weight,
-  })) as Product[];
+      mrp: pricing.mrp,
+      price: pricing.price,
+      in_stock: pricing.inStock,
+    };
+  }) as Product[];
 };
 
 export const getProductBySlug = async (slug: string): Promise<Product | null> => {

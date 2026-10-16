@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ChevronRight, ShieldCheck, Download, CheckCircle2, Wrench, FileText, Phone, Zap, Search } from "lucide-react";
 import { getProductBySlug, getProducts, getCategories } from "@/lib/data";
 import ProductGallery from "@/components/ProductGallery";
+import ProductBuyWidget from "@/components/products/ProductBuyWidget";
 
 export async function generateStaticParams() {
   const products = await getProducts();
@@ -87,25 +88,8 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
                 </div>
               </div>
 
-              {/* High-conversion Action Strip */}
-              <div className="flex flex-col sm:flex-row gap-3 mb-8 bg-slate-50 p-3 rounded-2xl border border-slate-200 shadow-md">
-                <a 
-                  href={`https://wa.me/919667724411?text=${encodeURIComponent(`Goodwin Batteries Order / Dealership Enquiry\n\nProduct: ${product.name}\nSeries: ${product.series || "Gold"}\nCapacity: ${product.ah || "N/A"}\nVoltage: ${product.voltage || "12V"}\n\nKindly share pricing, nearest dealer availability, and delivery timeframe.`)}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="flex-1 bg-[#00843D] hover:bg-[#006830] text-white px-6 py-4 rounded-xl font-bold uppercase tracking-wider transition-all text-center shadow-lg shadow-emerald-700/20 flex items-center justify-center gap-2 group"
-                >
-                  <Phone size={18} className="group-hover:scale-110 transition-transform" /> 
-                  <span>Instant Price & Dealer Quote</span>
-                </a>
-                <a 
-                  href="#specifications" 
-                  className="bg-white border border-slate-200 text-slate-700 hover:text-slate-900 px-6 py-4 rounded-xl font-bold uppercase tracking-wider hover:bg-slate-50 hover:border-slate-300 transition-all text-center flex items-center justify-center gap-2 shadow-sm"
-                >
-                  <FileText size={18} className="text-[#00843D]" /> 
-                  <span>Specifications</span>
-                </a>
-              </div>
+              {/* E-Commerce Buy Widget */}
+              <ProductBuyWidget product={product} />
 
               {/* Goodwin Tech Advantages Checklist */}
               {product.features && product.features.length > 0 ? (

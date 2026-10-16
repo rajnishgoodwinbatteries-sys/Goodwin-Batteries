@@ -5,12 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   Menu, X, Search, BatteryCharging, Briefcase, 
-  ShieldCheck, Phone, MapPin, Zap, ChevronDown, Sparkles 
+  ShieldCheck, Phone, MapPin, Zap, ChevronDown, Sparkles, ShoppingBag, Truck 
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 import Image from "next/image";
 import { useGlobalSettings } from "@/components/GlobalSettingsProvider";
+import { useCart } from "@/context/CartContext";
 
 const productCategories = [
   { name: "Four Wheeler / Car", href: "/products?category=passenger-vehicles", icon: "🚗", desc: "High CCA batteries for cars & SUVs" },
@@ -26,6 +27,7 @@ export default function Navbar() {
   const [productsDropdownOpen, setProductsDropdownOpen] = useState(false);
   const pathname = usePathname();
   const settings = useGlobalSettings();
+  const { itemCount, openCart } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,10 +106,10 @@ export default function Navbar() {
           {/* Original Logo (No white background wrapper, no invert) */}
           <Link href="/" className="flex items-center gap-3 z-50 group">
             <Image 
-              src="/assets/logo/tilak.svg" 
-              alt="Goodwin Tilak" 
-              width={34} 
-              height={40} 
+              src="/assets/logo/g-logo.png" 
+              alt="Goodwin" 
+              width={38} 
+              height={38} 
               className="object-contain transition-transform group-hover:scale-105" 
               priority
             />
@@ -286,6 +288,30 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="hidden lg:flex items-center gap-3">
+            {/* My Orders / Tracking */}
+            <Link
+              href="/account/orders"
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#00843D] border border-gray-300 hover:border-[#00843D] px-3.5 py-2 rounded-full transition-all bg-white shadow-xs"
+              title="Track live orders & download GST invoice"
+            >
+              <Truck size={14} className="text-[#00843D]" />
+              <span>My Orders</span>
+            </Link>
+
+            {/* Cart Trigger */}
+            <button
+              onClick={openCart}
+              className="relative p-2.5 rounded-full bg-slate-100 hover:bg-emerald-50 text-slate-800 hover:text-[#00843D] transition-colors border border-slate-200 hover:border-emerald-300 flex items-center justify-center group"
+              aria-label="View Cart"
+            >
+              <ShoppingBag size={18} className="transition-transform group-hover:scale-110" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#00843D] text-white text-[11px] font-black rounded-full flex items-center justify-center shadow-md animate-in zoom-in-50">
+                  {itemCount}
+                </span>
+              )}
+            </button>
+
             <Link
               href="/dealer-distributor"
               className="text-xs font-bold text-slate-700 hover:text-[#00843D] border border-gray-300 hover:border-[#00843D] px-4 py-2.5 rounded-full flex items-center gap-1.5 transition-all bg-white shadow-xs"
@@ -303,14 +329,28 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            className="xl:hidden z-50 text-slate-800 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors focus-visible:outline-none"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Right Controls */}
+          <div className="flex items-center gap-2 xl:hidden">
+            <button
+              onClick={openCart}
+              className="relative p-2 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-800 hover:text-[#00843D] transition-colors border border-slate-200"
+              aria-label="View Cart"
+            >
+              <ShoppingBag size={20} />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#00843D] text-white text-[10px] font-black rounded-full flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
+            </button>
+            <button
+              className="z-50 text-slate-800 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition-colors focus-visible:outline-none"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </header>
 

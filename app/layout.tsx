@@ -21,8 +21,20 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://goodwinbatteries.in'),
-  title: `${GOODWIN_CONFIG.companyName} | ${GOODWIN_CONFIG.tagline}`,
+  title: {
+    default: "Goodwin",
+    template: "%s | Goodwin",
+  },
   description: GOODWIN_CONFIG.description,
+  icons: {
+    icon: [
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+      { url: '/assets/logo/g-logo.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
   alternates: {
     canonical: '/',
   },

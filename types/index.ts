@@ -23,6 +23,66 @@ export interface Product {
   dimensions: string;
   weight: string;
   datasheet?: string;
+  mrp?: number;
+  price?: number;
+  in_stock?: boolean;
+}
+
+export interface CartItem {
+  id: string;
+  name: string;
+  slug: string;
+  image: string;
+  series?: string;
+  ah?: string;
+  voltage?: string;
+  warranty?: string;
+  mrp: number;
+  price: number;
+  quantity: number;
+}
+
+export interface OrderItem {
+  productId: string;
+  name: string;
+  slug: string;
+  image: string;
+  price: number;
+  quantity: number;
+}
+
+export interface Order {
+  id: string;
+  customerName: string;
+  phone: string;
+  email?: string;
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+  landmark?: string;
+  vehicleDetails?: string;
+  deliverySlot: string;
+  paymentMethod: "online" | "upi" | "cod";
+  paymentStatus: "Pending" | "Paid";
+  transactionId?: string;
+  status: "Confirmed" | "Packed" | "Out for Delivery" | "Delivered & Installed" | "Cancelled";
+  items: OrderItem[];
+  totalMrp: number;
+  discount: number;
+  deliveryFee: number;
+  totalAmount: number;
+  createdAt: string;
+  // Goodwin Seller Hub Dispatch & Technician fields
+  packedAt?: string;
+  dispatchedAt?: string;
+  deliveredAt?: string;
+  technicianName?: string;
+  technicianPhone?: string;
+  technicianVehicle?: string;
+  installedSerialNumber?: string;
+  invoiceNumber?: string;
+  trackingNumber?: string;
 }
 
 export interface Category {

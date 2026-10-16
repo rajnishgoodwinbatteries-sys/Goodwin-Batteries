@@ -323,7 +323,7 @@ export default function WarrantyRegistrationPage() {
                       <option value="">Select Platform</option>
                       <option value="Goodwin Website">Goodwin Website</option>
                       <option value="Amazon">Amazon</option>
-                      <option value="Flipkart">Flipkart</option>
+                      <option value="Online Marketplace">Online Marketplace</option>
                       <option value="Other">Other</option>
                     </select>
                   </div>

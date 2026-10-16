@@ -46,26 +46,28 @@ export default function FactoryLabel({
   };
 
   // Dynamically calculate font-size and spacing based on serial number length
-  // Calibrated for 36mm full-width container so any serial up to 45+ chars is 100% visible
+  // Calibrated for full 36mm width so any serial up to 48+ chars is 100% visible with zero clipping
   const getSerialStyle = (len: number) => {
-    if (len <= 14) return { fontSize: '5.4pt', letterSpacing: '0.2px' };
-    if (len <= 20) return { fontSize: '4.6pt', letterSpacing: '0.15px' };
-    if (len <= 26) return { fontSize: '4.2pt', letterSpacing: '0.1px' };
-    if (len <= 32) return { fontSize: '3.9pt', letterSpacing: '0.05px' };
-    if (len <= 38) return { fontSize: '3.6pt', letterSpacing: '0px' };
-    if (len <= 44) return { fontSize: '3.2pt', letterSpacing: '-0.05px' };
-    return { fontSize: '2.8pt', letterSpacing: '-0.1px' };
+    if (len <= 12) return { fontSize: '6.0pt', letterSpacing: '0.35px' };
+    if (len <= 16) return { fontSize: '5.4pt', letterSpacing: '0.25px' };
+    if (len <= 20) return { fontSize: '4.9pt', letterSpacing: '0.18px' };
+    if (len <= 25) return { fontSize: '4.5pt', letterSpacing: '0.12px' };
+    if (len <= 30) return { fontSize: '4.2pt', letterSpacing: '0.08px' };
+    if (len <= 36) return { fontSize: '3.9pt', letterSpacing: '0.04px' };
+    if (len <= 42) return { fontSize: '3.5pt', letterSpacing: '0px' };
+    if (len <= 48) return { fontSize: '3.1pt', letterSpacing: '-0.05px' };
+    return { fontSize: '2.7pt', letterSpacing: '-0.1px' };
   };
 
   const modelStyle = getModelStyle(cleanModel.length);
   const serialStyle = getSerialStyle(serialNumber.length);
 
   // LAYOUT 1: MAX QR HERO (DEFAULT & HIGHLY RECOMMENDED)
-  // Max content is the QR code (~14.5mm) for instant phone scanning.
+  // Max content is the QR code (~14mm) with quiet zone and crispEdges for instant phone scanning.
   // Full-width serial number bar across the bottom guarantees 100% visibility for all serials (e.g. GOLD-SERIES-12V-12AH-12M-161026-00005).
   // ONLY the GW logo is used (no "goodwin" text).
-  // NO "GENUINE" text.
-  // Model auto-adjusts dynamically for 100% compatibility across all models.
+  // NO "GENUINE" text, NO "INDIA" overlap.
+  // Model and serial auto-adjust dynamically for 100% compatibility across all models.
   if (!showBarcode) {
     return (
       <div 
@@ -74,7 +76,7 @@ export default function FactoryLabel({
           width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
           height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
           maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-          padding: '1.0mm 1.2mm 1.8mm 1.2mm', // 1.8mm bottom clearance protects from printer tear bar
+          padding: '0.8mm 1.2mm 1.8mm 1.2mm', // 1.8mm bottom clearance protects from printer tear bar
           overflow: 'hidden',
           fontFamily: bodyFont,
           boxSizing: 'border-box',
@@ -87,14 +89,21 @@ export default function FactoryLabel({
         {/* TOP SECTION: SCANNABLE QR CODE (LEFT) + BRAND, MODEL & SPECS (RIGHT) */}
         <div className="flex flex-row items-stretch justify-between flex-1 min-h-0">
           {/* LEFT: THE GIANT SCANNABLE QR CODE */}
-          <div className="flex flex-col items-center justify-between w-[16.0mm] shrink-0 pr-[1.0mm] border-r-[0.35mm] border-black">
+          <div className="flex flex-col items-center justify-between w-[16.2mm] shrink-0 pr-[0.8mm] border-r-[0.35mm] border-black">
             <div className="w-full flex-1 flex items-center justify-center bg-white min-h-0">
               <QRCodeSVG 
                 value={verifyUrl} 
-                size={56}
-                style={{ width: '13.5mm', height: '13.5mm', imageRendering: 'pixelated' }}
+                size={160}
+                style={{ 
+                  width: '13.8mm', 
+                  height: '13.8mm', 
+                  maxWidth: '100%', 
+                  maxHeight: '100%',
+                  shapeRendering: 'crispEdges'
+                }}
                 level="L" 
-                includeMargin={false} 
+                boostLevel={false}
+                marginSize={1}
                 fgColor="#000000"
                 bgColor="#FFFFFF"
               />
@@ -162,13 +171,10 @@ export default function FactoryLabel({
           </div>
         </div>
 
-        {/* BOTTOM SECTION: FULL-WIDTH SERIAL NUMBER (36mm WIDE - 100% VISIBLE FOR ALL SERIALS!) */}
-        <div className="w-full border-t-[0.4mm] border-black pt-[0.6mm] mt-[0.4mm] flex items-center justify-between shrink-0 leading-none">
-          <span className="text-[2.8pt] font-black uppercase text-black tracking-wider shrink-0 pr-[0.8mm]">
-            SERIAL NO:
-          </span>
+        {/* BOTTOM SECTION: ONLY COMPLETE SERIAL NUMBER (AUTO-ADJUSTS, ZERO OVERLAP, 100% COMPLETE) */}
+        <div className="w-full border-t-[0.4mm] border-black pt-[0.6mm] mt-[0.4mm] flex items-center justify-center shrink-0 leading-none overflow-hidden">
           <span 
-            className="font-black text-black uppercase whitespace-nowrap overflow-hidden font-mono text-center flex-1 mx-[0.5mm] leading-none"
+            className="font-black text-black uppercase whitespace-nowrap overflow-hidden font-mono text-center w-full leading-none tracking-tight"
             style={{ 
               fontFamily: serialFont,
               fontSize: serialStyle.fontSize,
@@ -178,9 +184,6 @@ export default function FactoryLabel({
             }}
           >
             {serialNumber}
-          </span>
-          <span className="text-[2.6pt] font-black text-black uppercase tracking-wider shrink-0 pl-[0.8mm]">
-            INDIA
           </span>
         </div>
       </div>
@@ -248,10 +251,11 @@ export default function FactoryLabel({
         <div className="shrink-0 flex items-center justify-center p-[0.2mm] bg-white border border-black/50 rounded-[0.3mm]">
           <QRCodeSVG 
             value={verifyUrl} 
-            size={48}
-            style={{ width: '12.0mm', height: '12.0mm', imageRendering: 'pixelated' }}
+            size={160}
+            style={{ width: '12.0mm', height: '12.0mm', shapeRendering: 'crispEdges' }}
             level="L" 
-            includeMargin={false} 
+            boostLevel={false}
+            marginSize={1} 
             fgColor="#000000"
             bgColor="#FFFFFF"
           />
@@ -265,7 +269,7 @@ export default function FactoryLabel({
             <strong>MFG:</strong> {mfgDate}
           </div>
           <div className="text-[3.4pt] font-black uppercase text-black tracking-wider">
-            MADE IN INDIA
+            GOODWIN BATTERIES
           </div>
         </div>
       </div>

@@ -32,9 +32,10 @@ export const GOODWIN_CONFIG = {
 
   // Brand Assets
   logo: {
-    dark: "/assets/branding/goodwin-logo.png",
-    light: "/assets/branding/goodwin-logo.png", // Replace with inverted logo if available
-    favicon: "/assets/branding/favicon.png",
+    dark: "/assets/logo/Goodwin.png",
+    light: "/assets/logo/Goodwin.png",
+    icon: "/assets/logo/g-logo.png",
+    favicon: "/icon.png",
   },
   
   // Social Media Links (Verified only)
@@ -49,7 +50,20 @@ export const GOODWIN_CONFIG = {
   marketplaces: {
     indiamart: "https://www.indiamart.com/goodwinbatteries",
     amazon: null,
-    flipkart: null,
     tradeIndia: null,
   }
+};
+
+export const GOODWIN_GST_CONFIG = {
+  legalName: "AMAN RAJARWAL",
+  tradeName: "GOODWIN BATTERIES",
+  constitution: "Proprietorship",
+  gstin: "23EAZPR0166R1ZN",
+  pan: "EAZPR0166R",
+  hsn: "8507",
+  address: "Shop No. 202, Second Floor, Samiksh Landmark, Tejpur Gadbadi, AB Road",
+  city: "Indore",
+  state: "Madhya Pradesh",
+  pincode: "452012",
+  fullAddress: "Shop No. 202, Second Floor, Samiksh Landmark, Tejpur Gadbadi, AB Road, Indore, Madhya Pradesh - 452012"
 };
