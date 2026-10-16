@@ -55,67 +55,67 @@ export default function FactoryLabel({
         color: '#000000'
       }}
     >
-      {/* 1. Header: Authentic Goodwin G Emblem + Brand Name + Model Box (Pure White & Black, Zero Reverse Flood) */}
-      <div className="flex items-start justify-between leading-none shrink-0 border-b-[0.35mm] border-black pb-[0.4mm]">
-        {/* Left: Goodwin Branding */}
-        <div className="flex flex-col min-w-0 pr-[1mm]">
-          <div className="flex items-center gap-[0.8mm]">
-            {/* Authentic Goodwin G Circular Emblem (Sharp 100% Black Vector) */}
-            <svg 
-              viewBox="0 0 100 100" 
-              className="w-[3.4mm] h-[3.4mm] shrink-0" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="50" cy="50" r="46" stroke="#000000" strokeWidth="8" fill="#ffffff" />
-              <path 
-                d="M 68 32 C 60 22 45 20 34 28 C 20 39 20 61 34 72 C 45 80 62 76 68 66 C 70 62 70 54 70 50 L 50 50 L 50 42 L 76 42 C 78 42 78 52 76 62 C 68 76 48 84 32 74 C 14 60 14 36 32 22 C 46 12 66 14 74 26 Z" 
-                fill="#000000" 
-              />
-            </svg>
-
-            <span 
-              className="font-black text-black uppercase whitespace-nowrap"
-              style={{ 
-                fontFamily: logoFont,
-                fontSize: '6.0pt', 
-                lineHeight: 1,
-                letterSpacing: letterSpacing,
-                fontWeight: 900
-              }}
-            >
-              GOODWIN BATTERIES
-            </span>
-          </div>
+      {/* 1. Header: 2 Clean Rows (Brand on Top, Tagline + Model on Bottom) - Zero Collision Guaranteed */}
+      <div className="flex flex-col shrink-0 border-b-[0.35mm] border-black pb-[0.35mm]">
+        {/* Row 1: Authentic Goodwin G Emblem + Brand Name across the full width */}
+        <div className="flex items-center gap-[0.8mm] leading-none">
+          {/* Authentic Goodwin G Circular Emblem (Sharp 100% Black Vector) */}
+          <svg 
+            viewBox="0 0 100 100" 
+            className="w-[3.2mm] h-[3.2mm] shrink-0" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="50" cy="50" r="46" stroke="#000000" strokeWidth="8" fill="#ffffff" />
+            <path 
+              d="M 68 32 C 60 22 45 20 34 28 C 20 39 20 61 34 72 C 45 80 62 76 68 66 C 70 62 70 54 70 50 L 50 50 L 50 42 L 76 42 C 78 42 78 52 76 62 C 68 76 48 84 32 74 C 14 60 14 36 32 22 C 46 12 66 14 74 26 Z" 
+              fill="#000000" 
+            />
+          </svg>
 
           <span 
-            className="font-bold text-black uppercase tracking-tight whitespace-nowrap mt-[0.35mm]"
+            className="font-black text-black uppercase tracking-tight whitespace-nowrap"
+            style={{ 
+              fontFamily: logoFont,
+              fontSize: '6.4pt', 
+              lineHeight: 1,
+              letterSpacing: letterSpacing,
+              fontWeight: 900
+            }}
+          >
+            GOODWIN BATTERIES
+          </span>
+        </div>
+
+        {/* Row 2: Tagline on Left, Model Badge on Right (Plenty of Space, Never Collides) */}
+        <div className="flex items-center justify-between leading-none mt-[0.35mm]">
+          <span 
+            className="font-bold text-black uppercase tracking-tight whitespace-nowrap truncate pr-[1mm]"
             style={{ 
               fontFamily: bodyFont,
-              fontSize: '3.5pt', 
+              fontSize: '3.4pt', 
               lineHeight: 1
             }}
           >
             Your Trusted Power Source
           </span>
-        </div>
 
-        {/* Right: Model Box (Black 1px Border on Pure White Background - Thermal Clean) */}
-        <div className="shrink-0 text-right">
+          {/* Model Box */}
           <div 
-            className="border-[0.35mm] border-black rounded-[0.4mm] px-[1mm] py-[0.4mm] bg-white text-center inline-block max-w-[15mm]"
+            className="shrink-0 border-[0.3mm] border-black rounded-[0.35mm] px-[1.2mm] py-[0.25mm] bg-white text-center inline-flex items-center gap-[0.6mm]"
             style={{ backgroundColor: '#ffffff' }}
           >
-            <div className="text-[3.2pt] font-black text-black leading-none uppercase">MODEL</div>
-            <div 
-              className="font-black text-black leading-none uppercase mt-[0.25mm] tracking-tight truncate"
+            <span className="text-[3.2pt] font-black text-black uppercase leading-none">MODEL:</span>
+            <span 
+              className="font-black text-black uppercase tracking-tight whitespace-nowrap leading-none"
               style={{ 
-                fontSize: cleanModel.length > 13 ? '4.0pt' : '5.2pt',
+                fontFamily: bodyFont,
+                fontSize: cleanModel.length > 12 ? '4.2pt' : '5.0pt',
                 lineHeight: 1
               }}
             >
               {cleanModel}
-            </div>
+            </span>
           </div>
         </div>
       </div>
