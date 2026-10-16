@@ -63,7 +63,7 @@ export default function HomePageClient({
               </span>
             </div>
             
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-heading font-black text-slate-900 leading-[1.08] tracking-tight mb-6 uppercase">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-black text-slate-900 leading-[1.08] tracking-tight mb-6 uppercase break-words">
               UNCOMPROMISING <br />
               <span className="text-[#00843D]">POWER.</span> <br />
               <span className="text-slate-900">RELENTLESS DRIVE.</span>
@@ -92,7 +92,7 @@ export default function HomePageClient({
             </div>
 
             {/* Micro Highlights Pill Bar */}
-            <div className="grid grid-cols-3 gap-3 w-full border-t border-slate-200 pt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full border-t border-slate-200 pt-6">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#00843D] shrink-0">
                   <Zap size={18} />
@@ -130,7 +130,7 @@ export default function HomePageClient({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="w-full lg:w-5/12 relative h-[380px] sm:h-[460px] lg:h-[520px] flex items-center justify-center"
+            className="w-full lg:w-5/12 relative h-[360px] sm:h-[460px] lg:h-[520px] flex items-center justify-center"
           >
             {/* Concentric Energy Aura */}
             <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 via-emerald-500/5 to-transparent rounded-full blur-[70px]" />
@@ -151,12 +151,12 @@ export default function HomePageClient({
             <motion.div 
               animate={{ y: [0, -6, 0] }}
               transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute top-6 -left-4 sm:left-4 z-20 bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-slate-200 flex items-center gap-2.5 shadow-xl"
+              className="absolute top-3 sm:top-6 left-2 sm:left-4 z-20 bg-white/95 backdrop-blur-md px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-2xl border border-slate-200 flex items-center gap-2 sm:gap-2.5 shadow-xl"
             >
-              <div className="w-3 h-3 rounded-full bg-[#00843D] shadow-[0_0_8px_#00843D]" />
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#00843D] shadow-[0_0_8px_#00843D]" />
               <div>
-                <div className="text-[10px] text-slate-500 uppercase font-black">Cranking Power</div>
-                <div className="text-xs font-black text-slate-900">550+ Cold Amps</div>
+                <div className="text-[9px] sm:text-[10px] text-slate-500 uppercase font-black">Cranking Power</div>
+                <div className="text-[11px] sm:text-xs font-black text-slate-900">550+ Cold Amps</div>
               </div>
             </motion.div>
 
@@ -164,14 +164,14 @@ export default function HomePageClient({
             <motion.div 
               animate={{ y: [0, 6, 0] }}
               transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
-              className="absolute bottom-8 -right-2 sm:right-6 z-20 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl border border-slate-200 flex items-center gap-3 shadow-xl"
+              className="absolute bottom-4 sm:bottom-8 right-2 sm:right-6 z-20 bg-white/95 backdrop-blur-md px-3 sm:px-4 py-2 sm:py-3 rounded-2xl border border-slate-200 flex items-center gap-2.5 sm:gap-3 shadow-xl"
             >
-              <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
-                <ShieldCheck size={18} />
+              <div className="p-1.5 sm:p-2 rounded-xl bg-amber-50 text-amber-600">
+                <ShieldCheck size={16} />
               </div>
               <div>
-                <div className="text-[10px] text-slate-500 uppercase font-black">Replacement Guarantee</div>
-                <div className="text-xs font-black text-amber-600">Fast Dealer Swap</div>
+                <div className="text-[9px] sm:text-[10px] text-slate-500 uppercase font-black">Replacement Guarantee</div>
+                <div className="text-[11px] sm:text-xs font-black text-amber-600">Fast Dealer Swap</div>
               </div>
             </motion.div>
           </motion.div>
@@ -182,14 +182,14 @@ export default function HomePageClient({
       {/* 2. INTERACTIVE QUICK ASSISTANT (Amaron & Exide Benchmark) */}
       <section id="quick-assistant" className="py-12 bg-slate-50 border-y border-slate-200 relative z-30">
         <div className="container">
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
+          <div className="bg-white border border-slate-200 rounded-3xl p-5 sm:p-8 shadow-xl shadow-slate-200/50">
             
             {/* Tab Navigation */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
-              <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-6">
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 w-full sm:w-auto">
                 <button
                   onClick={() => setActiveTab("finder")}
-                  className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-2 transition-all ${
+                  className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-2 transition-all whitespace-nowrap shrink-0 ${
                     activeTab === "finder" 
                       ? "bg-[#00843D] text-white shadow-md shadow-emerald-700/20" 
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
@@ -201,7 +201,7 @@ export default function HomePageClient({
 
                 <button
                   onClick={() => setActiveTab("warranty")}
-                  className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-2 transition-all ${
+                  className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-2 transition-all whitespace-nowrap shrink-0 ${
                     activeTab === "warranty" 
                       ? "bg-[#00843D] text-white shadow-md shadow-emerald-700/20" 
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
@@ -213,7 +213,7 @@ export default function HomePageClient({
 
                 <button
                   onClick={() => setActiveTab("dealer")}
-                  className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-2 transition-all ${
+                  className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-2 transition-all whitespace-nowrap shrink-0 ${
                     activeTab === "dealer" 
                       ? "bg-[#00843D] text-white shadow-md shadow-emerald-700/20" 
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
@@ -224,7 +224,7 @@ export default function HomePageClient({
                 </button>
               </div>
 
-              <div className="hidden md:flex items-center gap-2 text-xs text-slate-500 font-medium">
+              <div className="hidden lg:flex items-center gap-2 text-xs text-slate-500 font-medium shrink-0">
                 <Sparkles size={14} className="text-amber-500" />
                 <span>Verified Match in Seconds</span>
               </div>

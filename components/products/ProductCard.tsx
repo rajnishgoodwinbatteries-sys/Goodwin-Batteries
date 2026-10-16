@@ -114,9 +114,9 @@ export default function ProductCard({ product }: { product: Product }) {
             <span className="text-[10px] uppercase font-bold text-slate-500 block">
               Special Online Price
             </span>
-            <div className="flex items-baseline justify-between mt-0.5">
-              <div className="flex items-baseline gap-2">
-                <span className="font-heading font-black text-2xl text-[#00843D]">
+            <div className="flex flex-wrap items-baseline justify-between gap-1 mt-0.5">
+              <div className="flex items-baseline gap-2 shrink-0">
+                <span className="font-heading font-black text-xl sm:text-2xl text-[#00843D]">
                   {formatINR(pricing.price)}
                 </span>
                 <span className="text-xs text-slate-400 line-through">
@@ -125,7 +125,7 @@ export default function ProductCard({ product }: { product: Product }) {
               </div>
 
               {pricing.mrp > pricing.price && (
-                <span className="text-[10px] font-black text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-black text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-md shrink-0">
                   Save {formatINR(pricing.mrp - pricing.price)}
                 </span>
               )}
@@ -135,10 +135,10 @@ export default function ProductCard({ product }: { product: Product }) {
         
         {/* Action Buttons */}
         <div className="space-y-2 pt-2 border-t border-slate-100">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
             <button
               onClick={handleAddToCart}
-              className={`py-2.5 px-3 rounded-xl font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-1.5 transition-all shadow-xs ${
+              className={`py-2.5 px-2 sm:px-3 rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider text-center flex items-center justify-center gap-1 transition-all shadow-xs ${
                 justAdded
                   ? "bg-emerald-700 text-white"
                   : "bg-slate-900 hover:bg-slate-800 text-white"
@@ -146,18 +146,18 @@ export default function ProductCard({ product }: { product: Product }) {
             >
               {justAdded ? (
                 <>
-                  <Check size={14} /> Added!
+                  <Check size={13} /> Added!
                 </>
               ) : (
                 <>
-                  <ShoppingBag size={14} /> Add to Cart
+                  <ShoppingBag size={13} /> Add to Cart
                 </>
               )}
             </button>
 
             <button
               onClick={handleBuyNow}
-              className="py-2.5 px-3 bg-[#00843D] hover:bg-[#006830] text-white rounded-xl font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-700/20 active:scale-98"
+              className="py-2.5 px-2 sm:px-3 bg-[#00843D] hover:bg-[#006830] text-white rounded-xl font-bold text-[11px] sm:text-xs uppercase tracking-wider text-center flex items-center justify-center gap-1 transition-all shadow-md shadow-emerald-700/20 active:scale-98"
             >
               Buy Now &rarr;
             </button>

@@ -25,6 +25,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [productsDropdownOpen, setProductsDropdownOpen] = useState(false);
+  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const pathname = usePathname();
   const settings = useGlobalSettings();
   const { itemCount, openCart } = useCart();
@@ -124,13 +125,13 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden xl:flex items-center gap-7">
-            <ul className="flex items-center gap-7">
+          <nav className="hidden xl:flex items-center gap-5 2xl:gap-7 shrink-0">
+            <ul className="flex items-center gap-5 2xl:gap-7">
               <li>
                 <Link
                   href="/"
                   className={clsx(
-                    "text-sm font-semibold tracking-wide transition-colors relative py-1",
+                    "text-xs 2xl:text-sm font-semibold tracking-wide transition-colors relative py-1",
                     pathname === "/" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
                   )}
                 >
@@ -150,12 +151,12 @@ export default function Navbar() {
                 <Link
                   href="/products"
                   className={clsx(
-                    "text-sm font-semibold tracking-wide transition-colors flex items-center gap-1 py-1",
+                    "text-xs 2xl:text-sm font-semibold tracking-wide transition-colors flex items-center gap-1 py-1",
                     pathname.startsWith("/products") ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
                   )}
                 >
                   Products
-                  <ChevronDown size={14} className={clsx("transition-transform duration-200 text-slate-500", productsDropdownOpen && "rotate-180 text-[#00843D]")} />
+                  <ChevronDown size={13} className={clsx("transition-transform duration-200 text-slate-500", productsDropdownOpen && "rotate-180 text-[#00843D]")} />
                 </Link>
 
                 <AnimatePresence>
@@ -215,48 +216,12 @@ export default function Navbar() {
                 <Link
                   href="/battery-finder"
                   className={clsx(
-                    "text-sm font-semibold tracking-wide transition-colors flex items-center gap-1.5 py-1",
+                    "text-xs 2xl:text-sm font-semibold tracking-wide transition-colors flex items-center gap-1.5 py-1",
                     pathname === "/battery-finder" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
                   )}
                 >
-                  <Sparkles size={14} className="text-amber-500 animate-pulse" />
+                  <Sparkles size={13} className="text-amber-500 animate-pulse" />
                   Battery Finder
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/gallery"
-                  className={clsx(
-                    "text-sm font-semibold tracking-wide transition-colors py-1",
-                    pathname === "/gallery" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
-                  )}
-                >
-                  Gallery
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/blogs"
-                  className={clsx(
-                    "text-sm font-semibold tracking-wide transition-colors py-1",
-                    pathname.startsWith("/blogs") ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
-                  )}
-                >
-                  Blogs & Care
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/vision"
-                  className={clsx(
-                    "text-sm font-semibold tracking-wide transition-colors py-1",
-                    pathname === "/vision" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
-                  )}
-                >
-                  Vision
                 </Link>
               </li>
 
@@ -264,7 +229,7 @@ export default function Navbar() {
                 <Link
                   href="/dealers"
                   className={clsx(
-                    "text-sm font-semibold tracking-wide transition-colors py-1",
+                    "text-xs 2xl:text-sm font-semibold tracking-wide transition-colors py-1",
                     pathname === "/dealers" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
                   )}
                 >
@@ -276,22 +241,99 @@ export default function Navbar() {
                 <Link
                   href="/about"
                   className={clsx(
-                    "text-sm font-semibold tracking-wide transition-colors py-1",
+                    "text-xs 2xl:text-sm font-semibold tracking-wide transition-colors py-1",
                     pathname === "/about" ? "text-[#00843D] font-bold" : "text-slate-700 hover:text-[#00843D]"
                   )}
                 >
                   About
                 </Link>
               </li>
+
+              {/* More Dropdown (Blogs, Gallery, Vision, Upcoming) */}
+              <li 
+                className="relative"
+                onMouseEnter={() => setMoreDropdownOpen(true)}
+                onMouseLeave={() => setMoreDropdownOpen(false)}
+              >
+                <button
+                  type="button"
+                  className={clsx(
+                    "text-xs 2xl:text-sm font-semibold tracking-wide transition-colors flex items-center gap-1 py-1 cursor-pointer",
+                    (pathname.startsWith("/blogs") || pathname === "/gallery" || pathname === "/vision" || pathname === "/why-goodwin") 
+                      ? "text-[#00843D] font-bold" 
+                      : "text-slate-700 hover:text-[#00843D]"
+                  )}
+                >
+                  More
+                  <ChevronDown size={13} className={clsx("transition-transform duration-200 text-slate-500", moreDropdownOpen && "rotate-180 text-[#00843D]")} />
+                </button>
+
+                <AnimatePresence>
+                  {moreDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full right-0 w-64 pt-3 z-50"
+                    >
+                      <div className="bg-white border border-gray-200 rounded-2xl shadow-2xl p-2.5">
+                        <Link
+                          href="/blogs"
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-emerald-50 text-xs font-bold text-slate-800 hover:text-[#00843D] transition-colors"
+                          onClick={() => setMoreDropdownOpen(false)}
+                        >
+                          <span>📰</span>
+                          <span>Blogs & Battery Care</span>
+                        </Link>
+                        <Link
+                          href="/gallery"
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-emerald-50 text-xs font-bold text-slate-800 hover:text-[#00843D] transition-colors"
+                          onClick={() => setMoreDropdownOpen(false)}
+                        >
+                          <span>🏭</span>
+                          <span>Manufacturing Gallery</span>
+                        </Link>
+                        <Link
+                          href="/vision"
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-emerald-50 text-xs font-bold text-slate-800 hover:text-[#00843D] transition-colors"
+                          onClick={() => setMoreDropdownOpen(false)}
+                        >
+                          <span>🚀</span>
+                          <span>Vision 2030</span>
+                        </Link>
+                        <Link
+                          href="/why-goodwin"
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-emerald-50 text-xs font-bold text-slate-800 hover:text-[#00843D] transition-colors"
+                          onClick={() => setMoreDropdownOpen(false)}
+                        >
+                          <span>⭐</span>
+                          <span>Why Goodwin?</span>
+                        </Link>
+                        <div className="mt-1 pt-1 border-t border-gray-100">
+                          <Link
+                            href="/dealer-distributor"
+                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-emerald-50 text-xs font-bold text-[#00843D] transition-colors"
+                            onClick={() => setMoreDropdownOpen(false)}
+                          >
+                            <span>💼</span>
+                            <span>Become a Dealer</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </li>
             </ul>
           </nav>
 
-          {/* Actions */}
-          <div className="hidden lg:flex items-center gap-3">
+          {/* Desktop Actions (Strictly xl:flex to match nav breakpoint) */}
+          <div className="hidden xl:flex items-center gap-2.5 2xl:gap-3 shrink-0">
             {/* My Orders / Tracking */}
             <Link
               href="/account/orders"
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#00843D] border border-gray-300 hover:border-[#00843D] px-3.5 py-2 rounded-full transition-all bg-white shadow-xs"
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#00843D] border border-gray-300 hover:border-[#00843D] px-3 py-2 rounded-full transition-all bg-white shadow-xs shrink-0"
               title="Track live orders & download GST invoice"
             >
               <Truck size={14} className="text-[#00843D]" />
@@ -301,7 +343,7 @@ export default function Navbar() {
             {/* Cart Trigger */}
             <button
               onClick={openCart}
-              className="relative p-2.5 rounded-full bg-slate-100 hover:bg-emerald-50 text-slate-800 hover:text-[#00843D] transition-colors border border-slate-200 hover:border-emerald-300 flex items-center justify-center group"
+              className="relative p-2.5 rounded-full bg-slate-100 hover:bg-emerald-50 text-slate-800 hover:text-[#00843D] transition-colors border border-slate-200 hover:border-emerald-300 flex items-center justify-center group shrink-0"
               aria-label="View Cart"
             >
               <ShoppingBag size={18} className="transition-transform group-hover:scale-110" />
@@ -312,25 +354,35 @@ export default function Navbar() {
               )}
             </button>
 
+            {/* Become a dealer - on extra wide screens */}
             <Link
               href="/dealer-distributor"
-              className="text-xs font-bold text-slate-700 hover:text-[#00843D] border border-gray-300 hover:border-[#00843D] px-4 py-2.5 rounded-full flex items-center gap-1.5 transition-all bg-white shadow-xs"
+              className="hidden 2xl:flex text-xs font-bold text-slate-700 hover:text-[#00843D] border border-gray-300 hover:border-[#00843D] px-3.5 py-2 rounded-full items-center gap-1.5 transition-all bg-white shadow-xs shrink-0"
             >
               <Briefcase size={14} className="text-[#00843D]" />
-              Become a Dealer
+              <span>Dealer Partner</span>
             </Link>
 
             <Link
               href="/battery-finder"
-              className="text-xs font-black uppercase tracking-wider bg-[#00843D] hover:bg-[#006830] text-white px-5 py-2.5 rounded-full flex items-center gap-2 shadow-md shadow-emerald-700/20 hover:shadow-lg transition-all active:scale-[0.98]"
+              className="text-xs font-black uppercase tracking-wider bg-[#00843D] hover:bg-[#006830] text-white px-4 2xl:px-5 py-2 rounded-full flex items-center gap-1.5 shadow-md shadow-emerald-700/20 hover:shadow-lg transition-all active:scale-[0.98] shrink-0"
             >
-              <BatteryCharging size={16} />
-              Find Your Battery
+              <BatteryCharging size={15} />
+              <span>Find Battery</span>
             </Link>
           </div>
 
-          {/* Mobile Right Controls */}
-          <div className="flex items-center gap-2 xl:hidden">
+          {/* Mobile & Tablet Right Controls */}
+          <div className="flex items-center gap-2 xl:hidden shrink-0">
+            {/* Quick My Orders button on tablets */}
+            <Link
+              href="/account/orders"
+              className="hidden sm:flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-[#00843D] border border-gray-200 px-3 py-1.5 rounded-xl bg-slate-50 transition-colors"
+            >
+              <Truck size={14} className="text-[#00843D]" />
+              <span>Orders</span>
+            </Link>
+
             <button
               onClick={openCart}
               className="relative p-2 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-800 hover:text-[#00843D] transition-colors border border-slate-200"

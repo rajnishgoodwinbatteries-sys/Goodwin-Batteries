@@ -56,7 +56,7 @@ export default function ProductBuyWidget({ product }: { product: Product }) {
       
       {/* Price Header */}
       <div>
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex flex-wrap items-center gap-2 mb-1">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Special Online Price
           </span>
@@ -70,15 +70,15 @@ export default function ProductBuyWidget({ product }: { product: Product }) {
           </span>
         </div>
 
-        <div className="flex items-baseline gap-3">
-          <span className="font-heading font-black text-3xl sm:text-4xl text-[#00843D]">
+        <div className="flex flex-wrap items-baseline gap-2 sm:gap-3">
+          <span className="font-heading font-black text-2xl sm:text-4xl text-[#00843D]">
             {formatINR(totalPrice)}
           </span>
-          <span className="text-base text-slate-400 line-through">
+          <span className="text-sm sm:text-base text-slate-400 line-through">
             {formatINR(totalMrp)}
           </span>
           {totalSavings > 0 && (
-            <span className="text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-full">
+            <span className="text-[11px] sm:text-xs font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-full">
               Save {formatINR(totalSavings)}
             </span>
           )}
