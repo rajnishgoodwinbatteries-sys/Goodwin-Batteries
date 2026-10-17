@@ -67,7 +67,7 @@ export default function MRPLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '0.8mm 1.0mm 1.8mm 1.0mm',
+        padding: '0.8mm 1.4mm 1.6mm 1.4mm',
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box',
@@ -83,7 +83,7 @@ export default function MRPLabel({
           {/* Authentic GW Circular Emblem (Sharp 100% Black Vector) */}
           <svg 
             viewBox="0 0 100 100" 
-            className="w-[4.8mm] h-[4.8mm] shrink-0" 
+            className="w-[4.4mm] h-[4.4mm] shrink-0" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -99,28 +99,29 @@ export default function MRPLabel({
               className="font-black truncate text-black leading-tight uppercase" 
               style={{ 
                 fontFamily: bodyFont,
-                fontSize: '5.2pt', 
+                fontSize: '5.0pt', 
                 letterSpacing: '0.1px'
               }}
             >
               {cleanProductName}
             </div>
-            <span className="text-[3.4pt] font-extrabold uppercase text-black tracking-wider leading-none mt-[0.2mm]">
+            <span className="text-[3.2pt] font-extrabold uppercase text-black tracking-wider leading-none mt-[0.2mm]">
               AUTOMOTIVE BATTERY
             </span>
           </div>
         </div>
 
         {/* Model Box on Header Right: Auto-adjusts for all models */}
-        <div className="text-right flex-shrink-0 ml-[0.5mm] max-w-[17mm]">
+        <div className="text-right flex-shrink-0 ml-[0.5mm] max-w-[18mm]">
           <div 
-            className="font-black border-[0.35mm] border-black bg-white text-black px-[0.8mm] py-[0.25mm] inline-block truncate w-full text-center rounded-[0.35mm] leading-none" 
+            className="font-black border-[0.35mm] border-black bg-white text-black px-[0.8mm] py-[0.25mm] inline-block w-full text-center rounded-[0.35mm] leading-tight" 
             style={{ 
               fontFamily: bodyFont,
               fontSize: modelStyle.fontSize, 
-              lineHeight: '1',
+              lineHeight: '1.05',
               letterSpacing: modelStyle.letterSpacing,
-              textShadow: '0 0 0.15px #000000'
+              textShadow: '0 0 0.15px #000000',
+              wordBreak: 'break-word'
             }}
           >
             {cleanModel}
@@ -129,7 +130,7 @@ export default function MRPLabel({
             className="font-black text-black mt-[0.2mm] leading-none text-right" 
             style={{ 
               fontFamily: bodyFont,
-              fontSize: '4.6pt', 
+              fontSize: '4.4pt', 
               lineHeight: '1' 
             }}
           >
