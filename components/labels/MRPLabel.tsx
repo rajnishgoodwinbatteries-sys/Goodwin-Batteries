@@ -38,23 +38,23 @@ export default function MRPLabel({
 
   // Auto-adjust font size for model based on length to guarantee 100% fit
   const getModelStyle = (len: number) => {
-    if (len <= 7) return { fontSize: '5.6pt', letterSpacing: '0.1px' };
-    if (len <= 11) return { fontSize: '4.8pt', letterSpacing: '0px' };
-    if (len <= 15) return { fontSize: '4.2pt', letterSpacing: '-0.05px' };
-    return { fontSize: '3.6pt', letterSpacing: '-0.1px' };
+    if (len <= 7) return { fontSize: '6.8pt', letterSpacing: '0.1px' };
+    if (len <= 11) return { fontSize: '5.8pt', letterSpacing: '0px' };
+    if (len <= 15) return { fontSize: '5.0pt', letterSpacing: '-0.05px' };
+    return { fontSize: '4.4pt', letterSpacing: '-0.1px' };
   };
 
   // Auto-adjust font size for serial number based on length across full width
   const getSerialStyle = (len: number) => {
-    if (len <= 12) return { fontSize: '6.0pt', letterSpacing: '0.35px' };
-    if (len <= 16) return { fontSize: '5.4pt', letterSpacing: '0.25px' };
-    if (len <= 20) return { fontSize: '4.9pt', letterSpacing: '0.18px' };
-    if (len <= 25) return { fontSize: '4.5pt', letterSpacing: '0.12px' };
-    if (len <= 30) return { fontSize: '4.2pt', letterSpacing: '0.08px' };
-    if (len <= 36) return { fontSize: '3.9pt', letterSpacing: '0.04px' };
-    if (len <= 42) return { fontSize: '3.5pt', letterSpacing: '0px' };
-    if (len <= 48) return { fontSize: '3.1pt', letterSpacing: '-0.05px' };
-    return { fontSize: '2.7pt', letterSpacing: '-0.1px' };
+    if (len <= 12) return { fontSize: '7.2pt', letterSpacing: '0.35px' };
+    if (len <= 16) return { fontSize: '6.5pt', letterSpacing: '0.25px' };
+    if (len <= 20) return { fontSize: '5.8pt', letterSpacing: '0.18px' };
+    if (len <= 25) return { fontSize: '5.2pt', letterSpacing: '0.12px' };
+    if (len <= 30) return { fontSize: '4.7pt', letterSpacing: '0.08px' };
+    if (len <= 36) return { fontSize: '4.3pt', letterSpacing: '0.04px' };
+    if (len <= 42) return { fontSize: '3.9pt', letterSpacing: '0px' };
+    if (len <= 48) return { fontSize: '3.5pt', letterSpacing: '-0.05px' };
+    return { fontSize: '3.1pt', letterSpacing: '-0.1px' };
   };
 
   const modelStyle = getModelStyle(cleanModel.length);
@@ -67,7 +67,7 @@ export default function MRPLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '0.8mm 1.0mm 2.0mm 1.0mm',
+        padding: '0.8mm 1.0mm 1.8mm 1.0mm',
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box',
@@ -78,12 +78,12 @@ export default function MRPLabel({
       }}
     >
       {/* Top Header: ONLY GW LOGO (No "Goodwin" text, No "GENUINE") + Auto-adjusting Model Box + Voltage/Capacity */}
-      <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.25mm] shrink-0">
+      <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.3mm] shrink-0">
         <div className="flex items-center gap-[0.8mm] flex-1 min-w-0 pr-[1mm]">
           {/* Authentic GW Circular Emblem (Sharp 100% Black Vector) */}
           <svg 
             viewBox="0 0 100 100" 
-            className="w-[4.4mm] h-[4.4mm] shrink-0" 
+            className="w-[4.8mm] h-[4.8mm] shrink-0" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -99,13 +99,13 @@ export default function MRPLabel({
               className="font-black truncate text-black leading-tight uppercase" 
               style={{ 
                 fontFamily: bodyFont,
-                fontSize: '4.4pt', 
+                fontSize: '5.2pt', 
                 letterSpacing: '0.1px'
               }}
             >
               {cleanProductName}
             </div>
-            <span className="text-[2.8pt] font-extrabold uppercase text-black tracking-wider leading-none mt-[0.2mm]">
+            <span className="text-[3.4pt] font-extrabold uppercase text-black tracking-wider leading-none mt-[0.2mm]">
               AUTOMOTIVE BATTERY
             </span>
           </div>
@@ -126,10 +126,10 @@ export default function MRPLabel({
             {cleanModel}
           </div>
           <div 
-            className="font-extrabold text-black mt-[0.2mm] leading-none" 
+            className="font-black text-black mt-[0.2mm] leading-none text-right" 
             style={{ 
               fontFamily: bodyFont,
-              fontSize: '4.0pt', 
+              fontSize: '4.6pt', 
               lineHeight: '1' 
             }}
           >
@@ -146,55 +146,70 @@ export default function MRPLabel({
           className="flex flex-col justify-between w-[52%] text-black h-full pr-[0.8mm]" 
           style={{ fontFamily: bodyFont }}
         >
-          <div className="space-y-[0.3mm]">
+          <div className="space-y-[0.35mm]">
             <div>
-              <span className="font-extrabold" style={{ fontSize: '4.8pt' }}>MRP: </span> 
+              <span className="font-extrabold" style={{ fontSize: '5.4pt' }}>MRP: </span> 
               <span 
                 className="font-black text-black ml-[0.5mm]" 
-                style={{ fontSize: '7.5pt', letterSpacing: '0.2px', textShadow: '0 0 0.15px #000000' }}
+                style={{ fontSize: '8.8pt', letterSpacing: '0.2px', textShadow: '0 0 0.15px #000000' }}
               >
                 ₹{mrp}
               </span>
               <div 
                 className="font-bold text-black" 
-                style={{ fontSize: '3.6pt', lineHeight: '1', letterSpacing: '0.1px' }}
+                style={{ fontSize: '4.0pt', lineHeight: '1', letterSpacing: '0.1px' }}
               >
                 (Incl. of all taxes)
               </div>
             </div>
             
             <div 
-              className="text-black" 
-              style={{ fontSize: '4.4pt', lineHeight: '1.1' }}
+              className="text-black font-black" 
+              style={{ fontSize: '5.2pt', lineHeight: '1.1' }}
             >
-              <strong className="font-black">MFG: </strong> 
+              <strong>MFG: </strong> 
               <span className="font-bold">{mfgDate}</span>
             </div>
           </div>
           
           {/* Bottom details */}
           <div 
-            className="pt-[0.3mm] text-black font-bold" 
+            className="pt-[0.2mm] text-black font-black" 
             style={{ 
-              fontSize: '3.8pt', 
-              lineHeight: '1.2',
+              fontSize: '4.8pt', 
+              lineHeight: '1.1',
               letterSpacing: '0.1px'
             }}
           >
             <div><strong className="font-black">CC:</strong> 9220404411</div>
-            <div>Scan QR for Portal</div>
           </div>
         </div>
 
-        {/* Right Side: MAX SCANNABLE QR CODE */}
-        <div className="flex flex-col justify-center items-center w-[48%] h-full pl-[0.8mm] border-l-[0.35mm] border-black">
-          <div className="flex flex-col items-center justify-center">
+        {/* Right Side: HIGHLIGHTED SCAN FOR WARRANTY ON TOP OF QR CODE */}
+        <div className="flex flex-col justify-between items-center w-[48%] h-full pl-[0.8mm] border-l-[0.35mm] border-black">
+          {/* Highlight on top of the QR */}
+          <div 
+            className="w-full bg-black text-white text-center font-black uppercase rounded-[0.35mm] py-[0.45mm] px-[0.2mm] mb-[0.5mm] leading-none shrink-0 label-badge-invert"
+            style={{ 
+              fontSize: '4.4pt', 
+              letterSpacing: '0.15px',
+              backgroundColor: '#000000',
+              color: '#ffffff',
+              WebkitPrintColorAdjust: 'exact',
+              printColorAdjust: 'exact',
+              lineHeight: 1
+            }}
+          >
+            SCAN FOR WARRANTY
+          </div>
+
+          <div className="w-full flex-1 flex items-center justify-center bg-white min-h-0">
             <QRCodeSVG 
               value={verifyUrl} 
               size={160}
               style={{ 
-                width: '13.8mm', 
-                height: '13.8mm', 
+                width: '12.8mm', 
+                height: '12.8mm', 
                 maxWidth: '100%', 
                 maxHeight: '100%',
                 shapeRendering: 'crispEdges' 
@@ -205,16 +220,13 @@ export default function MRPLabel({
               fgColor="#000000"
               bgColor="#FFFFFF"
             />
-            <div className="text-[2.8pt] font-black uppercase text-center mt-[0.35mm] tracking-tight">
-              SCAN TO REGISTER
-            </div>
           </div>
         </div>
       </div>
 
       {/* Optional Full-width Serial Number (36mm wide - 100% visible for all serial lengths, zero overlap, no INDIA) */}
       {serialNumber && (
-        <div className="w-full border-t-[0.4mm] border-black pt-[0.6mm] mt-[0.4mm] flex items-center justify-center shrink-0 leading-none overflow-hidden">
+        <div className="w-full border-t-[0.4mm] border-black pt-[0.5mm] mt-[0.3mm] flex items-center justify-center shrink-0 leading-none overflow-hidden">
           <span 
             className="font-mono font-black text-center w-full leading-none whitespace-nowrap overflow-hidden text-black tracking-tight"
             style={{ 

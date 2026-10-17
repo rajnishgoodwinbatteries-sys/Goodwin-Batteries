@@ -111,10 +111,16 @@ export const getPrintCss = () => `
       -webkit-font-smoothing: none !important;
       text-rendering: optimizeSpeed !important;
     }
-    .label-container * {
+    .label-container *:not(.label-badge-invert):not(.label-badge-invert *) {
       color: #000000 !important;
       -webkit-font-smoothing: none !important;
       text-rendering: optimizeSpeed !important;
+    }
+    .label-badge-invert, .label-badge-invert * {
+      background-color: #000000 !important;
+      color: #ffffff !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
   }
 `;
