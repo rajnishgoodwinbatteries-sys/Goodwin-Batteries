@@ -262,7 +262,8 @@ export default function PrintFactoryBatchPage() {
         {labelsToPrint.map((serial) => (
           <div 
             key={serial} 
-            className="print-label-item shadow-xl print:shadow-none bg-white border border-gray-200 print:border-none rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
+            className="print-label-item shadow-xl print:shadow-none bg-white border border-gray-200 print:!border-none print:!border-0 rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
+            style={{ borderStyle: 'solid' }}
           >
             <FactoryLabel
               serialNumber={serial}

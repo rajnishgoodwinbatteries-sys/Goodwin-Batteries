@@ -93,6 +93,8 @@ export const getPrintCss = () => `
       margin: 0 !important;
       padding: 0 !important;
       border: none !important;
+      border-width: 0 !important;
+      outline: none !important;
       box-shadow: none !important;
       page-break-after: always !important;
       break-after: page !important;
@@ -109,7 +111,7 @@ export const getPrintCss = () => `
       height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       max-height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       margin: 0 !important;
-      padding: 1.4mm 1.4mm 1.4mm 1.4mm !important;
+      padding: 2.6mm 1.2mm 1.6mm 1.2mm !important;
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
@@ -119,6 +121,8 @@ export const getPrintCss = () => `
       color: #000000 !important;
       position: relative !important;
       border: none !important;
+      border-width: 0 !important;
+      outline: none !important;
       box-shadow: none !important;
       page-break-inside: avoid !important;
       break-inside: avoid !important;

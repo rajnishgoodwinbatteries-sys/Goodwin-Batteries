@@ -67,7 +67,13 @@ export default function FactoryLabel({
   // Max content is the QR code with highlighted SCAN FOR WARRANTY header on top.
   // Full-width serial number bar across the bottom guarantees 100% visibility for all serials.
   // ONLY the GW logo is used (no "goodwin" text).
+  // LAYOUT 1: MAX QR HERO (DEFAULT & HIGHLY RECOMMENDED)
+  // Max content is the QR code with highlighted SCAN FOR WARRANTY header on top.
+  // Full-width serial number bar across the bottom guarantees 100% visibility for all serials.
+  // ONLY the GW logo is used (no "goodwin" text).
   // Model, warranty, MFG, and serial auto-adjust dynamically for 100% compatibility across all models.
+  const topPadding = Math.max(0.5, 2.6 + (verticalOffset || 0));
+
   if (!showBarcode) {
     return (
       <div 
@@ -76,22 +82,18 @@ export default function FactoryLabel({
           width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
           height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
           maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-          padding: '1.4mm 1.4mm 1.4mm 1.4mm', // 1.4mm balanced clearance prevents top & bottom edge cutoff
+          padding: `${topPadding}mm 1.2mm 1.6mm 1.2mm`, // 2.6mm top clearance eliminates top tear-bar cutoff
           overflow: 'hidden',
           fontFamily: bodyFont,
           boxSizing: 'border-box',
           backgroundColor: '#ffffff',
           color: '#000000',
+          border: 'none',
           WebkitFontSmoothing: 'none',
           textRendering: 'optimizeSpeed'
         }}
       >
-        <div 
-          className="w-full h-full flex flex-col justify-between flex-1 min-h-0"
-          style={{
-            transform: verticalOffset ? `translateY(${verticalOffset}mm)` : undefined,
-          }}
-        >
+        <div className="w-full h-full flex flex-col justify-between flex-1 min-h-0">
           {/* TOP SECTION: SCANNABLE QR CODE (LEFT) + BRAND, MODEL & SPECS (RIGHT) */}
           <div className="flex flex-row items-stretch justify-between flex-1 min-h-0">
             {/* LEFT: HIGHLIGHTED "SCAN FOR WARRANTY" ON TOP + SCANNABLE QR CODE */}
@@ -117,8 +119,8 @@ export default function FactoryLabel({
                   value={verifyUrl} 
                   size={160}
                   style={{ 
-                    width: '12.8mm', 
-                    height: '12.8mm', 
+                    width: '12.6mm', 
+                    height: '12.6mm', 
                     maxWidth: '100%', 
                     maxHeight: '100%',
                     shapeRendering: 'crispEdges'
@@ -162,7 +164,7 @@ export default function FactoryLabel({
 
               {/* Model Box - MULTI-LINE SUPPORT WITH NO ELLIPSIS TRUNCATION */}
               <div className="border-[0.35mm] border-black rounded-[0.35mm] px-[0.9mm] py-[0.45mm] bg-white flex flex-col items-center justify-center text-center my-[0.2mm] min-h-[6.2mm]">
-                <div className="text-[3.8pt] font-black text-black uppercase leading-none tracking-wider mb-[0.35mm]">
+                <div className="text-[4.2pt] font-black text-black uppercase leading-none tracking-wider mb-[0.35mm]">
                   BATTERY MODEL
                 </div>
                 <div 
@@ -214,22 +216,18 @@ export default function FactoryLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '1.4mm 1.4mm 1.4mm 1.4mm',
+        padding: `${topPadding}mm 1.2mm 1.6mm 1.2mm`,
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box',
         backgroundColor: '#ffffff',
         color: '#000000',
+        border: 'none',
         WebkitFontSmoothing: 'none',
         textRendering: 'optimizeSpeed'
       }}
     >
-      <div 
-        className="w-full h-full flex flex-col justify-between flex-1 min-h-0"
-        style={{
-          transform: verticalOffset ? `translateY(${verticalOffset}mm)` : undefined,
-        }}
-      >
+      <div className="w-full h-full flex flex-col justify-between flex-1 min-h-0">
         {/* Top Header: Only GW Logo + Model Box + Warranty (NO "Goodwin" text) */}
         <div className="flex items-center justify-between border-b-[0.35mm] border-black pb-[0.35mm] shrink-0">
           <svg 

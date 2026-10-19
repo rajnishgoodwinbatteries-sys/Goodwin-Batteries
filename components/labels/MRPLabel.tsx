@@ -62,6 +62,8 @@ export default function MRPLabel({
   const modelStyle = getModelStyle(cleanModel.length);
   const serialStyle = getSerialStyle(serialNumber?.length || 0);
 
+  const topPadding = Math.max(0.5, 2.6 + (verticalOffset || 0));
+
   return (
     <div 
       className="label-container bg-white text-black box-border relative flex flex-col justify-between"
@@ -69,22 +71,18 @@ export default function MRPLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '1.4mm 1.4mm 1.4mm 1.4mm',
+        padding: `${topPadding}mm 1.2mm 1.6mm 1.2mm`,
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box',
         backgroundColor: '#ffffff',
         color: '#000000',
+        border: 'none',
         WebkitFontSmoothing: 'none',
         textRendering: 'optimizeSpeed'
       }}
     >
-      <div 
-        className="w-full h-full flex flex-col justify-between flex-1 min-h-0"
-        style={{
-          transform: verticalOffset ? `translateY(${verticalOffset}mm)` : undefined,
-        }}
-      >
+      <div className="w-full h-full flex flex-col justify-between flex-1 min-h-0">
         {/* Top Header: ONLY GW LOGO (No "Goodwin" text, No "GENUINE") + Auto-adjusting Model Box + Voltage/Capacity */}
         <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.3mm] shrink-0">
           <div className="flex items-center gap-[0.8mm] flex-1 min-w-0 pr-[1mm]">
