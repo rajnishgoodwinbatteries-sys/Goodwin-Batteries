@@ -104,8 +104,8 @@ function PrintMRPContent() {
         {labelsToPrint.map((_, index) => (
           <div 
             key={index} 
-            className="print-label-item shadow-xl print:shadow-none bg-white rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
-            style={{ border: 'none', outline: 'none' }}
+            className="print-label-item bg-white overflow-hidden"
+            style={{ border: '0 none transparent', outline: '0 none transparent', boxShadow: 'none', borderRadius: '0' }}
           >
             <MRPLabel
               productName={product.name}

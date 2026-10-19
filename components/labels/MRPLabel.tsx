@@ -60,8 +60,8 @@ export default function MRPLabel({
   const modelStyle = getModelStyle(cleanModel.length);
   const serialStyle = getSerialStyle(serialNumber?.length || 0);
 
-  const topPadding = Math.max(0.5, 4.0 + (verticalOffset || 0));
-  const bottomPadding = Math.max(0.5, 2.0 - (verticalOffset || 0));
+  const topPadding = Math.max(0.5, 5.2 + (verticalOffset || 0));
+  const bottomPadding = Math.max(0.5, 1.4 - (verticalOffset || 0));
 
   return (
     <div 
@@ -76,7 +76,9 @@ export default function MRPLabel({
         boxSizing: 'border-box',
         backgroundColor: '#ffffff',
         color: '#000000',
-        border: 'none',
+        border: '0 none transparent',
+        outline: '0 none transparent',
+        boxShadow: 'none',
         WebkitFontSmoothing: 'none',
         textRendering: 'optimizeSpeed'
       }}

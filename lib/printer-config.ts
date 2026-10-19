@@ -44,8 +44,8 @@ export const VERTICAL_OFFSET_OPTIONS = [
 ];
 
 export const getPrintCss = (verticalOffset = 0) => {
-  const baseTop = 4.0;
-  const baseBottom = 2.0;
+  const baseTop = 5.2;
+  const baseBottom = 1.4;
   const topPad = Math.max(0.5, baseTop + verticalOffset).toFixed(1);
   const bottomPad = Math.max(0.5, baseBottom - verticalOffset).toFixed(1);
 
@@ -60,6 +60,12 @@ export const getPrintCss = (verticalOffset = 0) => {
       print-color-adjust: exact !important;
       color-adjust: exact !important;
       box-sizing: border-box !important;
+      border: 0 none transparent !important;
+      border-width: 0 !important;
+      border-style: none !important;
+      outline: 0 none transparent !important;
+      box-shadow: none !important;
+      text-decoration: none !important;
     }
     html, body {
       width: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm !important;
@@ -82,6 +88,7 @@ export const getPrintCss = (verticalOffset = 0) => {
       background: #ffffff !important;
       width: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm !important;
       height: auto !important;
+      border: 0 none transparent !important;
     }
     .print-labels-container {
       display: block !important;
@@ -90,6 +97,7 @@ export const getPrintCss = (verticalOffset = 0) => {
       gap: 0 !important;
       width: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm !important;
       height: auto !important;
+      border: 0 none transparent !important;
     }
     .print-label-item {
       display: block !important;
@@ -101,7 +109,7 @@ export const getPrintCss = (verticalOffset = 0) => {
       border: 0 none transparent !important;
       border-width: 0 !important;
       border-style: none !important;
-      outline: none !important;
+      outline: 0 none transparent !important;
       box-shadow: none !important;
       page-break-after: always !important;
       break-after: page !important;
@@ -130,7 +138,7 @@ export const getPrintCss = (verticalOffset = 0) => {
       border: 0 none transparent !important;
       border-width: 0 !important;
       border-style: none !important;
-      outline: none !important;
+      outline: 0 none transparent !important;
       box-shadow: none !important;
       page-break-inside: avoid !important;
       break-inside: avoid !important;
@@ -147,6 +155,29 @@ export const getPrintCss = (verticalOffset = 0) => {
       color: #ffffff !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
+    }
+    .label-warranty-badge {
+      border: 0.38mm solid #000000 !important;
+      border-radius: 0.4mm !important;
+      box-sizing: border-box !important;
+    }
+    .label-model-box {
+      border: 0.38mm solid #000000 !important;
+      border-radius: 0.4mm !important;
+      box-sizing: border-box !important;
+    }
+    .label-vertical-divider {
+      width: 0.4mm !important;
+      background-color: #000000 !important;
+      display: block !important;
+      flex-shrink: 0 !important;
+    }
+    .label-horizontal-divider {
+      width: 100% !important;
+      height: 0.42mm !important;
+      background-color: #000000 !important;
+      display: block !important;
+      flex-shrink: 0 !important;
     }
   }
 `;
