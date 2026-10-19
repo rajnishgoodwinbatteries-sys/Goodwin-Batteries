@@ -32,6 +32,17 @@ export const THERMAL_FONT_PRESETS = {
   ]
 };
 
+export const VERTICAL_OFFSET_OPTIONS = [
+  { id: "up-1.5", name: "-1.5mm (Shift Up)", value: -1.5 },
+  { id: "up-1.0", name: "-1.0mm (Shift Up)", value: -1.0 },
+  { id: "up-0.5", name: "-0.5mm (Shift Up)", value: -0.5 },
+  { id: "center", name: "0mm (Centered - Safe Insets)", value: 0 },
+  { id: "down-0.5", name: "+0.5mm (Nudge Down)", value: 0.5 },
+  { id: "down-1.0", name: "+1.0mm (Nudge Down)", value: 1.0 },
+  { id: "down-1.5", name: "+1.5mm (Nudge Down)", value: 1.5 },
+  { id: "down-2.0", name: "+2.0mm (Nudge Down)", value: 2.0 },
+];
+
 export const getPrintCss = () => `
   @page {
     size: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm;
@@ -98,8 +109,11 @@ export const getPrintCss = () => `
       height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       max-height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       margin: 0 !important;
-      padding: 0.8mm 1.2mm 1.8mm 1.2mm !important;
+      padding: 1.4mm 1.4mm 1.4mm 1.4mm !important;
       box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
       overflow: hidden !important;
       background: #ffffff !important;
       color: #000000 !important;

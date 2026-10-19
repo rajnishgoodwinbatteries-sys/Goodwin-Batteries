@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Printer, Settings2, Sliders, Info, Check, RotateCcw } from "lucide-react";
-import { PRINTER_CONFIG, THERMAL_FONT_PRESETS } from "@/lib/printer-config";
+import { PRINTER_CONFIG, THERMAL_FONT_PRESETS, VERTICAL_OFFSET_OPTIONS } from "@/lib/printer-config";
 
 export interface PrintSettings {
   logoFont: string;
@@ -12,6 +12,7 @@ export interface PrintSettings {
   letterSpacing: string;
   printerModel: string;
   showBarcode?: boolean;
+  verticalOffset?: number;
 }
 
 export const DEFAULT_PRINT_SETTINGS: PrintSettings = {
@@ -21,6 +22,7 @@ export const DEFAULT_PRINT_SETTINGS: PrintSettings = {
   letterSpacing: THERMAL_FONT_PRESETS.trackingOptions[0].value,
   printerModel: PRINTER_CONFIG.PRINTER_MODEL,
   showBarcode: false, // Default is Max QR Hero layout (requested by user)
+  verticalOffset: 0, // Default 0mm (uses calibrated 1.4mm safe insets)
 };
 
 interface PrintControlToolbarProps {
@@ -108,6 +110,22 @@ export default function PrintControlToolbar({
             <span>Layout:</span>
             <strong>{!settings.showBarcode ? "Max QR Hero" : "With Barcode"}</strong>
           </button>
+
+          {/* Quick Hardware Feed Nudge Selector */}
+          <div className="flex items-center gap-1.5 bg-background border border-border rounded-lg px-2.5 py-1.5 shadow-2xs" title="Nudge content up or down to compensate for printer feed drift">
+            <span className="text-[11px] font-bold text-muted-foreground whitespace-nowrap">Nudge:</span>
+            <select
+              value={settings.verticalOffset ?? 0}
+              onChange={(e) => updateSetting("verticalOffset", parseFloat(e.target.value))}
+              className="bg-transparent text-xs font-bold text-foreground focus:outline-none cursor-pointer"
+            >
+              {VERTICAL_OFFSET_OPTIONS.map((o) => (
+                <option key={o.id} value={o.value}>
+                  {o.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <button
             type="button"
@@ -256,6 +274,27 @@ export default function PrintControlToolbar({
               </select>
               <p className="text-[10px] text-muted-foreground mt-1">
                 Adds spacing so heated thermal ink doesn't fuse letters.
+              </p>
+            </div>
+
+            {/* Vertical Alignment / Hardware Feed Nudge */}
+            <div>
+              <label className="block text-[11px] font-bold text-foreground mb-1 uppercase tracking-wider">
+                5. Hardware Feed Nudge (Top/Down)
+              </label>
+              <select
+                value={settings.verticalOffset ?? 0}
+                onChange={(e) => updateSetting("verticalOffset", parseFloat(e.target.value))}
+                className="w-full bg-surface border border-border rounded-md px-2.5 py-1.5 text-xs text-foreground focus:border-brand focus:outline-none"
+              >
+                {VERTICAL_OFFSET_OPTIONS.map((o) => (
+                  <option key={o.id} value={o.value}>
+                    {o.name}
+                  </option>
+                ))}
+              </select>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                Nudges content down if printer cuts off top header, or up if bottom clips.
               </p>
             </div>
           </div>

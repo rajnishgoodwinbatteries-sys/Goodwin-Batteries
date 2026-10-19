@@ -245,7 +245,7 @@ export default function PrintFactoryBatchPage() {
             Thermal Pro Tip
           </span>
           <span className="text-slate-300">
-            For crystal-clear, non-hazy print: In Chrome Print (<kbd className="bg-slate-800 px-1.5 py-0.5 rounded text-white border border-slate-700">Ctrl+P</kbd>) &rarr; More settings &rarr; set <strong>Margins: None</strong> &amp; <strong>Scale: 100%</strong>. (Default margins cause blurry scaling).
+            For crystal-clear, non-hazy print: In Chrome Print (<kbd className="bg-slate-800 px-1.5 py-0.5 rounded text-white border border-slate-700">Ctrl+P</kbd>) &rarr; More settings &rarr; set <strong>Margins: None</strong> &amp; <strong>Scale: 100%</strong>. If your printer feeds high or low, use the <strong>Nudge</strong> control in the toolbar.
           </span>
         </div>
       </div>
@@ -274,6 +274,7 @@ export default function PrintFactoryBatchPage() {
               serialFont={settings.serialFont}
               letterSpacing={settings.letterSpacing}
               showBarcode={settings.showBarcode}
+              verticalOffset={settings.verticalOffset}
             />
           </div>
         ))}

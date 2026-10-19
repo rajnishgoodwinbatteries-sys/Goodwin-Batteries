@@ -117,6 +117,7 @@ function PrintMRPContent() {
               bodyFont={settings.bodyFont}
               serialFont={settings.serialFont}
               letterSpacing={settings.letterSpacing}
+              verticalOffset={settings.verticalOffset}
             />
           </div>
         ))}

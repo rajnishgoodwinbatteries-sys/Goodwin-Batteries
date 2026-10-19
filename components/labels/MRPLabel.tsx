@@ -15,6 +15,7 @@ export interface MRPLabelProps {
   bodyFont?: string;
   serialFont?: string;
   letterSpacing?: string;
+  verticalOffset?: number;
 }
 
 export default function MRPLabel({
@@ -27,6 +28,7 @@ export default function MRPLabel({
   serialNumber,
   bodyFont = "Tahoma, Verdana, sans-serif",
   serialFont = "'Consolas', 'Courier New', monospace",
+  verticalOffset = 0,
 }: MRPLabelProps) {
   const verifyUrl = serialNumber
     ? `https://goodwinbatteries.in/support/warranty-registration?serial=${encodeURIComponent(serialNumber.trim())}`
@@ -38,23 +40,23 @@ export default function MRPLabel({
 
   // Auto-adjust font size for model based on length to guarantee 100% fit
   const getModelStyle = (len: number) => {
-    if (len <= 7) return { fontSize: '6.8pt', letterSpacing: '0.1px' };
-    if (len <= 11) return { fontSize: '5.8pt', letterSpacing: '0px' };
-    if (len <= 15) return { fontSize: '5.0pt', letterSpacing: '-0.05px' };
-    return { fontSize: '4.4pt', letterSpacing: '-0.1px' };
+    if (len <= 7) return { fontSize: '7.2pt', letterSpacing: '0.15px' };
+    if (len <= 11) return { fontSize: '6.0pt', letterSpacing: '0.05px' };
+    if (len <= 15) return { fontSize: '5.2pt', letterSpacing: '0px' };
+    return { fontSize: '4.6pt', letterSpacing: '-0.05px' };
   };
 
   // Auto-adjust font size for serial number based on length across full width
   const getSerialStyle = (len: number) => {
     if (len <= 12) return { fontSize: '7.2pt', letterSpacing: '0.35px' };
-    if (len <= 16) return { fontSize: '6.5pt', letterSpacing: '0.25px' };
-    if (len <= 20) return { fontSize: '5.8pt', letterSpacing: '0.18px' };
-    if (len <= 25) return { fontSize: '5.2pt', letterSpacing: '0.12px' };
-    if (len <= 30) return { fontSize: '4.7pt', letterSpacing: '0.08px' };
-    if (len <= 36) return { fontSize: '4.3pt', letterSpacing: '0.04px' };
-    if (len <= 42) return { fontSize: '3.9pt', letterSpacing: '0px' };
-    if (len <= 48) return { fontSize: '3.5pt', letterSpacing: '-0.05px' };
-    return { fontSize: '3.1pt', letterSpacing: '-0.1px' };
+    if (len <= 16) return { fontSize: '6.8pt', letterSpacing: '0.25px' };
+    if (len <= 20) return { fontSize: '6.2pt', letterSpacing: '0.18px' };
+    if (len <= 25) return { fontSize: '5.6pt', letterSpacing: '0.12px' };
+    if (len <= 30) return { fontSize: '5.0pt', letterSpacing: '0.08px' };
+    if (len <= 36) return { fontSize: '4.5pt', letterSpacing: '0.04px' };
+    if (len <= 42) return { fontSize: '4.0pt', letterSpacing: '0px' };
+    if (len <= 48) return { fontSize: '3.6pt', letterSpacing: '-0.05px' };
+    return { fontSize: '3.2pt', letterSpacing: '-0.1px' };
   };
 
   const modelStyle = getModelStyle(cleanModel.length);
@@ -67,180 +69,185 @@ export default function MRPLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: '0.8mm 1.4mm 1.6mm 1.4mm',
+        padding: '1.4mm 1.4mm 1.4mm 1.4mm',
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box',
         backgroundColor: '#ffffff',
         color: '#000000',
         WebkitFontSmoothing: 'none',
-        textRendering: 'geometricPrecision'
+        textRendering: 'optimizeSpeed'
       }}
     >
-      {/* Top Header: ONLY GW LOGO (No "Goodwin" text, No "GENUINE") + Auto-adjusting Model Box + Voltage/Capacity */}
-      <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.3mm] shrink-0">
-        <div className="flex items-center gap-[0.8mm] flex-1 min-w-0 pr-[1mm]">
-          {/* Authentic GW Circular Emblem (Sharp 100% Black Vector) */}
-          <svg 
-            viewBox="0 0 100 100" 
-            className="w-[4.4mm] h-[4.4mm] shrink-0" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="50" cy="50" r="46" stroke="#000000" strokeWidth="8" fill="#ffffff" />
-            <path 
-              d="M 68 32 C 60 22 45 20 34 28 C 20 39 20 61 34 72 C 45 80 62 76 68 66 C 70 62 70 54 70 50 L 50 50 L 50 42 L 76 42 C 78 42 78 52 76 62 C 68 76 48 84 32 74 C 14 60 14 36 32 22 C 46 12 66 14 74 26 Z" 
-              fill="#000000" 
-            />
-          </svg>
+      <div 
+        className="w-full h-full flex flex-col justify-between flex-1 min-h-0"
+        style={{
+          transform: verticalOffset ? `translateY(${verticalOffset}mm)` : undefined,
+        }}
+      >
+        {/* Top Header: ONLY GW LOGO (No "Goodwin" text, No "GENUINE") + Auto-adjusting Model Box + Voltage/Capacity */}
+        <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.3mm] shrink-0">
+          <div className="flex items-center gap-[0.8mm] flex-1 min-w-0 pr-[1mm]">
+            {/* Authentic GW Circular Emblem (Sharp 100% Black Vector) */}
+            <svg 
+              viewBox="0 0 100 100" 
+              className="w-[4.6mm] h-[4.6mm] shrink-0" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="50" cy="50" r="46" stroke="#000000" strokeWidth="8" fill="#ffffff" />
+              <path 
+                d="M 68 32 C 60 22 45 20 34 28 C 20 39 20 61 34 72 C 45 80 62 76 68 66 C 70 62 70 54 70 50 L 50 50 L 50 42 L 76 42 C 78 42 78 52 76 62 C 68 76 48 84 32 74 C 14 60 14 36 32 22 C 46 12 66 14 74 26 Z" 
+                fill="#000000" 
+              />
+            </svg>
 
-          <div className="flex flex-col min-w-0">
+            <div className="flex flex-col min-w-0">
+              <div 
+                className="font-black truncate text-black leading-tight uppercase" 
+                style={{ 
+                  fontFamily: bodyFont,
+                  fontSize: '5.2pt', 
+                  letterSpacing: '0.1px'
+                }}
+              >
+                {cleanProductName}
+              </div>
+              <span className="text-[3.4pt] font-extrabold uppercase text-black tracking-wider leading-none mt-[0.2mm]">
+                AUTOMOTIVE BATTERY
+              </span>
+            </div>
+          </div>
+
+          {/* Model Box on Header Right: Auto-adjusts for all models */}
+          <div className="text-right flex-shrink-0 ml-[0.5mm] max-w-[18mm]">
             <div 
-              className="font-black truncate text-black leading-tight uppercase" 
+              className="font-black border-[0.35mm] border-black bg-white text-black px-[0.8mm] py-[0.25mm] inline-block w-full text-center rounded-[0.35mm] leading-tight" 
               style={{ 
                 fontFamily: bodyFont,
-                fontSize: '5.0pt', 
-                letterSpacing: '0.1px'
+                fontSize: modelStyle.fontSize, 
+                lineHeight: '1.05',
+                letterSpacing: modelStyle.letterSpacing,
+                wordBreak: 'break-word'
               }}
             >
-              {cleanProductName}
+              {cleanModel}
             </div>
-            <span className="text-[3.2pt] font-extrabold uppercase text-black tracking-wider leading-none mt-[0.2mm]">
-              AUTOMOTIVE BATTERY
-            </span>
+            <div 
+              className="font-black text-black mt-[0.2mm] leading-none text-right" 
+              style={{ 
+                fontFamily: bodyFont,
+                fontSize: '4.6pt', 
+                lineHeight: '1' 
+              }}
+            >
+              {voltage}|{capacity}
+            </div>
           </div>
         </div>
 
-        {/* Model Box on Header Right: Auto-adjusts for all models */}
-        <div className="text-right flex-shrink-0 ml-[0.5mm] max-w-[18mm]">
+        {/* Main Content Area */}
+        <div className="flex flex-row flex-grow justify-between items-stretch min-h-0">
+          
+          {/* Left Side: Pricing & Metadata */}
           <div 
-            className="font-black border-[0.35mm] border-black bg-white text-black px-[0.8mm] py-[0.25mm] inline-block w-full text-center rounded-[0.35mm] leading-tight" 
-            style={{ 
-              fontFamily: bodyFont,
-              fontSize: modelStyle.fontSize, 
-              lineHeight: '1.05',
-              letterSpacing: modelStyle.letterSpacing,
-              textShadow: '0 0 0.15px #000000',
-              wordBreak: 'break-word'
-            }}
+            className="flex flex-col justify-between w-[52%] text-black h-full pr-[0.8mm]" 
+            style={{ fontFamily: bodyFont }}
           >
-            {cleanModel}
-          </div>
-          <div 
-            className="font-black text-black mt-[0.2mm] leading-none text-right" 
-            style={{ 
-              fontFamily: bodyFont,
-              fontSize: '4.4pt', 
-              lineHeight: '1' 
-            }}
-          >
-            {voltage}|{capacity}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      <div className="flex flex-row flex-grow justify-between items-stretch min-h-0">
-        
-        {/* Left Side: Pricing & Metadata */}
-        <div 
-          className="flex flex-col justify-between w-[52%] text-black h-full pr-[0.8mm]" 
-          style={{ fontFamily: bodyFont }}
-        >
-          <div className="space-y-[0.35mm]">
-            <div>
-              <span className="font-extrabold" style={{ fontSize: '5.4pt' }}>MRP: </span> 
-              <span 
-                className="font-black text-black ml-[0.5mm]" 
-                style={{ fontSize: '8.8pt', letterSpacing: '0.2px', textShadow: '0 0 0.15px #000000' }}
-              >
-                ₹{mrp}
-              </span>
+            <div className="space-y-[0.35mm]">
+              <div>
+                <span className="font-extrabold" style={{ fontSize: '5.6pt' }}>MRP: </span> 
+                <span 
+                  className="font-black text-black ml-[0.5mm]" 
+                  style={{ fontSize: '9.2pt', letterSpacing: '0.2px' }}
+                >
+                  ₹{mrp}
+                </span>
+                <div 
+                  className="font-bold text-black" 
+                  style={{ fontSize: '4.2pt', lineHeight: '1', letterSpacing: '0.1px' }}
+                >
+                  (Incl. of all taxes)
+                </div>
+              </div>
+              
               <div 
-                className="font-bold text-black" 
-                style={{ fontSize: '4.0pt', lineHeight: '1', letterSpacing: '0.1px' }}
+                className="text-black font-black" 
+                style={{ fontSize: '5.4pt', lineHeight: '1.1' }}
               >
-                (Incl. of all taxes)
+                <strong>MFG: </strong> 
+                <span className="font-bold">{mfgDate}</span>
               </div>
             </div>
             
+            {/* Bottom details */}
             <div 
-              className="text-black font-black" 
-              style={{ fontSize: '5.2pt', lineHeight: '1.1' }}
+              className="pt-[0.2mm] text-black font-black" 
+              style={{ 
+                fontSize: '5.0pt', 
+                lineHeight: '1.1',
+                letterSpacing: '0.1px'
+              }}
             >
-              <strong>MFG: </strong> 
-              <span className="font-bold">{mfgDate}</span>
+              <div><strong className="font-black">CC:</strong> 9220404411</div>
             </div>
           </div>
-          
-          {/* Bottom details */}
-          <div 
-            className="pt-[0.2mm] text-black font-black" 
-            style={{ 
-              fontSize: '4.8pt', 
-              lineHeight: '1.1',
-              letterSpacing: '0.1px'
-            }}
-          >
-            <div><strong className="font-black">CC:</strong> 9220404411</div>
-          </div>
-        </div>
 
-        {/* Right Side: HIGHLIGHTED SCAN FOR WARRANTY ON TOP OF QR CODE */}
-        <div className="flex flex-col justify-between items-center w-[48%] h-full pl-[0.8mm] border-l-[0.35mm] border-black">
-          {/* Highlight on top of the QR */}
-          <div 
-            className="w-full bg-black text-white text-center font-black uppercase rounded-[0.35mm] py-[0.45mm] px-[0.2mm] mb-[0.5mm] leading-none shrink-0 label-badge-invert"
-            style={{ 
-              fontSize: '4.4pt', 
-              letterSpacing: '0.15px',
-              backgroundColor: '#000000',
-              color: '#ffffff',
-              WebkitPrintColorAdjust: 'exact',
-              printColorAdjust: 'exact',
-              lineHeight: 1
-            }}
-          >
-            SCAN FOR WARRANTY
-          </div>
-
-          <div className="w-full flex-1 flex items-center justify-center bg-white min-h-0">
-            <QRCodeSVG 
-              value={verifyUrl} 
-              size={160}
+          {/* Right Side: HIGHLIGHTED SCAN FOR WARRANTY ON TOP OF QR CODE */}
+          <div className="flex flex-col justify-between items-center w-[48%] h-full pl-[0.8mm] border-l-[0.35mm] border-black">
+            {/* Highlight on top of the QR */}
+            <div 
+              className="w-full bg-black text-white text-center font-black uppercase rounded-[0.35mm] py-[0.5mm] px-[0.3mm] mb-[0.4mm] leading-none shrink-0 label-badge-invert"
               style={{ 
-                width: '12.8mm', 
-                height: '12.8mm', 
-                maxWidth: '100%', 
-                maxHeight: '100%',
-                shapeRendering: 'crispEdges' 
+                fontSize: '4.8pt', 
+                letterSpacing: '0.25px',
+                backgroundColor: '#000000',
+                color: '#ffffff',
+                WebkitPrintColorAdjust: 'exact',
+                printColorAdjust: 'exact',
+                lineHeight: 1
               }}
-              level="L" 
-              boostLevel={false}
-              marginSize={1}
-              fgColor="#000000"
-              bgColor="#FFFFFF"
-            />
+            >
+              SCAN FOR WARRANTY
+            </div>
+
+            <div className="w-full flex-1 flex items-center justify-center bg-white min-h-0">
+              <QRCodeSVG 
+                value={verifyUrl} 
+                size={160}
+                style={{ 
+                  width: '12.8mm', 
+                  height: '12.8mm', 
+                  maxWidth: '100%', 
+                  maxHeight: '100%',
+                  shapeRendering: 'crispEdges' 
+                }}
+                level="L" 
+                boostLevel={false}
+                marginSize={1}
+                fgColor="#000000"
+                bgColor="#FFFFFF"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Optional Full-width Serial Number (36mm wide - 100% visible for all serial lengths, zero overlap, no INDIA) */}
-      {serialNumber && (
-        <div className="w-full border-t-[0.4mm] border-black pt-[0.5mm] mt-[0.3mm] flex items-center justify-center shrink-0 leading-none overflow-hidden">
-          <span 
-            className="font-mono font-black text-center w-full leading-none whitespace-nowrap overflow-hidden text-black tracking-tight"
-            style={{ 
-              fontFamily: serialFont,
-              fontSize: serialStyle.fontSize,
-              letterSpacing: serialStyle.letterSpacing,
-              textShadow: '0 0 0.15px #000000'
-            }}
-          >
-            {serialNumber}
-          </span>
-        </div>
-      )}
+        {/* Optional Full-width Serial Number (36mm wide - 100% visible for all serial lengths, zero overlap, no INDIA) */}
+        {serialNumber && (
+          <div className="w-full border-t-[0.4mm] border-black pt-[0.6mm] mt-[0.3mm] flex items-center justify-center shrink-0 leading-none overflow-hidden">
+            <span 
+              className="font-mono font-black text-center w-full leading-none whitespace-nowrap overflow-hidden text-black tracking-tight"
+              style={{ 
+                fontFamily: serialFont,
+                fontSize: serialStyle.fontSize,
+                letterSpacing: serialStyle.letterSpacing
+              }}
+            >
+              {serialNumber}
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
