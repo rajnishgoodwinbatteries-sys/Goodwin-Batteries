@@ -90,7 +90,7 @@ function PrintMRPContent() {
       />
 
       {/* Printable area stylesheet */}
-      <style dangerouslySetInnerHTML={{ __html: getPrintCss() }} />
+      <style dangerouslySetInnerHTML={{ __html: getPrintCss(settings.verticalOffset) }} />
 
       {/* Visual notice if test mode is active */}
       {testOnlyOne && (
@@ -104,8 +104,8 @@ function PrintMRPContent() {
         {labelsToPrint.map((_, index) => (
           <div 
             key={index} 
-            className="print-label-item shadow-xl print:shadow-none bg-white border border-gray-200 print:!border-none print:!border-0 rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
-            style={{ borderStyle: 'solid' }}
+            className="print-label-item shadow-xl print:shadow-none bg-white rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
+            style={{ border: 'none', outline: 'none' }}
           >
             <MRPLabel
               productName={product.name}

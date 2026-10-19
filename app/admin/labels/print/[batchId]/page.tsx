@@ -236,7 +236,7 @@ export default function PrintFactoryBatchPage() {
       />
 
       {/* Printable area styling */}
-      <style dangerouslySetInnerHTML={{ __html: getPrintCss() }} />
+      <style dangerouslySetInnerHTML={{ __html: getPrintCss(settings.verticalOffset) }} />
 
       {/* Setup Guide for TSC TE244 Non-Hazy Quality */}
       <div className="print:hidden bg-slate-900 text-white border-b border-slate-800 px-6 py-2.5 text-xs flex flex-wrap items-center justify-between gap-3 shadow-inner">
@@ -262,8 +262,8 @@ export default function PrintFactoryBatchPage() {
         {labelsToPrint.map((serial) => (
           <div 
             key={serial} 
-            className="print-label-item shadow-xl print:shadow-none bg-white border border-gray-200 print:!border-none print:!border-0 rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
-            style={{ borderStyle: 'solid' }}
+            className="print-label-item shadow-xl print:shadow-none bg-white rounded overflow-hidden print:rounded-none transition-transform hover:scale-[1.02]"
+            style={{ border: 'none', outline: 'none' }}
           >
             <FactoryLabel
               serialNumber={serial}

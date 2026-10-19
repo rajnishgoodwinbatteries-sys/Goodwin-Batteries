@@ -68,7 +68,8 @@ export default function FactoryLabel({
   // Center: Crisp vertical divider line
   // Right: GW circle logo + Warranty box, Centered Battery Model box, MFG date
   // Bottom: Full-width horizontal divider line + monospace serial number
-  const topPadding = Math.max(0.5, 2.0 + (verticalOffset || 0));
+  const topPadding = Math.max(0.5, 4.0 + (verticalOffset || 0));
+  const bottomPadding = Math.max(0.5, 2.0 - (verticalOffset || 0));
 
   if (!showBarcode) {
     return (
@@ -78,7 +79,7 @@ export default function FactoryLabel({
           width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
           height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
           maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-          padding: `${topPadding}mm 1.6mm 1.4mm 1.4mm`, // 1.6mm right padding prevents right-edge clipping
+          padding: `${topPadding}mm 1.2mm ${bottomPadding}mm 1.2mm`,
           overflow: 'hidden',
           fontFamily: bodyFont,
           boxSizing: 'border-box',
@@ -135,7 +136,7 @@ export default function FactoryLabel({
             </div>
 
             {/* VERTICAL DIVIDER LINE (Extends from top to the horizontal divider) */}
-            <div className="w-[0.38mm] bg-black shrink-0 self-stretch mx-[0.8mm]" />
+            <div className="w-[0.4mm] bg-black shrink-0 self-stretch mx-[0.8mm]" style={{ backgroundColor: '#000000' }} />
 
             {/* RIGHT: GW LOGO + WARRANTY BADGE + MODEL BOX + MFG DATE */}
             <div className="flex flex-col justify-between flex-1 min-w-0 h-full">
@@ -154,8 +155,15 @@ export default function FactoryLabel({
                   />
                 </svg>
 
-                {/* Self-contained horizontal Warranty badge: Guaranteed to fit within container */}
-                <div className="border-[0.38mm] border-black rounded-[0.45mm] px-[1.0mm] py-[0.4mm] bg-white text-center leading-none inline-flex items-center gap-[0.5mm] shrink-0">
+                {/* Self-contained horizontal Warranty badge: Guaranteed to fit within container with all 4 borders */}
+                <div 
+                  className="bg-white flex items-center justify-center gap-[0.6mm] px-[1.2mm] py-[0.45mm] shrink-0"
+                  style={{
+                    border: '0.4mm solid #000000',
+                    borderRadius: '0.4mm',
+                    boxSizing: 'border-box'
+                  }}
+                >
                   <span className="font-black text-[7.0pt] text-black tracking-tight leading-none">
                     {cleanWarranty}
                   </span>
@@ -166,7 +174,14 @@ export default function FactoryLabel({
               </div>
 
               {/* Model Box - BORDERED WITH MULTI-LINE CENTERED MODEL NAME */}
-              <div className="border-[0.38mm] border-black rounded-[0.45mm] px-[0.8mm] py-[0.55mm] bg-white flex flex-col items-center justify-center text-center my-[0.25mm] flex-1 min-h-[6.8mm]">
+              <div 
+                className="bg-white flex flex-col items-center justify-center text-center my-[0.25mm] flex-1 min-h-[6.5mm] px-[0.8mm] py-[0.4mm]"
+                style={{
+                  border: '0.4mm solid #000000',
+                  borderRadius: '0.4mm',
+                  boxSizing: 'border-box'
+                }}
+              >
                 <div className="text-[4.4pt] font-black text-black uppercase leading-none tracking-wider mb-[0.35mm]">
                   BATTERY MODEL
                 </div>
@@ -193,10 +208,10 @@ export default function FactoryLabel({
           </div>
 
           {/* HORIZONTAL DIVIDER LINE (Full width across entire label) */}
-          <div className="w-full h-[0.42mm] bg-black shrink-0" />
+          <div className="w-full h-[0.42mm] bg-black shrink-0" style={{ backgroundColor: '#000000', height: '0.42mm' }} />
 
           {/* BOTTOM SECTION: ONLY COMPLETE SERIAL NUMBER (AUTO-ADJUSTS, MAXIMUM LEGIBILITY) */}
-          <div className="w-full pt-[0.5mm] flex items-center justify-center shrink-0 leading-none overflow-hidden">
+          <div className="w-full pt-[0.45mm] flex items-center justify-center shrink-0 leading-none overflow-hidden" style={{ border: 'none' }}>
             <span 
               className="font-black text-black uppercase whitespace-nowrap overflow-hidden font-mono text-center w-full leading-none"
               style={{ 
@@ -222,7 +237,7 @@ export default function FactoryLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: `${topPadding}mm 1.2mm 1.6mm 1.2mm`,
+        padding: `${topPadding}mm 1.2mm ${bottomPadding}mm 1.2mm`,
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box',

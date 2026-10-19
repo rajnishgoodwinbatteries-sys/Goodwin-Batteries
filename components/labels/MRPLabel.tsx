@@ -60,7 +60,8 @@ export default function MRPLabel({
   const modelStyle = getModelStyle(cleanModel.length);
   const serialStyle = getSerialStyle(serialNumber?.length || 0);
 
-  const topPadding = Math.max(0.5, 2.6 + (verticalOffset || 0));
+  const topPadding = Math.max(0.5, 4.0 + (verticalOffset || 0));
+  const bottomPadding = Math.max(0.5, 2.0 - (verticalOffset || 0));
 
   return (
     <div 
@@ -69,7 +70,7 @@ export default function MRPLabel({
         width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
         height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
         maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-        padding: `${topPadding}mm 1.2mm 1.6mm 1.2mm`,
+        padding: `${topPadding}mm 1.2mm ${bottomPadding}mm 1.2mm`,
         overflow: 'hidden',
         fontFamily: bodyFont,
         boxSizing: 'border-box',

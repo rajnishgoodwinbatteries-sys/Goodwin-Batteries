@@ -43,7 +43,13 @@ export const VERTICAL_OFFSET_OPTIONS = [
   { id: "down-2.0", name: "+2.0mm (Nudge Down)", value: 2.0 },
 ];
 
-export const getPrintCss = () => `
+export const getPrintCss = (verticalOffset = 0) => {
+  const baseTop = 4.0;
+  const baseBottom = 2.0;
+  const topPad = Math.max(0.5, baseTop + verticalOffset).toFixed(1);
+  const bottomPad = Math.max(0.5, baseBottom - verticalOffset).toFixed(1);
+
+  return `
   @page {
     size: ${PRINTER_CONFIG.LABEL_WIDTH_MM}mm ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm;
     margin: 0;
@@ -92,8 +98,9 @@ export const getPrintCss = () => `
       max-height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       margin: 0 !important;
       padding: 0 !important;
-      border: none !important;
+      border: 0 none transparent !important;
       border-width: 0 !important;
+      border-style: none !important;
       outline: none !important;
       box-shadow: none !important;
       page-break-after: always !important;
@@ -111,7 +118,7 @@ export const getPrintCss = () => `
       height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       max-height: ${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm !important;
       margin: 0 !important;
-      padding: 2.6mm 1.2mm 1.6mm 1.2mm !important;
+      padding: ${topPad}mm 1.2mm ${bottomPad}mm 1.2mm !important;
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
@@ -120,8 +127,9 @@ export const getPrintCss = () => `
       background: #ffffff !important;
       color: #000000 !important;
       position: relative !important;
-      border: none !important;
+      border: 0 none transparent !important;
       border-width: 0 !important;
+      border-style: none !important;
       outline: none !important;
       box-shadow: none !important;
       page-break-inside: avoid !important;
@@ -142,3 +150,4 @@ export const getPrintCss = () => `
     }
   }
 `;
+};
