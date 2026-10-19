@@ -48,15 +48,13 @@ export default function MRPLabel({
 
   // Auto-adjust font size for serial number based on length across full width
   const getSerialStyle = (len: number) => {
-    if (len <= 12) return { fontSize: '7.2pt', letterSpacing: '0.35px' };
-    if (len <= 16) return { fontSize: '6.8pt', letterSpacing: '0.25px' };
-    if (len <= 20) return { fontSize: '6.2pt', letterSpacing: '0.18px' };
-    if (len <= 25) return { fontSize: '5.6pt', letterSpacing: '0.12px' };
-    if (len <= 30) return { fontSize: '5.0pt', letterSpacing: '0.08px' };
-    if (len <= 36) return { fontSize: '4.5pt', letterSpacing: '0.04px' };
-    if (len <= 42) return { fontSize: '4.0pt', letterSpacing: '0px' };
-    if (len <= 48) return { fontSize: '3.6pt', letterSpacing: '-0.05px' };
-    return { fontSize: '3.2pt', letterSpacing: '-0.1px' };
+    if (len <= 14) return { fontSize: '6.0pt', letterSpacing: '0.3px' };
+    if (len <= 20) return { fontSize: '5.2pt', letterSpacing: '0.2px' };
+    if (len <= 26) return { fontSize: '4.6pt', letterSpacing: '0.1px' };
+    if (len <= 32) return { fontSize: '4.0pt', letterSpacing: '0.04px' };
+    if (len <= 38) return { fontSize: '3.6pt', letterSpacing: '0px' };
+    if (len <= 44) return { fontSize: '3.2pt', letterSpacing: '-0.05px' };
+    return { fontSize: '2.8pt', letterSpacing: '-0.1px' };
   };
 
   const modelStyle = getModelStyle(cleanModel.length);
