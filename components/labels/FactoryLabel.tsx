@@ -31,7 +31,9 @@ export default function FactoryLabel({
     : `https://goodwinbatteries.in/support/warranty-registration`;
 
   // Clean model name for display (e.g. "GW-XL2.5LC (12 Months)" -> "GW-XL2.5LC")
-  const cleanModel = productModel.replace(/\s*\([^)]*\)/g, '').trim() || productModel;
+  const rawModel = productModel.replace(/\s*\([^)]*\)/g, '').trim() || productModel;
+  // If model name contains hyphens without spaces (e.g. "GOLD-SERIES-12V-12AH"), convert hyphens to spaces for natural multi-line display
+  const cleanModel = rawModel.includes(' ') ? rawModel : rawModel.replace(/-/g, ' ');
 
   // Clean warranty for badge (e.g. "48 Months" -> "48M", "36 Months" -> "36M")
   const cleanWarranty = warranty.replace(/Months?/i, 'M').replace(/\s+/g, '').trim() || warranty;
@@ -39,40 +41,33 @@ export default function FactoryLabel({
   // Dynamically auto-adjust font size & spacing for any model name length
   // to ensure 100% fit with multi-line wrap support (NO ellipsis truncation)
   const getModelStyle = (len: number) => {
-    if (len <= 7) return { fontSize: '7.2pt', letterSpacing: '0.15px' };
-    if (len <= 12) return { fontSize: '6.0pt', letterSpacing: '0.05px' };
-    if (len <= 18) return { fontSize: '5.2pt', letterSpacing: '0px' };
-    if (len <= 24) return { fontSize: '4.6pt', letterSpacing: '-0.05px' };
-    return { fontSize: '4.0pt', letterSpacing: '-0.1px' };
+    if (len <= 8) return { fontSize: '7.8pt', letterSpacing: '0.15px' };
+    if (len <= 14) return { fontSize: '6.8pt', letterSpacing: '0.05px' };
+    if (len <= 22) return { fontSize: '6.0pt', letterSpacing: '0px' };
+    if (len <= 28) return { fontSize: '5.2pt', letterSpacing: '-0.05px' };
+    return { fontSize: '4.4pt', letterSpacing: '-0.1px' };
   };
 
   // Dynamically calculate font-size and spacing based on serial number length
-  // Calibrated for full 36mm width so any serial up to 48+ chars is 100% visible with maximum font size
+  // Calibrated for full 35mm width so any serial up to 48+ chars is 100% visible with maximum font size
   const getSerialStyle = (len: number) => {
-    if (len <= 12) return { fontSize: '7.2pt', letterSpacing: '0.35px' };
-    if (len <= 16) return { fontSize: '6.8pt', letterSpacing: '0.25px' };
-    if (len <= 20) return { fontSize: '6.2pt', letterSpacing: '0.18px' };
-    if (len <= 25) return { fontSize: '5.6pt', letterSpacing: '0.12px' };
-    if (len <= 30) return { fontSize: '5.0pt', letterSpacing: '0.08px' };
-    if (len <= 36) return { fontSize: '4.5pt', letterSpacing: '0.04px' };
-    if (len <= 42) return { fontSize: '4.0pt', letterSpacing: '0px' };
-    if (len <= 48) return { fontSize: '3.6pt', letterSpacing: '-0.05px' };
-    return { fontSize: '3.2pt', letterSpacing: '-0.1px' };
+    if (len <= 16) return { fontSize: '6.8pt', letterSpacing: '0.4px' };
+    if (len <= 24) return { fontSize: '5.8pt', letterSpacing: '0.3px' };
+    if (len <= 32) return { fontSize: '5.2pt', letterSpacing: '0.25px' };
+    if (len <= 38) return { fontSize: '4.7pt', letterSpacing: '0.18px' };
+    if (len <= 44) return { fontSize: '4.2pt', letterSpacing: '0.1px' };
+    return { fontSize: '3.6pt', letterSpacing: '0.05px' };
   };
 
   const modelStyle = getModelStyle(cleanModel.length);
   const serialStyle = getSerialStyle(serialNumber.length);
 
-  // LAYOUT 1: MAX QR HERO (DEFAULT & HIGHLY RECOMMENDED)
-  // Max content is the QR code with highlighted SCAN FOR WARRANTY header on top.
-  // Full-width serial number bar across the bottom guarantees 100% visibility for all serials.
-  // ONLY the GW logo is used (no "goodwin" text).
-  // LAYOUT 1: MAX QR HERO (DEFAULT & HIGHLY RECOMMENDED)
-  // Max content is the QR code with highlighted SCAN FOR WARRANTY header on top.
-  // Full-width serial number bar across the bottom guarantees 100% visibility for all serials.
-  // ONLY the GW logo is used (no "goodwin" text).
-  // Model, warranty, MFG, and serial auto-adjust dynamically for 100% compatibility across all models.
-  const topPadding = Math.max(0.5, 2.6 + (verticalOffset || 0));
+  // LAYOUT 1: EXACT MATCH TO SPECIFICATION MOCKUP
+  // Left: 2-line "SCAN FOR / WARRANTY" in black box + crisp QR code
+  // Center: Crisp vertical divider line
+  // Right: GW circle logo + Warranty box, Centered Battery Model box, MFG date
+  // Bottom: Full-width horizontal divider line + monospace serial number
+  const topPadding = Math.max(0.5, 2.2 + (verticalOffset || 0));
 
   if (!showBarcode) {
     return (
@@ -82,7 +77,7 @@ export default function FactoryLabel({
           width: `${PRINTER_CONFIG.LABEL_WIDTH_MM}mm`,
           height: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
           maxHeight: `${PRINTER_CONFIG.LABEL_HEIGHT_MM}mm`,
-          padding: `${topPadding}mm 1.2mm 1.6mm 1.2mm`, // 2.6mm top clearance eliminates top tear-bar cutoff
+          padding: `${topPadding}mm 1.5mm 1.4mm 1.5mm`,
           overflow: 'hidden',
           fontFamily: bodyFont,
           boxSizing: 'border-box',
@@ -94,33 +89,37 @@ export default function FactoryLabel({
         }}
       >
         <div className="w-full h-full flex flex-col justify-between flex-1 min-h-0">
-          {/* TOP SECTION: SCANNABLE QR CODE (LEFT) + BRAND, MODEL & SPECS (RIGHT) */}
-          <div className="flex flex-row items-stretch justify-between flex-1 min-h-0">
-            {/* LEFT: HIGHLIGHTED "SCAN FOR WARRANTY" ON TOP + SCANNABLE QR CODE */}
-            <div className="flex flex-col items-center justify-between w-[15.0mm] shrink-0 pr-[0.8mm] border-r-[0.35mm] border-black">
-              {/* Highlighted Banner directly on top of the QR code */}
+          {/* MAIN UPPER SECTION: QR CODE (LEFT) + VERTICAL DIVIDER + DETAILS (RIGHT) */}
+          <div className="flex flex-row items-stretch justify-between flex-1 min-h-0 pb-[0.8mm]">
+            
+            {/* LEFT: 2-LINE "SCAN FOR / WARRANTY" BADGE + HIGH CONTRAST QR CODE */}
+            <div className="flex flex-col items-center justify-between w-[13.6mm] shrink-0">
+              {/* Highlighted Banner on top of QR code (Two-line format for max font size) */}
               <div 
-                className="w-full bg-black text-white text-center font-black uppercase rounded-[0.35mm] py-[0.5mm] px-[0.3mm] mb-[0.4mm] leading-none shrink-0 label-badge-invert"
+                className="w-full bg-black text-white text-center font-black uppercase rounded-[0.4mm] py-[0.5mm] px-[0.2mm] leading-none shrink-0 label-badge-invert flex flex-col justify-center items-center gap-[0.25mm]"
                 style={{ 
-                  fontSize: '4.8pt', 
-                  letterSpacing: '0.25px',
                   backgroundColor: '#000000',
                   color: '#ffffff',
                   WebkitPrintColorAdjust: 'exact',
                   printColorAdjust: 'exact',
-                  lineHeight: 1
                 }}
               >
-                SCAN FOR WARRANTY
+                <span className="text-[5.4pt] font-black uppercase tracking-wider leading-none text-white">
+                  SCAN FOR
+                </span>
+                <span className="text-[5.4pt] font-black uppercase tracking-wider leading-none text-white">
+                  WARRANTY
+                </span>
               </div>
 
-              <div className="w-full flex-1 flex items-center justify-center bg-white min-h-0">
+              {/* Scannable Crisp QR Code */}
+              <div className="w-full flex-1 flex items-center justify-center bg-white min-h-0 pt-[0.4mm]">
                 <QRCodeSVG 
                   value={verifyUrl} 
                   size={160}
                   style={{ 
-                    width: '12.6mm', 
-                    height: '12.6mm', 
+                    width: '12.4mm', 
+                    height: '12.4mm', 
                     maxWidth: '100%', 
                     maxHeight: '100%',
                     shapeRendering: 'crispEdges'
@@ -134,13 +133,16 @@ export default function FactoryLabel({
               </div>
             </div>
 
-            {/* RIGHT: ONLY GW LOGO + AUTO-ADJUSTING MODEL + WARRANTY & METADATA */}
-            <div className="flex flex-col justify-between flex-1 min-w-0 pl-[1.2mm] h-full py-[0.1mm]">
-              {/* Top Row: Authentic GW Circular Emblem + Bold Warranty Badge (Zero Overflow) */}
-              <div className="flex items-center justify-between pb-[0.2mm] gap-[1mm]">
+            {/* VERTICAL DIVIDER LINE (Extends from top to the horizontal divider) */}
+            <div className="w-[0.45mm] bg-black shrink-0 self-stretch mx-[1.0mm]" />
+
+            {/* RIGHT: GW LOGO + WARRANTY BADGE + MODEL BOX + MFG DATE */}
+            <div className="flex flex-col justify-between flex-1 min-w-0 h-full pl-[0.2mm]">
+              {/* Top Row: Authentic GW Circular Emblem + Bold Warranty Badge */}
+              <div className="flex items-center justify-between pb-[0.2mm] gap-[1mm] shrink-0">
                 <svg 
                   viewBox="0 0 100 100" 
-                  className="w-[4.6mm] h-[4.6mm] shrink-0" 
+                  className="w-[5.0mm] h-[5.0mm] shrink-0" 
                   fill="none" 
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -151,24 +153,24 @@ export default function FactoryLabel({
                   />
                 </svg>
 
-                {/* Self-contained horizontal Warranty badge: Bold, Crisp, Highly Visible */}
-                <div className="border-[0.35mm] border-black rounded-[0.35mm] px-[1.0mm] py-[0.4mm] bg-white text-center leading-none inline-flex items-center gap-[0.5mm] shrink-0">
-                  <span className="font-black text-[6.8pt] text-black tracking-tight leading-none">
+                {/* Self-contained horizontal Warranty badge */}
+                <div className="border-[0.38mm] border-black rounded-[0.45mm] px-[1.2mm] py-[0.45mm] bg-white text-center leading-none inline-flex items-center gap-[0.8mm] shrink-0">
+                  <span className="font-black text-[7.6pt] text-black tracking-tight leading-none">
                     {cleanWarranty}
                   </span>
-                  <span className="text-[4.0pt] font-black uppercase text-black tracking-wider leading-none">
+                  <span className="text-[4.6pt] font-black uppercase text-black tracking-wider leading-none">
                     WARRANTY
                   </span>
                 </div>
               </div>
 
-              {/* Model Box - MULTI-LINE SUPPORT WITH NO ELLIPSIS TRUNCATION */}
-              <div className="border-[0.35mm] border-black rounded-[0.35mm] px-[0.9mm] py-[0.45mm] bg-white flex flex-col items-center justify-center text-center my-[0.2mm] min-h-[6.2mm]">
-                <div className="text-[4.2pt] font-black text-black uppercase leading-none tracking-wider mb-[0.35mm]">
+              {/* Model Box - BORDERED WITH MULTI-LINE CENTERED MODEL NAME */}
+              <div className="border-[0.38mm] border-black rounded-[0.45mm] px-[0.8mm] py-[0.6mm] bg-white flex flex-col items-center justify-center text-center my-[0.3mm] flex-1 min-h-[7.0mm]">
+                <div className="text-[4.6pt] font-black text-black uppercase leading-none tracking-wider mb-[0.4mm]">
                   BATTERY MODEL
                 </div>
                 <div 
-                  className="font-black text-black uppercase tracking-tight text-center leading-[1.12] w-full"
+                  className="font-black text-black uppercase tracking-tight text-center leading-[1.15] w-full"
                   style={{ 
                     fontFamily: bodyFont,
                     fontSize: modelStyle.fontSize,
@@ -181,16 +183,19 @@ export default function FactoryLabel({
                 </div>
               </div>
 
-              {/* MFG Date Row - Single line, bold & zero collision */}
-              <div className="flex items-center justify-start text-black font-black text-[5.2pt] leading-none pt-[0.2mm] whitespace-nowrap overflow-hidden">
+              {/* MFG Date Row - Single bold line */}
+              <div className="flex items-center justify-start text-black font-black text-[5.8pt] leading-none pt-[0.2mm] whitespace-nowrap overflow-hidden shrink-0">
                 <strong className="font-black mr-[0.8mm]">MFG:</strong>
-                <span className="font-bold">{mfgDate}</span>
+                <span className="font-black">{mfgDate}</span>
               </div>
             </div>
           </div>
 
+          {/* HORIZONTAL DIVIDER LINE (Full width across entire label) */}
+          <div className="w-full h-[0.45mm] bg-black shrink-0" />
+
           {/* BOTTOM SECTION: ONLY COMPLETE SERIAL NUMBER (AUTO-ADJUSTS, MAXIMUM LEGIBILITY) */}
-          <div className="w-full border-t-[0.4mm] border-black pt-[0.6mm] mt-[0.3mm] flex items-center justify-center shrink-0 leading-none overflow-hidden">
+          <div className="w-full pt-[0.6mm] flex items-center justify-center shrink-0 leading-none overflow-hidden">
             <span 
               className="font-black text-black uppercase whitespace-nowrap overflow-hidden font-mono text-center w-full leading-none tracking-tight"
               style={{ 

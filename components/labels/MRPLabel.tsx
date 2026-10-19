@@ -195,18 +195,20 @@ export default function MRPLabel({
           <div className="flex flex-col justify-between items-center w-[48%] h-full pl-[0.8mm] border-l-[0.35mm] border-black">
             {/* Highlight on top of the QR */}
             <div 
-              className="w-full bg-black text-white text-center font-black uppercase rounded-[0.35mm] py-[0.5mm] px-[0.3mm] mb-[0.4mm] leading-none shrink-0 label-badge-invert"
+              className="w-full bg-black text-white text-center font-black uppercase rounded-[0.4mm] py-[0.5mm] px-[0.2mm] mb-[0.4mm] leading-none shrink-0 label-badge-invert flex flex-col justify-center items-center gap-[0.25mm]"
               style={{ 
-                fontSize: '4.8pt', 
-                letterSpacing: '0.25px',
                 backgroundColor: '#000000',
                 color: '#ffffff',
                 WebkitPrintColorAdjust: 'exact',
                 printColorAdjust: 'exact',
-                lineHeight: 1
               }}
             >
-              SCAN FOR WARRANTY
+              <span className="text-[5.4pt] font-black uppercase tracking-wider leading-none text-white">
+                SCAN FOR
+              </span>
+              <span className="text-[5.4pt] font-black uppercase tracking-wider leading-none text-white">
+                WARRANTY
+              </span>
             </div>
 
             <div className="w-full flex-1 flex items-center justify-center bg-white min-h-0">
