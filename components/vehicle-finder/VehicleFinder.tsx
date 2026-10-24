@@ -38,6 +38,7 @@ export default function VehicleFinder() {
 
   // Results
   const [recommendedProduct, setRecommendedProduct] = useState<any | null>(null);
+  const [availableWarrantyVariants, setAvailableWarrantyVariants] = useState<any[]>([]);
   const [fitmentStatus, setFitmentStatus] = useState<"verified" | "unverified">("verified");
 
   // Search
@@ -55,6 +56,7 @@ export default function VehicleFinder() {
     setStep(1);
     setSelections({ type: "", brand: "", model: "", variant: "", fuel: "", year: "" });
     setRecommendedProduct(null);
+    setAvailableWarrantyVariants([]);
     setSearchQuery("");
     setSearchResults([]);
   };
@@ -65,6 +67,75 @@ export default function VehicleFinder() {
     }
   };
 
+  // Helper to reliably match a product in goodwinProducts.json
+  const findProduct = (fitment: any) => {
+    if (!fitment) return null;
+
+    // 1. Direct match by ID (e.g. "prod-xl25lc", "prod-tz4lb")
+    if (fitment.batteryProductId) {
+      const byId = goodwinProducts.find(p => p.id === fitment.batteryProductId);
+      if (byId) return byId;
+    }
+
+    // 2. Direct match by slug (e.g. "gw-xl2-5lc", "gw-tz4lb")
+    if (fitment.batteryProductId) {
+      const bySlug = goodwinProducts.find(p => p.slug === fitment.batteryProductId);
+      if (bySlug) return bySlug;
+    }
+
+    // 3. Match by batteryModel (e.g. "GW-XL2.5LC", "GW-TZ4LB", "GOLD SERIES 12V 9AH")
+    if (fitment.batteryModel) {
+      const rawModel = fitment.batteryModel.trim();
+      const cleanModel = rawModel.toLowerCase();
+      const cleanAlpha = cleanModel.replace(/[^a-z0-9]/gi, "");
+
+      // Match product name prefix or exact
+      const byName = goodwinProducts.find(p => {
+        const pName = p.name.toLowerCase();
+        return pName === cleanModel || pName.startsWith(cleanModel) || pName.includes(cleanModel);
+      });
+      if (byName) return byName;
+
+      // Match product slug
+      const bySlug = goodwinProducts.find(p => {
+        const pSlug = p.slug.toLowerCase();
+        const pAlpha = pSlug.replace(/[^a-z0-9]/gi, "");
+        return pSlug === cleanModel || pAlpha === cleanAlpha || pAlpha.includes(cleanAlpha) || cleanAlpha.includes(pAlpha);
+      });
+      if (bySlug) return bySlug;
+    }
+
+    // 4. Match by Ah / capacity
+    if (fitment.notes || fitment.batteryModel) {
+      const text = `${fitment.batteryModel || ""} ${fitment.notes || ""}`;
+      const ahMatch = text.match(/(\d+(?:\.\d+)?)\s*ah/i);
+      if (ahMatch) {
+        const ahNum = parseFloat(ahMatch[1]);
+        const byAh = goodwinProducts.find(p => {
+          const pAh = parseFloat(p.ah?.replace(/[^0-9.]/g, "") || "0");
+          return pAh === ahNum && p.category === "cat-two-wheeler";
+        });
+        if (byAh) return byAh;
+      }
+    }
+
+    return null;
+  };
+
+  const getWarrantyVariants = (baseProd: any) => {
+    if (!baseProd) return [];
+    // Extract base model prefix, e.g. "GW-TZ4LB" from "GW-TZ4LB (48 Months)"
+    const baseCodeMatch = baseProd.name.match(/^(GW-[A-Z0-9.]+)/i);
+    if (!baseCodeMatch) return [baseProd];
+    const baseCode = baseCodeMatch[1].toLowerCase();
+
+    const variants = goodwinProducts.filter(p => 
+      p.name.toLowerCase().startsWith(baseCode) || 
+      (baseProd.slug.includes("-") && p.slug.toLowerCase().startsWith(baseProd.slug.split("-").slice(0, 2).join("-")))
+    );
+    return variants.length > 0 ? variants : [baseProd];
+  };
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.length < 2) {
@@ -73,7 +144,7 @@ export default function VehicleFinder() {
     }
     
     setIsSearching(true);
-    // Find matching models
+    // Find matching models or brands
     const matches = vehicleFitments.filter(f => 
       f.model.toLowerCase().includes(query.toLowerCase()) || 
       f.brand.toLowerCase().includes(query.toLowerCase())
@@ -83,12 +154,12 @@ export default function VehicleFinder() {
     const uniqueMatches: any[] = [];
     const seen = new Set();
     for (const m of matches) {
-      const key = `${m.brand}-${m.model}`;
+      const key = `${m.brand.toLowerCase()}-${m.model.toLowerCase()}`;
       if (!seen.has(key)) {
         seen.add(key);
         uniqueMatches.push(m);
       }
-      if (uniqueMatches.length >= 10) break;
+      if (uniqueMatches.length >= 12) break;
     }
       
     setSearchResults(uniqueMatches);
@@ -112,10 +183,10 @@ export default function VehicleFinder() {
     
     setTimeout(() => {
       const v = Array.from(new Set(vehicleFitments
-        .filter(f => f.type === fitment.type && f.brand === fitment.brand && f.model === fitment.model)
+        .filter(f => f.brand.toLowerCase() === fitment.brand.toLowerCase() && f.model.toLowerCase() === fitment.model.toLowerCase())
         .map(f => f.variant)
       ));
-      setVariants(v.sort());
+      setVariants(v.length > 0 ? v.sort() : ["Standard"]);
       setLoading(false);
     }, 250);
   };
@@ -154,7 +225,7 @@ export default function VehicleFinder() {
         .filter(f => f.type === selections.type && f.brand === selections.brand && f.model === model)
         .map(f => f.variant)
       ));
-      setVariants(v.sort());
+      setVariants(v.length > 0 ? v.sort() : ["Standard"]);
       setLoading(false);
     }, 250);
   };
@@ -169,7 +240,7 @@ export default function VehicleFinder() {
         .filter(f => f.type === selections.type && f.brand === selections.brand && f.model === selections.model && f.variant === variant)
         .map(f => f.fuel)
       ));
-      setFuels(fl.sort());
+      setFuels(fl.length > 0 ? fl.sort() : ["Petrol"]);
       setLoading(false);
     }, 250);
   };
@@ -180,21 +251,29 @@ export default function VehicleFinder() {
     setLoading(true);
     setLoadingText("Loading years...");
     setTimeout(() => {
-      const f = vehicleFitments.find(f => 
+      const matchingFitments = vehicleFitments.filter(f => 
         f.type === selections.type && 
         f.brand === selections.brand && 
         f.model === selections.model && 
         f.variant === selections.variant && 
         f.fuel === fuel
       );
-      if (f) {
+      if (matchingFitments.length > 0) {
+        const yearSet = new Set<string>();
+        matchingFitments.forEach(f => {
+          const from = f.yearFrom || 2010;
+          const to = f.yearTo || 2025;
+          for (let i = to; i >= from; i--) {
+            yearSet.add(i.toString());
+          }
+        });
+        setYears(Array.from(yearSet).sort((a, b) => parseInt(b) - parseInt(a)));
+      } else {
         const y: string[] = [];
-        for (let i = f.yearTo; i >= f.yearFrom; i--) {
+        for (let i = 2025; i >= 2010; i--) {
           y.push(i.toString());
         }
         setYears(y);
-      } else {
-        setYears([]);
       }
       setLoading(false);
     }, 250);
@@ -207,30 +286,40 @@ export default function VehicleFinder() {
     setLoadingText("Finding verified battery match...");
 
     setTimeout(() => {
+      const yearNum = parseInt(year);
       const match = vehicleFitments.find(f => 
         f.type === selections.type && 
         f.brand === selections.brand && 
         f.model === selections.model && 
         f.variant === selections.variant && 
+        f.fuel === selections.fuel &&
+        (!isNaN(yearNum) ? (yearNum >= f.yearFrom && yearNum <= f.yearTo) : true)
+      ) || vehicleFitments.find(f => 
+        f.type === selections.type && 
+        f.brand === selections.brand && 
+        f.model === selections.model && 
+        f.variant === selections.variant && 
         f.fuel === selections.fuel
+      ) || vehicleFitments.find(f => 
+        f.brand.toLowerCase() === selections.brand.toLowerCase() && 
+        f.model.toLowerCase() === selections.model.toLowerCase()
       );
 
-      if (match && match.batteryModel) {
-        const prod = goodwinProducts.find(p => p.slug === match.batteryProductId || p.slug === match.batteryModel || p.name === match.batteryModel);
-        if (prod) {
-          setRecommendedProduct(prod);
-          setFitmentStatus("verified");
-        } else {
-          setRecommendedProduct(null);
-          setFitmentStatus("unverified");
-        }
+      const prod = findProduct(match);
+
+      if (prod) {
+        setRecommendedProduct(prod);
+        const related = getWarrantyVariants(prod);
+        setAvailableWarrantyVariants(related);
+        setFitmentStatus("verified");
       } else {
         setRecommendedProduct(null);
+        setAvailableWarrantyVariants([]);
         setFitmentStatus("unverified");
       }
       
       setLoading(false);
-    }, 450);
+    }, 400);
   };
 
   const getIconForType = (typeName: string) => {
@@ -248,7 +337,7 @@ export default function VehicleFinder() {
     `Fuel: ${selections.fuel}\n` +
     `Year: ${selections.year}\n\n` +
     (recommendedProduct ? 
-      `Recommended Goodwin Battery:\n${recommendedProduct.name}\n${recommendedProduct.voltage} / ${recommendedProduct.capacity}\n\n` :
+      `Recommended Goodwin Battery:\n${recommendedProduct.name}\n${recommendedProduct.voltage} / ${recommendedProduct.ah || recommendedProduct.capacity || ""}\n\n` :
       `The database showed this as Unverified. Can you please help me find the exact match?\n\n`
     ) +
     `Please confirm availability and price.`
@@ -514,6 +603,36 @@ export default function VehicleFinder() {
                     </strong>
                   </div>
                 </div>
+
+                {/* Warranty Variants Selector (e.g. 48M / 18M / 12M) */}
+                {availableWarrantyVariants.length > 1 && (
+                  <div className="mb-4 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block mb-1.5">
+                      Available Warranty Tiers:
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {availableWarrantyVariants.map((vProd) => {
+                        const isCurrent = vProd.id === recommendedProduct.id;
+                        const wText = vProd.warranty || (vProd.warranty_options?.length ? vProd.warranty_options[0] : "Standard");
+                        return (
+                          <button
+                            key={vProd.id}
+                            type="button"
+                            onClick={() => setRecommendedProduct(vProd)}
+                            className={clsx(
+                              "px-2.5 py-1 rounded-lg text-xs font-bold transition-all border",
+                              isCurrent
+                                ? "bg-[#00843D] text-white border-[#00843D] shadow-sm font-black"
+                                : "bg-white text-slate-700 border-slate-300 hover:border-[#00843D] hover:text-[#00843D]"
+                            )}
+                          >
+                            {wText}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 <div className="bg-slate-50 rounded-xl p-3 mb-6 border border-slate-200 text-xs text-slate-600 text-left">
                   <span className="font-bold text-slate-900 block mb-0.5">Matched for your vehicle:</span>
