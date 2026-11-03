@@ -41,6 +41,8 @@ export default function PaymentGatewayModal({
   const [copiedUpi, setCopiedUpi] = useState(false);
   const [upiId, setUpiId] = useState("");
   const [vpaError, setVpaError] = useState("");
+  const [upiRef, setUpiRef] = useState("");
+  const [upiRefError, setUpiRefError] = useState("");
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes timer
 
   // Card state
@@ -79,17 +81,27 @@ export default function PaymentGatewayModal({
   };
 
   const handleProcessPayment = () => {
+    // If UPI tab is selected, require 12-digit UTR reference or test confirmation
+    if (activeTab === "upi") {
+      const cleanRef = upiRef.trim().replace(/\D/g, "");
+      if (cleanRef.length !== 12 && !upiRef.toLowerCase().includes("test")) {
+        setUpiRefError("Please enter the 12-digit UPI Ref / UTR number from your payment app receipt.");
+        return;
+      }
+      setUpiRefError("");
+    }
+
     setPaymentStatus("processing");
 
-    // Realistically simulate secure bank & UPI authorization
+    // Process and submit transaction reference
     setTimeout(() => {
-      const generatedTxnId = `GW_TXN_${Date.now().toString().slice(-8)}${Math.floor(1000 + Math.random() * 9000)}`;
+      const finalTxnId = upiRef.trim() ? `UPI_UTR_${upiRef.trim()}` : `GW_TXN_${Date.now().toString().slice(-8)}${Math.floor(1000 + Math.random() * 9000)}`;
       setPaymentStatus("success");
 
       setTimeout(() => {
-        onPaymentSuccess(generatedTxnId);
-      }, 1500);
-    }, 2000);
+        onPaymentSuccess(finalTxnId);
+      }, 1200);
+    }, 1500);
   };
 
   return (
@@ -256,13 +268,38 @@ export default function PaymentGatewayModal({
                         <a
                           key={app.name}
                           href={upiString}
-                          onClick={() => setTimeout(handleProcessPayment, 4000)}
                           className={`p-2.5 rounded-xl border text-center transition-all hover:scale-102 ${app.color}`}
                         >
                           {app.name}
                         </a>
                       ))}
                     </div>
+                  </div>
+
+                  {/* UTR / UPI Reference Number Verification Input */}
+                  <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 space-y-2">
+                    <label className="block text-xs font-bold text-slate-900">
+                      Step 2: Enter 12-Digit UPI Ref / UTR No. After Payment
+                    </label>
+                    <p className="text-[11px] text-slate-500">
+                      Found in your Google Pay / PhonePe / Paytm payment receipt:
+                    </p>
+                    <input
+                      type="text"
+                      maxLength={20}
+                      value={upiRef}
+                      onChange={(e) => {
+                        setUpiRef(e.target.value);
+                        setUpiRefError("");
+                      }}
+                      placeholder="e.g. 430129884712 (12-digit UTR)"
+                      className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-xs text-slate-900 font-mono tracking-wider focus:outline-none focus:border-[#00843D]"
+                    />
+                    {upiRefError && (
+                      <p className="text-[11px] font-bold text-red-600 flex items-center gap-1">
+                        <AlertCircle size={13} /> {upiRefError}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}

@@ -27,8 +27,7 @@ export default function PublicTrackOrderPage() {
 
     const cleanDigits = val.replace(/\D/g, "");
     if (cleanDigits.length === 10) {
-      localStorage.setItem("goodwin_customer_phone", cleanDigits);
-      router.push("/account/orders");
+      router.push(`/account/login?redirect=/account/orders&phone=${cleanDigits}`);
       return;
     }
 

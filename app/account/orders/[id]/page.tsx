@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { formatINR } from "@/lib/pricing";
+import { supabase } from "@/lib/supabase";
 import { 
   ArrowLeft, 
   CheckCircle2, 
@@ -35,25 +36,77 @@ export default function OrderTrackingDetailPage() {
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("goodwin_orders");
-      const latest = localStorage.getItem("goodwin_latest_order");
-      let all: any[] = stored ? JSON.parse(stored) : [];
-
-      if (latest) {
-        const p = JSON.parse(latest);
-        if (!all.some(o => o.id === p.id)) all.unshift(p);
+    async function loadOrder() {
+      if (!orderId) {
+        setLoading(false);
+        return;
       }
 
-      const found = all.find(o => o.id.toUpperCase() === orderId.toUpperCase());
-      if (found) {
-        setOrder(found);
+      // 1. Fetch from Supabase
+      try {
+        const { data, error } = await supabase
+          .from("orders")
+          .select("*")
+          .eq("id", orderId.trim())
+          .single();
+
+        if (data) {
+          setOrder({
+            id: data.id,
+            customerName: data.customer_name,
+            phone: data.phone,
+            email: data.email,
+            address: data.address,
+            city: data.city,
+            state: data.state,
+            pincode: data.pincode,
+            vehicleDetails: data.vehicle_details,
+            deliverySlot: data.delivery_slot,
+            paymentMethod: data.payment_method,
+            paymentStatus: data.payment_status,
+            status: data.status || "Confirmed",
+            items: Array.isArray(data.items) ? data.items : [],
+            totalAmount: Number(data.total_amount) || 0,
+            createdAt: data.created_at || new Date().toISOString(),
+            technicianName: data.technician_name,
+            technicianPhone: data.technician_phone,
+            technicianVehicle: data.technician_vehicle,
+            invoiceNumber: data.invoice_number,
+            trackingNumber: data.tracking_number,
+            packedAt: data.packed_at,
+            dispatchedAt: data.dispatched_at,
+            deliveredAt: data.delivered_at,
+          });
+          setLoading(false);
+          return;
+        }
+      } catch (sbErr) {
+        console.warn("Could not load order from Supabase:", sbErr);
       }
-    } catch (e) {
-      console.error("Order load error", e);
-    } finally {
-      setLoading(false);
+
+      // 2. Fallback to localStorage
+      try {
+        const stored = localStorage.getItem("goodwin_orders");
+        const latest = localStorage.getItem("goodwin_latest_order");
+        let all: any[] = stored ? JSON.parse(stored) : [];
+
+        if (latest) {
+          const p = JSON.parse(latest);
+          if (!all.some(o => o.id === p.id)) all.unshift(p);
+        }
+
+        const found = all.find(o => o.id.toUpperCase() === orderId.toUpperCase());
+        if (found) {
+          setOrder(found);
+        }
+      } catch (e) {
+        console.error("Order load error", e);
+      } finally {
+        setLoading(false);
+      }
     }
+
+    loadOrder();
   }, [orderId]);
 
   if (loading) {

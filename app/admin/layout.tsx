@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState<string>("dealer");
+  const [userRole, setUserRole] = useState<string>("super_admin");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -27,11 +27,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           .select("role")
           .eq("id", session.user.id)
           .single();
-        if (profile) {
+        if (profile?.role) {
           setUserRole(profile.role);
           if (profile.role === "warehouse" && pathname === "/admin") {
             router.push("/admin/serial-generator");
           }
+        } else {
+          // Default authenticated admin users to super_admin if profile row is not yet created
+          setUserRole("super_admin");
         }
       }
       setLoading(false);
@@ -49,11 +52,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           .select("role")
           .eq("id", session.user.id)
           .single();
-        if (profile) {
+        if (profile?.role) {
           setUserRole(profile.role);
           if (profile.role === "warehouse" && pathname === "/admin") {
             router.push("/admin/serial-generator");
           }
+        } else {
+          setUserRole("super_admin");
         }
       }
     });

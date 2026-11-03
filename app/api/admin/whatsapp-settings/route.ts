@@ -28,12 +28,12 @@ function readConfigFile(): WhatsAppOrderConfig {
       return { ...DEFAULT_CONFIG, ...JSON.parse(data) };
     }
   } catch (err) {
-    console.warn("Could not read order-notifications.json, using default", err);
+    // Non-blocking in serverless environments
   }
   return DEFAULT_CONFIG;
 }
 
-function writeConfigFile(config: WhatsAppOrderConfig): boolean {
+function writeConfigFileSafe(config: WhatsAppOrderConfig): boolean {
   try {
     const dir = path.dirname(CONFIG_FILE);
     if (!fs.existsSync(dir)) {
@@ -41,8 +41,8 @@ function writeConfigFile(config: WhatsAppOrderConfig): boolean {
     }
     fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), "utf-8");
     return true;
-  } catch (err) {
-    console.error("Failed to write order-notifications.json", err);
+  } catch {
+    // Read-only filesystem in serverless environments is expected and non-fatal
     return false;
   }
 }
@@ -51,10 +51,10 @@ export async function GET() {
   try {
     let config = readConfigFile();
 
-    // Check if Supabase global_settings has a newer or configured whatsapp_main
+    // Fetch live settings from Supabase
     try {
       const { data } = await supabase.from("global_settings").select("whatsapp_main").single();
-      if (data?.whatsapp_main && !config.whatsappNumber) {
+      if (data?.whatsapp_main) {
         config.whatsappNumber = data.whatsapp_main.replace(/\D/g, "");
       }
     } catch {
@@ -84,17 +84,20 @@ export async function POST(req: Request) {
       updatedAt: new Date().toISOString(),
     };
 
-    // Save to disk
-    writeConfigFile(updatedConfig);
+    // Save to disk if permitted (safe in serverless)
+    writeConfigFileSafe(updatedConfig);
 
-    // Sync to Supabase global_settings if possible
+    // Sync to Supabase global_settings
     try {
-      await supabase.from("global_settings").update({
-        whatsapp_main: cleanNumber,
-        updated_at: new Date().toISOString(),
-      }).neq("id", "00000000-0000-0000-0000-000000000000");
-    } catch {
-      // non-blocking
+      await supabase
+        .from("global_settings")
+        .update({
+          whatsapp_main: cleanNumber,
+          updated_at: new Date().toISOString(),
+        })
+        .neq("id", "00000000-0000-0000-0000-000000000000");
+    } catch (sbErr) {
+      console.warn("Could not sync whatsapp_main to global_settings", sbErr);
     }
 
     return NextResponse.json({ success: true, config: updatedConfig });

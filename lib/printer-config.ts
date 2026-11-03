@@ -60,9 +60,6 @@ export const getPrintCss = (verticalOffset = 0) => {
       print-color-adjust: exact !important;
       color-adjust: exact !important;
       box-sizing: border-box !important;
-      border: 0 none transparent !important;
-      border-width: 0 !important;
-      border-style: none !important;
       outline: 0 none transparent !important;
       box-shadow: none !important;
       text-decoration: none !important;

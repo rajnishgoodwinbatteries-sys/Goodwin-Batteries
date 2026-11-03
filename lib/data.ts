@@ -29,8 +29,65 @@ export const getCategories = async (): Promise<Category[]> => {
 };
 
 export const getProducts = async (): Promise<Product[]> => {
-  // Return typed products from the unified JSON catalog with e-commerce pricing
-  return (goodwinProducts as any[]).map(row => {
+  // Start with catalog from local static JSON
+  const catalogMap = new Map<string, any>();
+  (goodwinProducts as any[]).forEach(item => catalogMap.set(item.id, item));
+
+  // Merge live dynamic products from Supabase database if available
+  try {
+    const { data: dbProducts } = await supabase
+      .from("products")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (dbProducts && dbProducts.length > 0) {
+      dbProducts.forEach(dbItem => {
+        const existing = catalogMap.get(dbItem.id);
+        if (existing) {
+          // Overlay admin edits
+          catalogMap.set(dbItem.id, {
+            ...existing,
+            name: dbItem.name || existing.name,
+            warranty: dbItem.warranty || existing.warranty,
+            is_published: dbItem.is_published !== undefined ? dbItem.is_published : existing.is_published,
+            is_featured: dbItem.is_featured !== undefined ? dbItem.is_featured : existing.is_featured,
+            description: dbItem.description || existing.description,
+          });
+        } else if (dbItem.is_published !== false) {
+          // Admin added a new product
+          catalogMap.set(dbItem.id, {
+            id: dbItem.id,
+            name: dbItem.name,
+            slug: dbItem.slug || dbItem.id,
+            series: dbItem.series || "Goodwin SMF",
+            category: dbItem.category_id || "cat-automotive",
+            voltage: dbItem.voltage || "12V",
+            ah: dbItem.ah || "35Ah",
+            cca: dbItem.cca || "N/A",
+            warranty: dbItem.warranty || "36 Months",
+            warranty_options: dbItem.warranty_options || [dbItem.warranty || "36 Months"],
+            is_featured: !!dbItem.is_featured,
+            is_published: dbItem.is_published !== false,
+            application: Array.isArray(dbItem.application) ? dbItem.application.flat() : ["Automotive"],
+            image: dbItem.image || "/assets/products/placeholder-battery.png",
+            gallery: [],
+            videos: [],
+            description: dbItem.description || "High-performance Goodwin battery.",
+            features: Array.isArray(dbItem.features) ? dbItem.features : ["Zero Maintenance", "High Cranking Power"],
+            technology: "SMF / Maintenance Free",
+            terminalLayout: dbItem.terminal_layout || "Standard",
+            dimensions: dbItem.dimensions || "238 x 129 x 227 mm",
+            weight: dbItem.weight || "12 kg",
+          });
+        }
+      });
+    }
+  } catch (err) {
+    console.warn("Notice: Live Supabase products sync fallback to static JSON:", err);
+  }
+
+  // Return typed products from the unified catalog with e-commerce pricing
+  return Array.from(catalogMap.values()).map(row => {
     const pricing = getProductPricing({
       id: row.id,
       ah: row.ah,

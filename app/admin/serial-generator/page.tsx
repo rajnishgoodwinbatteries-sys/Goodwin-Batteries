@@ -150,6 +150,25 @@ export default function SerialGeneratorPage() {
       console.error("Error saving batch details:", batchError);
     }
 
+    // Register all individual serial numbers in battery_serials table for instant lookup & verification
+    try {
+      const serialRows = [];
+      for (let s = lastSeq + 1; s <= newLastSeq; s++) {
+        const sStr = String(s).padStart(5, '0');
+        serialRows.push({
+          serial_number: `${prefix}${sStr}`,
+          product_id: prod.id,
+          manufacturing_date: mfgDate,
+          status: 'ACTIVE'
+        });
+      }
+      if (serialRows.length > 0) {
+        await supabase.from('battery_serials').upsert(serialRows, { onConflict: 'serial_number' });
+      }
+    } catch (bsErr) {
+      console.warn("Battery serials register notice:", bsErr);
+    }
+
     if (skipCsv) {
       setLoading(false);
       return batchData;

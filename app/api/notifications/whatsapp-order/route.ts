@@ -2,10 +2,25 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { formatINR } from "@/lib/pricing";
+import { supabase } from "@/lib/supabase";
 
 const CONFIG_FILE = path.join(process.cwd(), "config", "order-notifications.json");
 
-function getTargetWhatsAppNumber(): { number: string; countryCode: string } {
+async function getTargetWhatsAppNumber(): Promise<{ number: string; countryCode: string }> {
+  // Check Supabase global_settings first
+  try {
+    const { data } = await supabase.from("global_settings").select("whatsapp_main").single();
+    if (data?.whatsapp_main) {
+      return {
+        number: data.whatsapp_main.replace(/\D/g, ""),
+        countryCode: "91",
+      };
+    }
+  } catch {
+    // fallback
+  }
+
+  // Fallback to local file if available
   try {
     if (fs.existsSync(CONFIG_FILE)) {
       const data = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf-8"));
@@ -25,7 +40,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { order, isTest } = body;
 
-    const { number, countryCode } = getTargetWhatsAppNumber();
+    const { number, countryCode } = await getTargetWhatsAppNumber();
     const fullRecipient = `${countryCode}${number}`;
 
     if (isTest) {

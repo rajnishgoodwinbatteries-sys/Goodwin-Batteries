@@ -47,5 +47,12 @@
     "slug": "vrla-smf",
     "description": "Sealed maintenance-free batteries for versatile applications.",
     "image": "/assets/products/goodwin-12smf8-ups-12v-8ah.png"
+  },
+  {
+    "id": "cat-e-rickshaw",
+    "name": "E-Rickshaw & EV",
+    "slug": "e-rickshaw",
+    "description": "Heavy-duty deep cycle batteries for electric rickshaws and commercial EVs.",
+    "image": "/assets/products/Gold Series.png"
   }
 ]

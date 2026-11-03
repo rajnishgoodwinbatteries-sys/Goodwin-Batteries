@@ -2,7 +2,12 @@ import { getProducts, getCategories } from "@/lib/data";
 import ProductsClient from "@/components/products/ProductsClient";
 import { Zap, ShieldCheck, BatteryCharging } from "lucide-react";
 
-export default async function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ category?: string }>;
+}) {
+  const resolvedParams = searchParams ? await searchParams : {};
   const products = await getProducts();
   const categories = await getCategories();
   
@@ -76,7 +81,11 @@ export default async function ProductsPage() {
         </div>
 
         <div className="container">
-          <ProductsClient initialProducts={publishedProducts} categories={categories} />
+          <ProductsClient
+            initialProducts={publishedProducts}
+            categories={categories}
+            initialCategory={resolvedParams.category}
+          />
         </div>
       </section>
     </div>

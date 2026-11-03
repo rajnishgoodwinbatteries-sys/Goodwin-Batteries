@@ -147,8 +147,29 @@ CREATE TABLE dealers (
 );
 
 -- ==============================================================================================
--- 5. LEADS & SUPPORT (Enquiries, Warranties, Claims)
+-- 5. LEADS, ORDERS & SUPPORT (Orders, Enquiries, Warranties, Claims)
 -- ==============================================================================================
+CREATE TABLE orders (
+    id TEXT PRIMARY KEY, -- e.g., GW-ORD-102938
+    customer_name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    email TEXT,
+    address TEXT NOT NULL,
+    city TEXT NOT NULL,
+    state TEXT,
+    pincode TEXT NOT NULL,
+    vehicle_details TEXT,
+    delivery_slot TEXT,
+    payment_method TEXT DEFAULT 'Online Payment',
+    payment_status TEXT DEFAULT 'Paid',
+    transaction_id TEXT,
+    total_amount NUMERIC NOT NULL DEFAULT 0,
+    items JSONB NOT NULL DEFAULT '[]'::jsonb,
+    status TEXT DEFAULT 'Confirmed', -- Confirmed, Packed, Out for Delivery, Delivered & Installed, Cancelled
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 CREATE TABLE enquiries (
     id TEXT PRIMARY KEY, -- e.g., GW-ENQ-123456
     name TEXT NOT NULL,

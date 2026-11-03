@@ -149,6 +149,43 @@ export default function AdminOrdersPage() {
       console.warn("Could not fetch from Supabase orders table", e);
     }
 
+    // 1b. Fallback check: Look in enquiries table for any orders saved during database transition
+    try {
+      const { data: enqData } = await supabase
+        .from("enquiries")
+        .select("*")
+        .or("id.like.GW-ORD%,subject.ilike.%ONLINE ORDER%")
+        .order("created_at", { ascending: false });
+
+      if (enqData && enqData.length > 0) {
+        enqData.forEach((enq: any) => {
+          if (!loaded.some((o) => o.id === enq.id)) {
+            // Extract items and details from message if possible
+            loaded.push({
+              id: enq.id,
+              customerName: enq.name || "Customer",
+              phone: enq.mobile || "",
+              email: enq.email,
+              address: "Address recorded in order details",
+              city: "City",
+              state: "State",
+              pincode: "",
+              vehicleDetails: "",
+              deliverySlot: "Standard Delivery",
+              paymentMethod: "online",
+              paymentStatus: "Paid",
+              status: enq.status === "Closed" ? "Delivered & Installed" : "Confirmed",
+              items: [],
+              totalAmount: 0,
+              createdAt: enq.created_at || new Date().toISOString(),
+            });
+          }
+        });
+      }
+    } catch (enqErr) {
+      console.warn("Enquiries orders fallback notice:", enqErr);
+    }
+
     // 2. Load from localStorage
     try {
       const stored = localStorage.getItem("goodwin_orders");

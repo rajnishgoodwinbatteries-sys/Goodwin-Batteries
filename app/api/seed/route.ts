@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const secret = searchParams.get('secret');
+    if (process.env.NODE_ENV === 'production' && secret !== (process.env.ADMIN_SEED_SECRET || 'goodwin_seed_2026')) {
+      return NextResponse.json({ error: 'Unauthorized to seed database in production' }, { status: 403 });
+    }
+
     const supabase = await createClient();
     // 1. Categories
     const categories = [

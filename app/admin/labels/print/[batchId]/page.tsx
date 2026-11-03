@@ -146,17 +146,8 @@ export default function PrintFactoryBatchPage() {
       if (data) {
         setBatch(data);
       } else {
-        console.warn("Batch not found, falling back to GOLD-SERIES demo preview batch");
-        setBatch({
-          id: batchId,
-          batch_number: "BATCH-GOLD-SERIES",
-          product_name: "GOLD-SERIES-12V-12AH",
-          warranty_info: "12 Months",
-          mfg_date: "16/10/2026",
-          prefix_key: "GOLD-SERIES-12V-12AH-12M-161026",
-          start_sequence: 1,
-          end_sequence: 5
-        });
+        console.warn("Batch not found for ID:", batchId, error);
+        setBatch(null);
       }
       setLoading(false);
     }

@@ -62,7 +62,7 @@ export default function AboutPage() {
                   From the beginning, our mission has been simple — to offer premium quality battery products engineered specifically for Indian conditions, backed by excellent service and expert support. 
                 </p>
                 <p>
-                  What truly sets us apart is our customer-first approach. We don't just sell batteries; we provide peace of mind on the road. From helping you select the right fitment to offering nationwide network support, our team is committed to making your journey smooth and hassle-free.
+                  What truly sets us apart is our customer-first approach. We don&apos;t just sell batteries; we provide peace of mind on the road. From helping you select the right fitment to offering nationwide network support, our team is committed to making your journey smooth and hassle-free.
                 </p>
               </div>
             </div>

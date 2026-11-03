@@ -85,7 +85,10 @@ export default function MRPLabel({
     >
       <div className="w-full h-full flex flex-col justify-between flex-1 min-h-0">
         {/* Top Header: ONLY GW LOGO (No "Goodwin" text, No "GENUINE") + Auto-adjusting Model Box + Voltage/Capacity */}
-        <div className="flex justify-between items-center border-b-[0.35mm] border-black pb-[0.35mm] mb-[0.3mm] shrink-0">
+        <div 
+          className="flex justify-between items-center pb-[0.35mm] mb-[0.3mm] shrink-0"
+          style={{ borderBottom: '0.35mm solid #000000' }}
+        >
           <div className="flex items-center gap-[0.8mm] flex-1 min-w-0 pr-[1mm]">
             {/* Authentic GW Circular Emblem (Sharp 100% Black Vector) */}
             <svg 

@@ -127,6 +127,16 @@ export default function WarrantyRegistrationPage() {
         }
         throw error;
       }
+
+      // Update battery_serials status to REGISTERED
+      try {
+        await supabase
+          .from('battery_serials')
+          .update({ status: 'REGISTERED' })
+          .eq('serial_number', formData.serial_number.toUpperCase());
+      } catch {
+        // non-blocking
+      }
       
       setWarrantyId(generatedId);
       setStatus("success");

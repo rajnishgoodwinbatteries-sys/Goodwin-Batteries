@@ -9,12 +9,20 @@ import { getProductPricing, formatINR } from "@/lib/pricing";
 export default function ProductsClient({
   initialProducts,
   categories,
+  initialCategory,
 }: {
   initialProducts: Product[];
   categories: Category[];
+  initialCategory?: string;
 }) {
+  const defaultCategory = useMemo(() => {
+    if (!initialCategory || initialCategory === "All") return "All";
+    const match = categories.find(c => c.slug === initialCategory || c.id === initialCategory);
+    return match ? match.id : "All";
+  }, [initialCategory, categories]);
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState<string>(defaultCategory);
   const [selectedWarranty, setSelectedWarranty] = useState<string>("All");
   const [selectedVoltage, setSelectedVoltage] = useState<string>("All");
   const [priceRange, setPriceRange] = useState<string>("All");

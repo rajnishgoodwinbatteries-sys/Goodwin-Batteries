@@ -257,7 +257,9 @@ export default function CheckoutClient() {
                 setLoading(false);
               }
             } catch (vErr) {
-              await finalizeOrder(orderId, "Paid", response.razorpay_payment_id);
+              console.error("Payment verification network error:", vErr);
+              setError("Payment verification request failed. If your account was debited, please contact our 24x7 support with your payment ID.");
+              setLoading(false);
             }
           },
           modal: {

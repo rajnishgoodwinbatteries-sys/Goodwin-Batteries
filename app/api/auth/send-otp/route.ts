@@ -13,20 +13,31 @@ export async function POST(req: Request) {
       );
     }
 
-    const { otp, expiresAt } = generateAndSaveOtp(cleanPhone);
+    const { otp, expiresAt, challengeToken } = generateAndSaveOtp(cleanPhone);
 
-    // In a real production deployment with an SMS Gateway (e.g. Fast2SMS / Twilio / Kaleyra / WhatsApp Business API),
-    // the SMS/WhatsApp API would be invoked here.
-    // For transparent verification across all devices, we return a success confirmation and delivery preview.
-    console.log(`[Goodwin Auth] OTP generated for +91 ${cleanPhone}: ${otp}`);
+    console.log(`[Goodwin Auth] OTP generated for +91 ${cleanPhone}`);
 
-    return NextResponse.json({
+    const isDev = process.env.NODE_ENV !== "production" || process.env.DEBUG_AUTH === "true";
+
+    const response = NextResponse.json({
       success: true,
       message: `OTP sent successfully to +91 ${cleanPhone}`,
       expiresAt,
-      // Pass the generated OTP in response so that the customer notification badge displays it on screen
-      deliveredOtp: otp,
+      challengeToken,
+      // Only include deliveredOtp in development / test environments for preview
+      ...(isDev ? { deliveredOtp: otp } : {}),
     });
+
+    // Set secure HttpOnly challenge cookie
+    response.cookies.set("goodwin_otp_challenge", challengeToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 300, // 5 minutes
+      path: "/",
+    });
+
+    return response;
   } catch (error: any) {
     console.error("Error in send-otp route:", error);
     return NextResponse.json(

@@ -116,19 +116,19 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=four-wheeler" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group">
+                <Link href="/products?category=automotive" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group">
                   <ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/>
                   Car & SUV (High Cold Crank)
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=commercial-heavy-duty" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group">
+                <Link href="/products?category=commercial" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group">
                   <ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/>
                   Commercial & Tractor Fleets
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=inverter-solar" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group">
+                <Link href="/products?category=inverter" className="text-slate-600 hover:text-[#00843D] transition-colors flex items-center gap-2 group">
                   <ArrowRight size={12} className="text-[#00843D] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all"/>
                   Tubular Inverter & Solar Power
                 </Link>

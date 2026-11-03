@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatINR } from "@/lib/pricing";
+import { supabase } from "@/lib/supabase";
 import { 
   Package, 
   Search, 
@@ -45,33 +46,73 @@ export default function CustomerOrdersPage() {
     setCustomerPhone(phone);
     if (name) setCustomerName(name);
 
-    // 2. Load orders matching this phone from localStorage & latest orders
-    try {
-      const stored = localStorage.getItem("goodwin_orders");
-      const latest = localStorage.getItem("goodwin_latest_order");
-      let all: any[] = stored ? JSON.parse(stored) : [];
+    // 2. Load orders matching this phone from Supabase & fallback to localStorage
+    async function loadCustomerOrders() {
+      const cleanPhone = (phone || "").replace(/\D/g, "").slice(-10);
+      let list: any[] = [];
 
-      if (latest) {
-        const latestParsed = JSON.parse(latest);
-        if (!all.some(o => o.id === latestParsed.id)) {
-          all.unshift(latestParsed);
+      try {
+        const { data, error } = await supabase
+          .from("orders")
+          .select("*")
+          .ilike("phone", `%${cleanPhone}%`)
+          .order("created_at", { ascending: false });
+
+        if (data && data.length > 0) {
+          list = data.map((row: any) => ({
+            id: row.id,
+            customerName: row.customer_name,
+            phone: row.phone,
+            email: row.email,
+            address: row.address,
+            city: row.city,
+            state: row.state,
+            pincode: row.pincode,
+            vehicleDetails: row.vehicle_details,
+            deliverySlot: row.delivery_slot,
+            paymentMethod: row.payment_method,
+            paymentStatus: row.payment_status,
+            status: row.status || "Confirmed",
+            items: Array.isArray(row.items) ? row.items : [],
+            totalAmount: Number(row.total_amount) || 0,
+            createdAt: row.created_at || new Date().toISOString(),
+          }));
         }
+      } catch (sbErr) {
+        console.warn("Could not load from Supabase orders", sbErr);
       }
 
-      // Filter by customer phone (matching last 10 digits)
-      const cleanPhone = phone.replace(/\D/g, "").slice(-10);
-      const customerOrders = all.filter(o => {
-        const oPhone = (o.phone || "").replace(/\D/g, "").slice(-10);
-        return oPhone === cleanPhone || !oPhone; // show all in demo if matches or default
-      });
+      // Merge with localStorage
+      try {
+        const stored = localStorage.getItem("goodwin_orders");
+        const latest = localStorage.getItem("goodwin_latest_order");
+        let localAll: any[] = stored ? JSON.parse(stored) : [];
 
-      // If no orders match this specific phone, also show the stored orders for demo testing
-      setOrders(customerOrders.length > 0 ? customerOrders : all);
-    } catch (e) {
-      console.error("Failed to load customer orders", e);
-    } finally {
+        if (latest) {
+          const latestParsed = JSON.parse(latest);
+          if (!localAll.some((o) => o.id === latestParsed.id)) {
+            localAll.unshift(latestParsed);
+          }
+        }
+
+        localAll.forEach((localOrd) => {
+          const oPhone = (localOrd.phone || "").replace(/\D/g, "").slice(-10);
+          if (oPhone === cleanPhone || !oPhone) {
+            if (!list.some((o) => o.id === localOrd.id)) {
+              list.push(localOrd);
+            }
+          }
+        });
+      } catch (e) {
+        console.error("Local storage orders parse error", e);
+      }
+
+      list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setOrders(list);
       setLoading(false);
     }
+
+    loadCustomerOrders();
   }, [router]);
 
   const handleLogout = () => {

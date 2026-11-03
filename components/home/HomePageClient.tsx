@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { 
   ChevronRight, ShieldCheck, Zap, Cog, ArrowRight, MapPin, 
@@ -23,6 +24,7 @@ export default function HomePageClient({
   products?: any[]; 
   settings: GlobalSettings | null; 
 }) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"finder" | "warranty" | "dealer">("finder");
   const [quickSerial, setQuickSerial] = useState("");
   const [quickCity, setQuickCity] = useState("");
@@ -290,7 +292,7 @@ export default function HomePageClient({
                   onSubmit={(e) => {
                     e.preventDefault();
                     if (quickSerial) {
-                      window.location.href = `/warranty?serial=${encodeURIComponent(quickSerial)}`;
+                      router.push(`/warranty?serial=${encodeURIComponent(quickSerial)}`);
                     }
                   }}
                   className="flex flex-col sm:flex-row gap-3"
@@ -330,7 +332,7 @@ export default function HomePageClient({
                 <form 
                   onSubmit={(e) => {
                     e.preventDefault();
-                    window.location.href = `/dealers?q=${encodeURIComponent(quickCity)}`;
+                    router.push(`/dealers?q=${encodeURIComponent(quickCity)}`);
                   }}
                   className="flex flex-col sm:flex-row gap-3"
                 >
@@ -398,7 +400,7 @@ export default function HomePageClient({
                 </div>
               </div>
               <Link 
-                href="/products?category=two-wheelers" 
+                href="/products?category=two-wheeler" 
                 className="text-xs font-bold text-[#00843D] hover:text-[#006830] flex items-center gap-1 uppercase tracking-wider pt-4 border-t border-slate-200"
               >
                 Explore Bike Range &rarr;
@@ -424,7 +426,7 @@ export default function HomePageClient({
                 </div>
               </div>
               <Link 
-                href="/products?category=passenger-vehicles" 
+                href="/products?category=automotive" 
                 className="text-xs font-bold text-[#00843D] hover:text-[#006830] flex items-center gap-1 uppercase tracking-wider pt-4 border-t border-slate-200"
               >
                 Explore Car Range &rarr;
@@ -450,7 +452,7 @@ export default function HomePageClient({
                 </div>
               </div>
               <Link 
-                href="/products?category=commercial-vehicles" 
+                href="/products?category=commercial" 
                 className="text-xs font-bold text-[#00843D] hover:text-[#006830] flex items-center gap-1 uppercase tracking-wider pt-4 border-t border-slate-200"
               >
                 Explore Heavy Duty &rarr;
@@ -476,7 +478,7 @@ export default function HomePageClient({
                 </div>
               </div>
               <Link 
-                href="/products?category=inverter-batteries" 
+                href="/products?category=inverter" 
                 className="text-xs font-bold text-[#00843D] hover:text-[#006830] flex items-center gap-1 uppercase tracking-wider pt-4 border-t border-slate-200"
               >
                 Explore Solar Range &rarr;

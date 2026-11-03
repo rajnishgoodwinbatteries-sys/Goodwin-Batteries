@@ -31,6 +31,7 @@ function CustomerLoginForm() {
   const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const [receivedOtpNotice, setReceivedOtpNotice] = useState<string | null>(null);
+  const [challengeToken, setChallengeToken] = useState<string>("");
 
   const otpInputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -83,6 +84,9 @@ function CustomerLoginForm() {
       setResendTimer(30);
       setCanResend(false);
       setSuccessMsg(`OTP sent to +91 ${clean}`);
+      if (data.challengeToken) {
+        setChallengeToken(data.challengeToken);
+      }
 
       // Display the received OTP alert on screen
       if (data.deliveredOtp) {
@@ -119,6 +123,9 @@ function CustomerLoginForm() {
         setCanResend(false);
         setOtp(["", "", "", "", "", ""]);
         setSuccessMsg(`New OTP sent to +91 ${clean}`);
+        if (data.challengeToken) {
+          setChallengeToken(data.challengeToken);
+        }
         if (data.deliveredOtp) {
           setReceivedOtpNotice(data.deliveredOtp);
         }
@@ -154,6 +161,7 @@ function CustomerLoginForm() {
           phone: cleanPhone,
           otp: enteredOtp,
           name: name.trim(),
+          challengeToken,
         }),
       });
 

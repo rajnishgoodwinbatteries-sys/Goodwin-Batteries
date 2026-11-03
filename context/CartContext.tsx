@@ -47,14 +47,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Load from local storage
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
       if (stored) {
-        setItems(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        queueMicrotask(() => {
+          setItems(parsed);
+          setIsLoaded(true);
+        });
+        return;
       }
     } catch (e) {
       console.error("Failed to load cart from localStorage", e);
     }
-    setIsLoaded(true);
+    queueMicrotask(() => setIsLoaded(true));
   }, []);
 
   // Save to local storage
