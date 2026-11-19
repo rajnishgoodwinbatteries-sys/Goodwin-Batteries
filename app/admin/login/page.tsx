@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ShieldAlert, Loader2 } from "lucide-react";
 
@@ -11,23 +10,62 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+
+  useEffect(() => {
+    // If admin is already authenticated, redirect straight to dashboard
+    const checkExistingSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          window.location.href = "/admin";
+        }
+      } catch (err) {
+        console.error("Session check error:", err);
+      }
+    };
+    checkExistingSession();
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const cleanEmail = email.trim().toLowerCase();
 
-    if (error) {
-      setError(error.message);
+    // Safety timeout in case of hanging network connection
+    const timeoutPromise = new Promise<{ error: Error }>((_, reject) =>
+      setTimeout(() => reject(new Error("Authentication request timed out. Please check your internet connection.")), 15000)
+    );
+
+    try {
+      const authPromise = supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
+
+      const result = await Promise.race([authPromise, timeoutPromise]) as {
+        data?: { session: any };
+        error?: any;
+      };
+
+      if (result.error) {
+        setError(result.error.message || "Invalid email or password.");
+        setLoading(false);
+        return;
+      }
+
+      if (result.data?.session) {
+        // Direct browser navigation to /admin ensures newly written auth cookies are included in headers
+        window.location.href = "/admin";
+      } else {
+        // In case signIn succeeded without session payload
+        window.location.href = "/admin";
+      }
+    } catch (err: any) {
+      console.error("Login failed:", err);
+      setError(err?.message || "An unexpected error occurred during authentication.");
       setLoading(false);
-    } else {
-      router.push("/admin");
     }
   };
 

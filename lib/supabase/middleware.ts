@@ -34,10 +34,16 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // Refresh auth tokens
-  const { data: { user } } = await supabase.auth.getUser()
+  // Refresh auth tokens safely
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data?.user || null;
+  } catch (err) {
+    console.error("Middleware auth check error:", err);
+  }
 
-  // Protect admin routes only
+  // Protect admin routes
   const pathname = request.nextUrl.pathname;
   if (
     !user &&
@@ -46,7 +52,25 @@ export async function updateSession(request: NextRequest) {
   ) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin/login'
-    return NextResponse.redirect(url)
+    const redirectResponse = NextResponse.redirect(url)
+    supabaseResponse.cookies.getAll().forEach((c) => {
+      redirectResponse.cookies.set(c.name, c.value, c)
+    })
+    return redirectResponse
+  }
+
+  // If already logged in as admin and visiting login page, redirect directly to /admin
+  if (
+    user &&
+    pathname === '/admin/login'
+  ) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/admin'
+    const redirectResponse = NextResponse.redirect(url)
+    supabaseResponse.cookies.getAll().forEach((c) => {
+      redirectResponse.cookies.set(c.name, c.value, c)
+    })
+    return redirectResponse
   }
 
   return supabaseResponse
